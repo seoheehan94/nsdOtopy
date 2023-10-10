@@ -36,7 +36,8 @@ bandwidth = 1;
 numOrientations = 8;
 dims = [backgroundSize backgroundSize];
 dims = dims*imgScaling;
-numLevels = maxLevel(dims,bandwidth);
+%numLevels = maxLevel(dims,bandwidth);
+numLevels = 1;
 
 switch visualRegion
     case 1
@@ -134,12 +135,17 @@ for roinum=1:length(rois)
     end
     prfSampleLev{roinum} = prfSampleLevRoi;
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
+
+    prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
+    save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
+        'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
+        'roiPrf','-v7.3');
 end
 
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
-save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
-    'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
-    'roiPrf','-v7.3');
+% prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
+% save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
+%     'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
+%     'roiPrf','-v7.3');
 delete(g);
 
 %% CSS pRF from Kay et al., J Neurophysiology, 2013

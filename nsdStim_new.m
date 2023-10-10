@@ -22,7 +22,7 @@ backgroundSize = 1024;
 imgScaling = 0.5;
 
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-pyramidfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/pyramid/';%to save model outputs
+orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter/';%to save model outputs
 
 %%
 % construct quad frequency filters
@@ -30,7 +30,7 @@ numOrientations = 8;
 bandwidth = 1;
 dims = [backgroundSize backgroundSize];
 dims = dims*imgScaling;
-numLevels = maxLevel(dims,bandwidth);
+numLevels = 1;
 [freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numOrientations, bandwidth);
 
 %%
@@ -47,6 +47,7 @@ nsdDesignFilename = fullfile(nsdfolder, 'nsd_expdesign.mat');
 nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
+vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
 for isub=[1:1]
     
@@ -56,7 +57,6 @@ for isub=[1:1]
     %%
     backgroundColor(1,1,:) = uint8([127,127,127]);
     
-    
     nImgs = 1;
     
     fixPoint(1,1,:) = [255 0 0];
@@ -65,8 +65,8 @@ for isub=[1:1]
     for imgNum=allImgs
         iimg = iimg+1
         
-        pyramidfilename = ['pyrImg' num2str(imgNum) '.mat'];
-        if ~isfile(fullfile(pyramidfolder, pyramidfilename))%if file exists already no need to remake it
+        orifilename = ['oriImg' num2str(imgNum) '.mat'];
+        if ~isfile(fullfile(orifolder, orifilename))%if file exists already no need to remake it
             origImg = h5read(stimfilename,'/imgBrick/',[1 1 1 imgNum],[3 imgSizeX imgSizeY nImgs]);
             origImg = double(origImg);
             origImg = permute(origImg,[3 2 1]);%[425,425,3]
@@ -94,24 +94,21 @@ for isub=[1:1]
             
             %DOWNSAMPLE
             bigImg = imresize(bigImg,imgScaling);
-            %% pass image through steerable pyramid
+            %% pass image through orientation filter
+            oriMap = generateOrientationMap(vecLD, NaN, [512 512]);
+            binWidth2 = 90 / length(vecLD.orientationBins);
+            horIdx = (oriMap > (180-binWidth2));
+            oriMap(horIdx) = oriMap(horIdx) - 180;
             
-            [pyr, pind] = buildQuadBands(bigImg, freqRespsImag, freqRespsReal);
-            sumOri = cell(numLevels,1);
-            modelOri = cell(numLevels,1);
-            for ilev = 1:numLevels
-                % loop over levels and orientations of the pyramid
-                % initialize output
-                sumOri{ilev}(:,:) = zeros(dims(1), dims(2));
-                modelOri{ilev} = zeros(numOrientations, dims(1), dims(2));
-                for orientation = 1:numOrientations
-                    thisBand = abs(accessSteerBand(pyr, pind, numOrientations,ilev, orientation)).^2;
-                    sumOri{ilev}(:,:) = sumOri{ilev}(:,:) + thisBand;
-                    modelOri{ilev}(orientation,:,:) = thisBand;
-                end
+            %vecLD.orientationBins
+            for binIdx = 1: length(vecLD.orientationBins)
+                oribinmap{1,binIdx} = (abs(oriMap-vecLD.orientationBins(binIdx)) <= binWidth2);
+
             end
-            
-            save(fullfile(pyramidfolder, pyramidfilename), 'interpImgSize','backgroundSize','imgScaling',...
+            modelOri=cat(3,oribinmap{:});
+            modelOri = permute(modelOri,[3 1 2]);
+
+            save(fullfile(orifolder, orifilename), 'interpImgSize','backgroundSize','imgScaling',...
                 'numOrientations','bandwidth','dims','bigImg','sumOri','modelOri','numLevels');
         end
     end
