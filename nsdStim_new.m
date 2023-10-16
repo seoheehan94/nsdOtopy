@@ -13,23 +13,19 @@
 
 % uses the steerable pyramid: https://github.com/elimerriam/stimulusVignetting
 
-
 close all
 clear all
 
-interpImgSize = 714;
-backgroundSize = 1024;
-imgScaling = 0.5;
-
+cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
 orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter/';%to save model outputs
 
 %%
 % construct quad frequency filters
+
 numOrientations = 8;
 bandwidth = 1;
-dims = [backgroundSize backgroundSize];
-dims = dims*imgScaling;
+dims = [512 512];
 numLevels = 1;
 [freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numOrientations, bandwidth);
 
@@ -51,7 +47,6 @@ vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
 for isub=[1:1]
     
-    
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
     %%
@@ -67,33 +62,21 @@ for isub=[1:1]
         
         orifilename = ['oriImg' num2str(imgNum) '.mat'];
         if ~isfile(fullfile(orifolder, orifilename))%if file exists already no need to remake it
-            origImg = h5read(stimfilename,'/imgBrick/',[1 1 1 imgNum],[3 imgSizeX imgSizeY nImgs]);
-            origImg = double(origImg);
-            origImg = permute(origImg,[3 2 1]);%[425,425,3]
-            
-            [Xq, Yq] = meshgrid(linspace(1,imgSizeX, interpImgSize), linspace(1,imgSizeY, interpImgSize));
-            for irgb=1:3
-                interpImg(:,:,irgb) = interp2(squeeze(origImg(:,:,irgb)), Xq, Yq);
+            imgName = ['img' num2str(imgNum) '.mat'];
+            if imgNum <= 14600*1
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images01/';
+            elseif imgNum <= 14600*2
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images02/';
+            elseif imgNum <= 14600*3
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images03/';
+            elseif imgNum <= 14600*4
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images04/';
+            elseif imgNum <= 14600*5
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images05/';
             end
-            %add red semi-transparent fixation point
-            
-            interpImg(interpImgSize/2-8:interpImgSize/2+8,interpImgSize/2-8:interpImgSize/2+8,:) = ...
-                (interpImg(interpImgSize/2-8:interpImgSize/2+8,interpImgSize/2-8:interpImgSize/2+8,:) + ...
-                repmat(fixPoint,17,17,1))/2;
-            
-            %%add background
-            bigImg = repmat(backgroundColor,backgroundSize,backgroundSize,1);
-            bigImg(1+backgroundSize/2-interpImgSize/2 : backgroundSize/2+interpImgSize/2, 1+backgroundSize/2-interpImgSize/2 : backgroundSize/2+interpImgSize/2,:) = interpImg(:,:,:);
-            
-            %axis image
-            % colormap gray
-            
-            %change to grayscale
-            % for now, simply by averaging across RGB channels
-            bigImg = mean(bigImg,3);
-            
-            %DOWNSAMPLE
-            bigImg = imresize(bigImg,imgScaling);
+
+            load(fullfile(imgFolder, imgName));
+
             %% pass image through orientation filter
             oriMap = generateOrientationMap(vecLD, NaN, [512 512]);
             binWidth2 = 90 / length(vecLD.orientationBins);
@@ -108,8 +91,8 @@ for isub=[1:1]
             modelOri=cat(3,oribinmap{:});
             modelOri = permute(modelOri,[3 1 2]);
 
-            save(fullfile(orifolder, orifilename), 'interpImgSize','backgroundSize','imgScaling',...
-                'numOrientations','bandwidth','dims','bigImg','sumOri','modelOri','numLevels');
+            save(fullfile(orifolder, orifilename),...
+                'numOrientations','bandwidth','dims','modelOri','numLevels', 'oriMap');
         end
     end
 end
