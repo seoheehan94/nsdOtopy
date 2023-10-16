@@ -127,8 +127,8 @@ for roinum=1:length(rois)
     end
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
 
-    prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
-    save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
+    prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/';
+    save(fullfile(prffolder,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf','-v7.3');
 end
