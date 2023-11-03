@@ -149,4 +149,4 @@ end
 
 
 %%
-figure; hold on; for ori=1:8;plot(squeeze(prfSampleLevOri{1,1}(1:100,23,1,ori)),'-','Color',colors(ori,:));end
+%%figure; hold on; for ori=1:8;plot(squeeze(prfSampleLevOri{1,1}(1:100,23,1,ori)),'-','Color',colors(ori,:));end

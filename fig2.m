@@ -18,10 +18,12 @@ figRoi=1;
 
 toSavePdf = 0;
 imgFormat = 'jpg';
-subjects = [1:8];
+%subjects = [1:8];
+subjects = [1:1];
 
 ifig=0;
-nrois = 4;
+%nrois = 4;
+nrois = 1;
 
 imgScaling = 0.5;
 global interpSz; interpSz= 714*imgScaling;
@@ -67,8 +69,8 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['~/NSD/prfsample/'];
-figFolder = ['/Users/rothzn/Documents/MATLAB/NSD/figures/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/'];
+figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 
 allOri = cell(1,nrois);
 allLevVig = cell(1,nrois);
@@ -93,13 +95,10 @@ for isub=1:length(subjects)
     subnum = subjects(isub);
     load([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig','roiLevFull',...
         'roiOri','roiNsdCorr','roiNsdOriCorr','roiNsdOriR2','roiNsdR2',...
-        'roiSynthCorr','roiSynthOriCorr','roiSynthOri',...
-        'roiSynthLevVig','roiSynthLevFull', ...
-        'nsdSynthImprov_pval', 'nsdSynthImprov_corr','roiOriDeviation',...
         'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis');
     subAnalysis(isub) = prefAnalysis;
-    subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
-    subNsdSynthImprov_pval(isub,:,:) = nsdSynthImprov_pval;
+%     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
+%     subNsdSynthImprov_pval(isub,:,:) = nsdSynthImprov_pval;
     for iroi=1:nrois
         allPrfX{iroi} = [allPrfX{iroi}; allRoiPrf{iroi}.x];
         allPrfY{iroi} = [allPrfY{iroi}; allRoiPrf{iroi}.y];
@@ -113,12 +112,12 @@ for isub=1:length(subjects)
         allNsdOriCorr{iroi} = [allNsdOriCorr{iroi} roiNsdOriCorr{iroi}];
         allNsdOriR2{iroi} = [allNsdOriR2{iroi} roiNsdOriR2{iroi}];
         allNsdR2{iroi} = [allNsdR2{iroi} roiNsdR2{iroi}];
-        allSynthCorr{iroi} = [allSynthCorr{iroi} roiSynthCorr{iroi}];
-        allSynthOriCorr{iroi} = [allSynthOriCorr{iroi} roiSynthOriCorr{iroi}];
-        allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
-        allSynthLevVig{iroi} = [allSynthLevVig{iroi} roiSynthLevVig{iroi}'];
-        allSynthLevFull{iroi} = [allSynthLevFull{iroi} roiSynthLevFull{iroi}'];
-        allImprovCorr{iroi} = [allImprovCorr{iroi} roiOriDeviation{iroi}];
+%         allSynthCorr{iroi} = [allSynthCorr{iroi} roiSynthCorr{iroi}];
+%         allSynthOriCorr{iroi} = [allSynthOriCorr{iroi} roiSynthOriCorr{iroi}];
+%         allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
+%         allSynthLevVig{iroi} = [allSynthLevVig{iroi} roiSynthLevVig{iroi}'];
+%         allSynthLevFull{iroi} = [allSynthLevFull{iroi} roiSynthLevFull{iroi}'];
+%         allImprovCorr{iroi} = [allImprovCorr{iroi} roiOriDeviation{iroi}];
     end
 end
 

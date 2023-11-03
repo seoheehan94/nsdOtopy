@@ -12,7 +12,7 @@
 %   uses files created by: prfSampleModel.m, prfSampleModel_synth.m
 %   creates files used by: getVoxPref.m
 
-function regressPrfSplit(isub,visualRegions)
+function regressPrfSplit_new(isub,visualRegions)
 
 tic
 
@@ -20,9 +20,9 @@ tic
 nsessionsSub = [40 40 32 30 40 32 40 30];
 nsessions=nsessionsSub(isub);
 nsplits=2;
-bandpass = 1; bandMin = 1; bandMax = 7;
+bandpass = 1; bandMin = 1; bandMax = 1;
 
-boxfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
+boxfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/';
 betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
 % stimfilename = fullfile(folder,'nsdsynthetic_colorstimuli_subj01.hdf5');
 nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
@@ -35,20 +35,20 @@ visRoiData = visRoiData(:);
 
 for visualRegion=visualRegions
     
-    load(fullfile(boxfolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
+    load(fullfile(boxfolder,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf');
     %if prf sampling was done with the nonlinear CSS prf, then we want to
     %define the weights for the constrained model as a sum of the
     %orientation model across orientations:
-    for roinum=1:length(rois)
-        prfSampleLev{roinum} = squeeze(sum(prfSampleLevOri{roinum},4));
-    end
+     for roinum=1:length(rois)
+         prfSampleLev{roinum} = squeeze(sum(prfSampleLevOri{roinum},4));
+     end
     
     if bandpass
         for roinum=1:length(rois)
             prfSampleLevOri{roinum} = prfSampleLevOri{roinum}(:,:,bandMin:bandMax,:);
-            prfSampleLev{roinum} = prfSampleLev{roinum}(:,:,bandMin:bandMax);
+             prfSampleLev{roinum} = prfSampleLev{roinum}(:,:,bandMin:bandMax);
         end
         numLevels = bandMax-bandMin+1;
     end

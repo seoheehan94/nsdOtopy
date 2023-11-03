@@ -13,7 +13,7 @@
 %   creates files used by: fig$$.m
 
 
-function getVoxPref(isub,numregions)
+function getVoxPref_new(isub,numregions)
 
 %uses data from regressPrfSplit.m
 
@@ -33,11 +33,11 @@ toSavePdf = 0;
 numOrientations = 8;
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 nperms=1000;
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/'];
 
 interpSz= 714;
 backgroundSz= 1024;
-bandpass = 1; bandMin = 1; bandMax = 7;
+bandpass = 1; bandMin = 1; bandMax = 1;
 bandpassStr = '';
 if bandpass
     bandpassStr = ['_bandpass' num2str(bandMin) 'to' num2str(bandMax)];
@@ -48,7 +48,7 @@ interpSz= 714*imgScaling;
 backgroundSz= 1024*imgScaling;
 degPerPix = 8.4/(714*imgScaling);
 
-gratings = load(['gratings.mat'],'cpds','angles','freqs','numOrientations','numLevels',...
+gratings = load(['gratings_new.mat'],'cpds','angles','freqs','numOrientations','numLevels',...
     'sumOriEnergy','modelOriEnergy','normResp','backgroundSize','imgScaling');
 for iregion=1:numregions
     visualRegion = iregion;%V1,V2,V3,V4
@@ -176,6 +176,7 @@ for iregion=1:numregions
         for isplit=1:nsplits
             %constrained model
             vigCoef = squeeze(nsd.voxCoef{iroi}(isplit,:,1:end-1));
+            vigCoef = vigCoef';
             vigPrefLevel{iroi}(isplit,:) = gratingPrefFreq(vigCoef,gratings.sumOriEnergy);
             
             %full orientation model

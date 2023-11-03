@@ -23,12 +23,10 @@ nsplits=2;
 bandpass = 1; bandMin = 1; bandMax = 7;
 
 boxfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
-betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
+betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
 % stimfilename = fullfile(folder,'nsdsynthetic_colorstimuli_subj01.hdf5');
 nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
-visualRoisfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-
-visualRoisFile = fullfile(visualRoisfolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
+visualRoisFile = fullfile(betasfolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
 visRoiData = niftiread(visualRoisFile);
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
 visRoiData = visRoiData(:);
@@ -55,7 +53,7 @@ for visualRegion=visualRegions
     
     for roinum=1:length(rois); iroi = rois(roinum); roiBetas{roinum}=[]; end
     for isession=1:nsessions
-        betasfilename = fullfile(betasfolder,['betas_session' num2str(isession,'%02.f') '.nii.gz']);
+        betasfilename = fullfile(betasfolder,['betas_session' num2str(isession,'%02.f') '.nii']);
         betas = niftiread(betasfilename);
         betas = cast(betas,'double');
         betas = betas/300;
@@ -323,3 +321,7 @@ end
 
 end
 
+
+function r2 = rsquared(Xresid, Xorig)
+r2 = 1 - sum((Xresid).^2)/sum((Xorig - mean(Xorig)).^2);
+end
