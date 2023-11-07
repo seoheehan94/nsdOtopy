@@ -22,7 +22,7 @@ nbins = 20;
 sigMarkersize = 15;
 
 imgFormat = 'jpg';
-subjects = [1:8];
+subjects = [1:1];
 
 ifig=0;
 nrois = 4;
@@ -83,8 +83,8 @@ edgeAlpha = 0.3;
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['~/NSD/prfsample/'];
-figFolder = ['/Users/rothzn/Documents/MATLAB/NSD/figures/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/'];
+figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 
 allOri = cell(1,nrois);
 allLevVig = cell(1,nrois);
@@ -117,8 +117,8 @@ for isub=1:length(subjects)
         'nsdSynthImprov_pval', 'nsdSynthImprov_corr','roiOriDeviation','roiVertDeviation','roiCardDeviation',...
         'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');
     subAnalysis(isub) = prefAnalysis;
-    subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
-    subNsdSynthImprov_pval(isub,:,:) = nsdSynthImprov_pval;
+%     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
+%     subNsdSynthImprov_pval(isub,:,:) = nsdSynthImprov_pval;
     for iroi=figRoi
         allPrfX{iroi} = [allPrfX{iroi}; allRoiPrf{iroi}.x];
         allPrfY{iroi} = [allPrfY{iroi}; allRoiPrf{iroi}.y];
@@ -132,15 +132,15 @@ for isub=1:length(subjects)
         allNsdOriCorr{iroi} = [allNsdOriCorr{iroi} roiNsdOriCorr{iroi}];
         allNsdOriR2{iroi} = [allNsdOriR2{iroi} roiNsdOriR2{iroi}];
         allNsdR2{iroi} = [allNsdR2{iroi} roiNsdR2{iroi}];
-        allSynthCorr{iroi} = [allSynthCorr{iroi} roiSynthCorr{iroi}];
-        allSynthOriCorr{iroi} = [allSynthOriCorr{iroi} roiSynthOriCorr{iroi}];
-        allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
-        allSynthLevVig{iroi} = [allSynthLevVig{iroi} roiSynthLevVig{iroi}'];
-        allSynthLevFull{iroi} = [allSynthLevFull{iroi} roiSynthLevFull{iroi}'];
-        allOriDeviation{iroi} = [allOriDeviation{iroi} roiOriDeviation{iroi}];
-        allVertDeviation{iroi} = [allVertDeviation{iroi} roiVertDeviation{iroi}];
-        allCardDeviation{iroi} = [allCardDeviation{iroi} roiCardDeviation{iroi}];
-        allSubInd{iroi} = [allSubInd{iroi}; subnum*ones(size(roiOriDeviation{iroi},2),1)];
+%         allSynthCorr{iroi} = [allSynthCorr{iroi} roiSynthCorr{iroi}];
+%         allSynthOriCorr{iroi} = [allSynthOriCorr{iroi} roiSynthOriCorr{iroi}];
+%         allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
+%         allSynthLevVig{iroi} = [allSynthLevVig{iroi} roiSynthLevVig{iroi}'];
+%         allSynthLevFull{iroi} = [allSynthLevFull{iroi} roiSynthLevFull{iroi}'];
+%         allOriDeviation{iroi} = [allOriDeviation{iroi} roiOriDeviation{iroi}];
+%         allVertDeviation{iroi} = [allVertDeviation{iroi} roiVertDeviation{iroi}];
+%         allCardDeviation{iroi} = [allCardDeviation{iroi} roiCardDeviation{iroi}];
+%         allSubInd{iroi} = [allSubInd{iroi}; subnum*ones(size(roiOriDeviation{iroi},2),1)];
     end
 end
 %% SCHEMATIC

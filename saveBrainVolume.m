@@ -1,8 +1,6 @@
 cd '/home/hanseohe/Documents/GitHub/nsdOtopy'
 
 load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/voxModelPref_sub1.mat');
-roiOri_New = roiOri;
-load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/voxModelPref_sub1.mat');
 
 ourBrain = visRoiData;
 ourBrain(ourBrain == 2) = 1;
@@ -16,8 +14,11 @@ angleBrain(ourBrain == 2) = roiOri{1,2}(3,:);
 angleBrain(ourBrain == 3) = roiOri{1,3}(3,:);
 angleBrain(ourBrain == 4) = roiOri{1,4}(3,:);
 angleBrain = angleBrain / pi *180;
+angleBrain(angleBrain > 0) = 180 - angleBrain(angleBrain > 0);
 angleBrain(angleBrain < 0) = -1;
-hist(angleBrain);
+
+%hist(angleBrain);
+
 
 save('angleBrain_new.mat', 'angleBrain');
 
@@ -34,3 +35,12 @@ size(angleBrain)
 Info.RootName = 'angleBrain_new+orig';
 opt.Prefix = 'angleBrain_new';
 WriteBrik(angleBrain,Info,opt);
+
+%%
+load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/voxModelPref_sub1.mat');
+roiOri_New = roiOri;
+load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/voxModelPref_sub1.mat');
+
+original = roiOri{1,1}(3,:)';
+new = roiOri_New{1,1}(3,:)';
+[r,p] = corr(original, new);
