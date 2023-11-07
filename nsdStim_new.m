@@ -18,7 +18,7 @@ clear all
 
 cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter/';%to save model outputs
+orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter2/';%to save model outputs
 
 %%
 % construct quad frequency filters

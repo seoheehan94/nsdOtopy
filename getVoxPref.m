@@ -320,9 +320,9 @@ for iregion=1:numregions
 %     roiSynthOri{iregion} = synthFullPrefOri{iroi};
 %     roiSynthLevVig{iregion} = synthVigPrefLevel{iroi};
 %     roiSynthLevFull{iregion} = synthFullPrefLevel{iroi};
-%     roiOriDeviation{iregion} = oriDeviation{iroi};
-%     roiVertDeviation{iregion} = vertDeviation{iroi};
-%     roiCardDeviation{iregion} = cardDeviation{iroi};
+     roiOriDeviation{iregion} = oriDeviation{iroi};
+     roiVertDeviation{iregion} = vertDeviation{iroi};
+     roiCardDeviation{iregion} = cardDeviation{iroi};
 end
 
 
@@ -338,6 +338,7 @@ save([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig'
     'roiNsdResidOriR2','roiNsdOriResidOriR2','roiNsdPredOriR2','roiNsdOriPredOriR2',...
     'residOri','residOriOri','predOri','predOriOri',...
     'oriModulation','oriPrefAmp','oriAntiAmp',...
+    'roiOriDeviation','roiVertDeviation','roiCardDeviation',...
     'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');
 
 %%

@@ -137,10 +137,10 @@ for isub=1:length(subjects)
 %         allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
 %         allSynthLevVig{iroi} = [allSynthLevVig{iroi} roiSynthLevVig{iroi}'];
 %         allSynthLevFull{iroi} = [allSynthLevFull{iroi} roiSynthLevFull{iroi}'];
-%         allOriDeviation{iroi} = [allOriDeviation{iroi} roiOriDeviation{iroi}];
-%         allVertDeviation{iroi} = [allVertDeviation{iroi} roiVertDeviation{iroi}];
-%         allCardDeviation{iroi} = [allCardDeviation{iroi} roiCardDeviation{iroi}];
-%         allSubInd{iroi} = [allSubInd{iroi}; subnum*ones(size(roiOriDeviation{iroi},2),1)];
+         allOriDeviation{iroi} = [allOriDeviation{iroi} roiOriDeviation{iroi}];
+         allVertDeviation{iroi} = [allVertDeviation{iroi} roiVertDeviation{iroi}];
+         allCardDeviation{iroi} = [allCardDeviation{iroi} roiCardDeviation{iroi}];
+         allSubInd{iroi} = [allSubInd{iroi}; subnum*ones(size(roiOriDeviation{iroi},2),1)];
     end
 end
 %% SCHEMATIC
