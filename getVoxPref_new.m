@@ -18,7 +18,7 @@ function getVoxPref_new(isub,numregions)
 %uses data from regressPrfSplit.m
 
 %chooses preferred orientation/levels by averaging across filters
-mrQuit
+%mrQuit
 close all
 % clear all
 global interpSz;
