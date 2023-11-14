@@ -64,15 +64,15 @@ for isub=[1:8]
         if ~isfile(fullfile(orifolder, orifilename))%if file exists already no need to remake it
             imgName = ['img' num2str(imgNum) '.mat'];
             if imgNum <= 14600*1
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images01/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images01/';
             elseif imgNum <= 14600*2
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images02/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images02/';
             elseif imgNum <= 14600*3
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images03/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images03/';
             elseif imgNum <= 14600*4
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images04/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images04/';
             elseif imgNum <= 14600*5
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images05/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images05/';
             end
 
             load(fullfile(imgFolder, imgName));
