@@ -13,19 +13,22 @@
 
 % uses the steerable pyramid: https://github.com/elimerriam/stimulusVignetting
 
-close all
-clear all
+close all;
+clear all;
+
+backgroundSize = [512 512];
+renderSize = [357,357];
 
 cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter_resize/';%to save model outputs
+orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter/';%to save model outputs
 
 %%
 % construct quad frequency filters
 
 numOrientations = 8;
 bandwidth = 1;
-dims = [512 512];
+dims = backgroundSize;
 numLevels = 1;
 [freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numOrientations, bandwidth);
 
@@ -45,7 +48,7 @@ allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
-for isub=[1:8]
+for isub=[1:1]
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
@@ -64,21 +67,26 @@ for isub=[1:8]
         if ~isfile(fullfile(orifolder, orifilename))%if file exists already no need to remake it
             imgName = ['img' num2str(imgNum) '.mat'];
             if imgNum <= 14600*1
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images01/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images01/';
             elseif imgNum <= 14600*2
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images02/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images02/';
             elseif imgNum <= 14600*3
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images03/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images03/';
             elseif imgNum <= 14600*4
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images04/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images04/';
             elseif imgNum <= 14600*5
-                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/resize_images05/';
+                imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images05/';
             end
 
             load(fullfile(imgFolder, imgName));
 
+
+
+           
             %% pass image through orientation filter
-            oriMap = generateOrientationMap(vecLD, NaN, [512 512]);
+            
+            oriMap = generateOrientationMap(vecLD, NaN, backgroundSize, renderSize);
+   
             binWidth2 = 90 / length(vecLD.orientationBins);
             horIdx = (oriMap > (180-binWidth2));
             oriMap(horIdx) = oriMap(horIdx) - 180;
