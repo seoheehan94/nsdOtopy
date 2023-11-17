@@ -1,13 +1,13 @@
-%% prfSampleModel_new
+%% prfSampleModel
 for sub = 1:1
     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,1);
-    prfSampleModel_new(sub,1);
+    prfSampleModel(sub,1);
     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,2);
-    prfSampleModel_new(sub,2);
+    prfSampleModel(sub,2);
     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,3);
-    prfSampleModel_new(sub,3);
+    prfSampleModel(sub,3);
     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,4);
-    prfSampleModel_new(sub,4);
+    prfSampleModel(sub,4);
 end
 
 %% regressPrfSplit

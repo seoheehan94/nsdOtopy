@@ -1,4 +1,4 @@
-% prfSampleModel.m
+% prfSampleModel_new.m
 %
 % associated with the following publication: Roth, ZN, Kay, K, and Merriam, EP (2022).
 % Massive natural scene sampling reveals reliable coarse-scale orientation tuning in human V1
@@ -54,7 +54,7 @@ x = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 y = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 [X,Y] = meshgrid(x,-y);%flip up-down
 
-orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter2/';%to save model outputs
+orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter/';%to save model outputs
 betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
 angFile = fullfile(betasfolder,'prf_angle.nii.gz');
 eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
@@ -128,7 +128,7 @@ for roinum=1:length(rois)
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
 
     prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/';
-    save(fullfile(prffolder,['prfSampleStim_ori2_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
+    save(fullfile(prffolder,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf','-v7.3');
 end

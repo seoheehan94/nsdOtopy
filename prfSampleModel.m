@@ -54,7 +54,7 @@ x = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 y = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 [X,Y] = meshgrid(x,-y);%flip up-down
 
-pyramidfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/pyramid/';%to save model outputs
+pyramidfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/pyramid_LD/';%to save model outputs
 betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
 angFile = fullfile(betasfolder,'prf_angle.nii.gz');
 eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
@@ -136,7 +136,7 @@ for roinum=1:length(rois)
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
 end
 
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
+prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_control/';
 save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
     'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
     'roiPrf','-v7.3');
