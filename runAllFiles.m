@@ -11,9 +11,12 @@ for sub = 1:1
 end
 
 %% regressPrfSplit
-% for sub = 2:8
-% 
-% fprintf('%s. %d. %d ...\n','regressPrfSplit',sub,1);
-% regressPrfSplit(sub, 4);
-% 
-% end
+for sub = 1:1
+fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
+regressPrfSplit_new(sub, 1);
+fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
+regressPrfSplit_new(sub, 2);
+fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 3);
+regressPrfSplit_new(sub, 3);
+
+end
