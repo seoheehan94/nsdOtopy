@@ -79,9 +79,6 @@ for isub=[1:1]
             end
 
             load(fullfile(imgFolder, imgName));
-
-
-
            
             %% pass image through orientation filter
             
