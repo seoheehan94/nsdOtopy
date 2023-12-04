@@ -1,0 +1,19 @@
+%% prfSampleModel
+for sub = 2:8
+    fprintf('%s. %d. %d ...\n',',sub,1);
+    prfSampleModel(sub,1);
+    fprintf('%s. %d. %d ...\n',sub,2);
+    prfSampleModel(sub,2);
+    fprintf('%s. %d. %d ...\n',sub,3);
+    prfSampleModel(sub,3);
+    fprintf('%s. %d. %d ...\n',sub,4);
+    prfSampleModel(sub,4);
+end
+
+%% regressPrfSplit
+for sub = 2:8
+
+
+regressPrfSplit(sub, 4);
+
+end

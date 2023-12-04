@@ -18,7 +18,7 @@ function getVoxPref(isub,numregions)
 %uses data from regressPrfSplit.m
 
 %chooses preferred orientation/levels by averaging across filters
-mrQuit
+% mrQuit
 close all
 % clear all
 global interpSz;
@@ -33,7 +33,7 @@ toSavePdf = 0;
 numOrientations = 8;
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 nperms=1000;
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori_control/'];
 
 interpSz= 714;
 backgroundSz= 1024;
