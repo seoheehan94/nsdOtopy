@@ -48,7 +48,7 @@ allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
-for isub=[1:1]
+for isub=[2:8]
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
