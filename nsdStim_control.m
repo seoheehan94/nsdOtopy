@@ -48,7 +48,7 @@ nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 
-for isub=[1:1]
+for isub=[2:8]
     
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
