@@ -48,7 +48,7 @@ allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
-for isub=[2:8]
+for isub=[1:8]
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
@@ -81,7 +81,10 @@ for isub=[2:8]
             load(fullfile(imgFolder, imgName));
            
             %% pass image through orientation filter
-            
+            for c = 1:vecLD.numContours
+                vecLD.orientations{c} = vecLD.orientations{c}-90;
+            end
+           
             oriMap = generateOrientationMap(vecLD, NaN, backgroundSize, renderSize);
    
             binWidth2 = 90 / length(vecLD.orientationBins);
