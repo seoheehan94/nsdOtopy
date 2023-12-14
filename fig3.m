@@ -34,7 +34,7 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori_control/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 
 allOri = cell(1,nrois);
