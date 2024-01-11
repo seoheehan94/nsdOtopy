@@ -17,7 +17,7 @@ tic
 toSavePdf = 0;
 
 imgFormat = 'jpg';
-subjects = [1:1];
+subjects = [1:8];
 % subjects = [7];
 ifig=0;
 nrois = 4;
@@ -80,11 +80,11 @@ for isub=1:length(subjects)
         allPrfEcc{iroi} = [allPrfEcc{iroi}; allRoiPrf{iroi}.ecc];
         allPrfAng{iroi} = [allPrfAng{iroi}; allRoiPrf{iroi}.ang];
         allPrfR2{iroi} = [allPrfR2{iroi}; allRoiPrf{iroi}.r2];
-        %allOri{iroi} =  [allOri{iroi} roiOri{iroi}];
-        curVal = roiOri{iroi};
-        curVal = curVal - (pi/2);
-        curVal(curVal < 0) = curVal(curVal < 0) + pi;
-        allOri{iroi} =  [allOri{iroi} curVal];
+        allOri{iroi} =  [allOri{iroi} roiOri{iroi}];
+        % curVal = roiOri{iroi};
+        % curVal = curVal - (pi/2);
+        % curVal(curVal < 0) = curVal(curVal < 0) + pi;
+        % allOri{iroi} =  [allOri{iroi} curVal];
         allResidOri{iroi} =  [allResidOri{iroi} residOri{iroi}];
         allResidOriOri{iroi} =  [allResidOriOri{iroi} roiOri{iroi}];
         allPredOri{iroi} =  [allPredOri{iroi} residOriOri{iroi}];
