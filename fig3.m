@@ -17,7 +17,7 @@ tic
 toSavePdf = 0;
 
 imgFormat = 'jpg';
-subjects = [1:1];
+subjects = [1:8];
 % subjects = [7];
 ifig=0;
 nrois = 4;
