@@ -17,7 +17,7 @@ offsetY = round((backgroundSize(1) - renderSize(1))/2);
 offsetX = round((backgroundSize(2) - renderSize(2))/2);
 
 for c = 1:vecLD.numContours
-     lens = vecLD.lengths{c};     
+     lens = vecLD.contourLengths(c);     
 
     for s = 1:size(vecLD.contours{c},1)
         thisMap = zeros(backgroundSize(1),backgroundSize(2),3);
@@ -27,7 +27,7 @@ for c = 1:vecLD.numContours
         thisMap = insertShape(thisMap,'Line',newcord,'Color',[1,0,0],'LineWidth',1,'Opacity',1,'SmoothEdges',false);
         thisMap = thisMap(:,:,1);
         thisIdx = (thisMap > 0);
-        lenMap(thisIdx) = lens(s);
+        lenMap(thisIdx) = lens;
     end
 end
    
