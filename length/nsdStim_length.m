@@ -52,7 +52,7 @@ allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
-for isub=[1:1]
+for isub=[1:8]
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
@@ -92,11 +92,12 @@ for isub=[1:1]
             numBins =8;
             binWidth = (logMinMax(2)-logMinMax(1)) / numBins; %the range of the original length is from max to min length value
             binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
-            binMax = 10.^binBoundary - 1;
+            logbins = binBoundary(2:end) - binWidth/2;
+            %binMax = 10.^binBoundary - 1;
             
             %vecLD.orientationBins
             for binIdx = 1: length(vecLD.lengthBins)
-                lenbinmap{1,binIdx} = (binMax(binIdx) <= lenMap) & (lenMap <= binMax(binIdx+1));
+                lenbinmap{1,binIdx} = (abs(lenMap-logbins(binIdx)) <= binWidth/2);
             end
             modelLen=cat(3,lenbinmap{:});
             modelLen = permute(modelLen,[3 1 2]);

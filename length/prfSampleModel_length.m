@@ -13,7 +13,7 @@
 %   creates files used by: regressPrfSplit.m
 
 function prfSampleModel_length(isub,visualRegion)
-cd '/home/hanseohe/Documents/GitHub/nsdOtopy';
+cd '/home/hanseohe/Documents/GitHub/nsdOtopy/length';
 delete(gcp('nocreate'));
 g=gcp
 distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
