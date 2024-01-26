@@ -33,7 +33,7 @@ toSavePdf = 0;
 numOrientations = 8;
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 nperms=1000;
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori_control/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/'];
 
 interpSz= 714;
 backgroundSz= 1024;
