@@ -1,7 +1,7 @@
 %% prfSampleModel_length
 
 addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
-for sub = 2:3
+for sub = 1:1
     tic;
     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,1);
     prfSampleModel_length(sub,1);
