@@ -13,7 +13,7 @@
 %   creates files used by: regressPrfSplit.m
 
 function prfSampleModel(isub,visualRegion)
-
+addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 delete(gcp('nocreate'));
 g=gcp
 distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
