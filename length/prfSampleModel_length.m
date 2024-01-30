@@ -15,9 +15,9 @@
 function prfSampleModel_length(isub,visualRegion)
 cd '/home/hanseohe/Documents/GitHub/nsdOtopy/length';
 delete(gcp('nocreate'));
-g=parcluster('local'); 
-g.NumWorkers=18; 
-parpool(g,18)
+gg=parcluster('local'); 
+gg.NumWorkers=18; 
+g=parpool(gg,18)
 %g=gcp
 distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
 
