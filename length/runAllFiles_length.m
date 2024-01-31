@@ -3,7 +3,7 @@
 addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'))
 
-for sub = 2:2
+for sub = 3:4
     tic;
     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,1);
     prfSampleModel_length(sub,1);
@@ -26,7 +26,7 @@ for sub = 2:2
 end
 
 %% regressPrfSplit
-for sub = 1:2
+for sub = 3:4
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
 regressPrfSplit_length(sub, 1);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
