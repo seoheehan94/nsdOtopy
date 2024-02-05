@@ -15,7 +15,9 @@
 function prfSampleModel(isub,visualRegion)
 addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 delete(gcp('nocreate'));
-g=gcp
+gg=parcluster('local'); 
+gg.NumWorkers=18; 
+g=parpool(gg,18)
 distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
 
 nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
