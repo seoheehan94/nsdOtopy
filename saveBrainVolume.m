@@ -1,11 +1,11 @@
 %%cd '/home/hanseohe/Documents/GitHub/nsdOtopy'
-cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/brainVolume';
+cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/brainVolume';
 corrList = [];
 for sub = 3:8
 
 
 %%
-fileName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/voxModelPref_sub', num2str(sub), '.mat'];
+fileName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample_Ori/voxModelPref_sub', num2str(sub), '.mat'];
 load(fileName);
 
 ourBrain = visRoiData;
@@ -25,7 +25,7 @@ angleBrain(angleBrain < 0) = -1;
 
 %hist(angleBrain);
 
-saveName = ['angleBrain_sub', num2str(sub), 'mat'];
+saveName = ['angleBrain_sub', num2str(sub), '.mat'];
 save(saveName, 'angleBrain');
 
 %%
@@ -58,11 +58,3 @@ WriteBrik(angleBrain,Info,opt);
 % 
 % corrList = [corrList; r, p];
 end
-%%
-% load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/voxModelPref_sub1.mat');
-% roiOri_New = roiOri;
-% load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/voxModelPref_sub1.mat');
-% 
-% original = roiOri{1,1}(3,:)';
-% new = roiOri_New{1,1}(3,:)';
-% [r,p] = corr(original, new);

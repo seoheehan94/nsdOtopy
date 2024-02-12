@@ -86,8 +86,8 @@ for isub=1:length(subjects)
         % curVal(curVal < 0) = curVal(curVal < 0) + pi;
         % allOri{iroi} =  [allOri{iroi} curVal];
         allResidOri{iroi} =  [allResidOri{iroi} residOri{iroi}];
-        allResidOriOri{iroi} =  [allResidOriOri{iroi} roiOri{iroi}];
-        allPredOri{iroi} =  [allPredOri{iroi} residOriOri{iroi}];
+        allResidOriOri{iroi} =  [allResidOriOri{iroi} residOriOri{iroi}];
+        allPredOri{iroi} =  [allPredOri{iroi} predOri{iroi}];
         allPredOriOri{iroi} =  [allPredOriOri{iroi} predOriOri{iroi}];
         
         allLevVig{iroi} = [allLevVig{iroi} roiLevVig{iroi}];
