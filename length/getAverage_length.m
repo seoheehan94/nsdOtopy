@@ -2,7 +2,7 @@
 
 %   uses files created by: regressPrfSplit_length.m
 %   creates files used by:
-for isub = 1:8
+for isub = 2:8
     clearvars -except isub
     %% set up
     prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/prfsample_Len/'];
@@ -122,6 +122,7 @@ for visualRegion = 1:4
         maxCoefLen.(thisfield)(1,ivox) = ilength;
     end
 end
+
 newBrain = ourBrain;
 newBrain(newBrain > 0) = 0;
 newBrain(ourBrain == 1) = maxCoefLen.v1(1,:);
@@ -130,22 +131,58 @@ newBrain(ourBrain == 3) = maxCoefLen.v3(1,:);
 newBrain(ourBrain == 4) = maxCoefLen.v4(1,:);
 newBrain(newBrain < 0) = -1;
 
-saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrain_sub', num2str(isub), '.mat'];
-save(saveName, 'newBrain');
+for k = 1:4
+    curNewBrain = ourBrain;
+    curNewBrain(ourBrain ~= k) = -1;
+    thisfield = ['v', num2str(k)];
+    curNewBrain(ourBrain == k) = maxCoefLen.(thisfield)(1,:);
+
+    newBrainbyROI(:,:,:,k) =curNewBrain;
+end
+
+% saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrain_sub', num2str(isub), '.mat'];
+% save(saveName, 'newBrain');
+
+saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrainbyROI_sub', num2str(isub), '.mat'];
+save(saveName, 'newBrainbyROI');
 
 %% save afni file
-size(newBrain)
+% size(newBrain)
 cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume');
-%3dinfo betas_session01.nii.gz 
-%3dcalc -a betas_session01.nii.gz[1] -expr a -prefix oneBeta
-command = ['3dinfo betas_session01_sub', num2str(isub), '.nii.gz'];
-system(command);
-command = ['3dcalc -a betas_session01_sub', num2str(isub), '.nii.gz[1] -expr a -prefix oneBeta_sub', num2str(isub)];
-system(command);
-
+% %3dinfo betas_session01.nii.gz 
+% %3dcalc -a betas_session01.nii.gz[1] -expr a -prefix oneBeta
+% command = ['3dinfo betas_session01_sub', num2str(isub), '.nii.gz'];
+% system(command);
+% command = ['3dcalc -a betas_session01_sub', num2str(isub), '.nii.gz[1] -expr a -prefix oneBeta_sub', num2str(isub)];
+% system(command);
+% 
 currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
 [err,V,Info] = BrikLoad(currOneBeta);
-Info.RootName = ['lengthBrain_sub', num2str(isub), '+orig'];
-opt.Prefix = ['lengthBrain_sub', num2str(isub)];
-WriteBrik(newBrain,Info,opt);
+Info.RootName = ['lengthBrainbyROI_sub', num2str(isub), '+orig'];
+opt.Prefix = ['lengthBrainbyROI_sub', num2str(isub)];
+WriteBrik(newBrainbyROI,Info,opt);
+
+%% plot figure
+% figure;
+% subplot(2,2,1)
+% histogram(maxCoefLen.v1);
+% title('v1');
+% 
+% subplot(2,2,2)
+% histogram(maxCoefLen.v2);
+% title('v2');
+% 
+% subplot(2,2,3)
+% histogram(maxCoefLen.v3);
+% title('v3');
+% 
+% subplot(2,2,4)
+% histogram(maxCoefLen.v4);
+% title('v4');
+% 
+% totalTitle = ['sub', num2str(isub), ' number of preferred length bin'];
+% sgtitle(totalTitle);
+% 
+% saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLength_sub', num2str(isub), '.png']);
+
 end

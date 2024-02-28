@@ -16,8 +16,8 @@ function prfSampleModel_length(isub,visualRegion)
 cd '/home/hanseohe/Documents/GitHub/nsdOtopy/length';
 delete(gcp('nocreate'));
 gg=parcluster('local'); 
-gg.NumWorkers=18; 
-g=parpool(gg,18)
+gg.NumWorkers=6; 
+g=parpool(gg,6)
 %g=gcp
 distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
 
@@ -50,6 +50,12 @@ switch visualRegion
         rois=5:6;%ventral and dorsal V3
     case 4
         rois=7;%V4
+    case 5
+        rois=8;%OPA
+    case 6
+        rois=9;%PPA
+    case 7
+        rois=10;%RSC
 end
 
 pixPerDeg = imgScaling*714/8.4;%=85
@@ -71,6 +77,12 @@ r2Data = niftiread(r2file);
 
 visualRoisFile = fullfile(betasfolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
 visRoiData = niftiread(visualRoisFile);
+
+placesRoisFile = fullfile(betasfolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC 
+placeRoiData = niftiread(placesRoisFile);
+visRoiData(placeRoiData == 1) = 8;
+visRoiData(placeRoiData == 2) = 9;
+visRoiData(placeRoiData == 3) = 10;
 
 tic
 %%
