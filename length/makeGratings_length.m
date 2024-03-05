@@ -31,7 +31,7 @@ rng(4228);
 grandMean = 6689;
 
 %% get contours from one length bin
-for curbin = 1:8
+for curbin = 8:8
     fprintf('%d\n',curbin);
     % curbin = 1;
     imgOrder = 1:73000;
@@ -105,11 +105,58 @@ for curbin = 1:8
     % save newVecLD
     newVecLD.imsize = vecLD.imsize;
     newVecLD.imgList = imgList;
-    save(['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/grating/gratingv2', num2str(curbin), '.mat'], 'newVecLD');
+    save(['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/grating/gratingv4_', num2str(curbin), '.mat'], 'newVecLD');
 
     % save as an image
     imgLD = renderLinedrawing(newVecLD);
     imgLD = squeeze(imgLD(:,:,1)); % use grayscale encoding
-    imwrite(imgLD,['gratingv2', num2str(curbin), '.png']);
+    imwrite(imgLD,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/grating/gratingv4_', num2str(curbin), '.png']);
 end
+
+%% pass image through orientation filter
+backgroundSize = [512 512];
+renderSize = [357,357];
+
+numLengths = 8;
+bandwidth = 1;
+dims = backgroundSize;
+numLevels = 1;
+[freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numLengths, bandwidth);
+
+imgFolder='/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/grating/'; 
+for imgNum = 1:8
+    imgName = ['grating' num2str(imgNum) '.mat'];
+    load(fullfile(imgFolder, imgName));
+    newVecLD = computeContourProperties(newVecLD);
+    newVecLD = getContourPropertiesStats(newVecLD);
+
+    lenMap = generateLengthMap(newVecLD, NaN, backgroundSize, renderSize);
+
+    minmaxLength = [2,sum(newVecLD.imsize)];
+    logMinMax = log10(minmaxLength + 1);
+    numBins =8;
+    binWidth = (logMinMax(2)-logMinMax(1)) / numBins; %the range of the original length is from max to min length value
+    binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
+    logbins = binBoundary(2:end) - binWidth/2;
+    %binMax = 10.^binBoundary - 1;
+
+    %vecLD.orientationBins
+    for binIdx = 1: length(newVecLD.lengthBins)
+        lenbinmap{1,binIdx} = (abs(lenMap-logbins(binIdx)) <= binWidth/2);
+
+        
+        modelLenEnergy(1,imgNum,1,binIdx) = sum(lenbinmap{1,binIdx}(:));
+    end
+
+    sumLenEnergy(1,imgNum,1) = sum(modelLenEnergy(1,imgNum,1,:));
+end
+
+
+
+save('gratings_length.mat','numLengths','numLevels',...
+    'sumLenEnergy','modelLenEnergy');
+
+
+
+
 

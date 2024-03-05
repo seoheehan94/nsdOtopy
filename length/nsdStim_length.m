@@ -84,7 +84,7 @@ for isub=[1:8]
 
             load(fullfile(imgFolder, imgName));
            
-            %% pass image through orientation filter
+            %% pass image through length filter
             lenMap = generateLengthMap(vecLD, NaN, backgroundSize, renderSize);
 
             minmaxLength = [2,sum(vecLD.imsize)];

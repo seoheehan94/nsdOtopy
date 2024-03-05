@@ -13,6 +13,7 @@
 %   creates files used by: getVoxPref.m
 
 function regressPrfSplit_length(isub,visualRegions)
+addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'));
 
 tic
 
@@ -30,7 +31,12 @@ visualRoisfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1
 
 visualRoisFile = fullfile(visualRoisfolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
 visRoiData = niftiread(visualRoisFile);
-roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
+roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
+placesRoisFile = fullfile(visualRoisfolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC 
+placeRoiData = niftiread(placesRoisFile);
+visRoiData(placeRoiData == 1) = 8;
+visRoiData(placeRoiData == 2) = 9;
+visRoiData(placeRoiData == 3) = 10;
 visRoiData = visRoiData(:);
 
 for visualRegion=visualRegions
