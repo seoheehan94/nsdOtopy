@@ -17,7 +17,7 @@ tic
 toSavePdf = 0;
 
 imgFormat = 'jpg';
-subjects = [1:8];
+subjects = [1:4];
 % subjects = [7];
 ifig=0;
 nrois = 4;
@@ -34,7 +34,7 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori_control/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 
 allOri = cell(1,nrois);
