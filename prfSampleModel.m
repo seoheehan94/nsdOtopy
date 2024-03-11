@@ -15,9 +15,7 @@
 function prfSampleModel(isub,visualRegion)
 addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 delete(gcp('nocreate'));
-gg=parcluster('local'); 
-gg.NumWorkers=18; 
-g=parpool(gg,18)
+g=gcp
 distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
 
 nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
@@ -138,7 +136,7 @@ for roinum=1:length(rois)
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
 end
 
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample/';
+prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/';
 save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
     'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
     'roiPrf','-v7.3');

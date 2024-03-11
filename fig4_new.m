@@ -83,7 +83,7 @@ edgeAlpha = 0.3;
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample_Ori/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);

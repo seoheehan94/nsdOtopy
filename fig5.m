@@ -17,7 +17,7 @@ tic
 
 toSavePdf = 0;
 imgFormat = 'jpg';
-subjects = [1:8];
+subjects = [1:4];
 
 ifig=0;
 nrois = 4;
@@ -33,8 +33,8 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['~/NSD/prfsample/'];
-figFolder = ['/Users/rothzn/Documents/MATLAB/NSD/figures/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
+figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);
 allResidOri = cell(1,nrois);

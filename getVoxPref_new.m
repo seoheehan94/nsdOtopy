@@ -31,9 +31,9 @@ prefAnalysis = 3;
 toSavePdf = 0;
 
 numOrientations = 8;
-figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
+figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 nperms=1000;
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/prfsample_Ori/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample_Ori/'];
 
 interpSz= 714;
 backgroundSz= 1024;
@@ -321,9 +321,9 @@ for iregion=1:numregions
 %     roiSynthOri{iregion} = synthFullPrefOri{iroi};
 %     roiSynthLevVig{iregion} = synthVigPrefLevel{iroi};
 %     roiSynthLevFull{iregion} = synthFullPrefLevel{iroi};
-%     roiOriDeviation{iregion} = oriDeviation{iroi};
-%     roiVertDeviation{iregion} = vertDeviation{iroi};
-%     roiCardDeviation{iregion} = cardDeviation{iroi};
+     roiOriDeviation{iregion} = oriDeviation{iroi};
+     roiVertDeviation{iregion} = vertDeviation{iroi};
+     roiCardDeviation{iregion} = cardDeviation{iroi};
 end
 
 
@@ -339,6 +339,7 @@ save([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig'
     'roiNsdResidOriR2','roiNsdOriResidOriR2','roiNsdPredOriR2','roiNsdOriPredOriR2',...
     'residOri','residOriOri','predOri','predOriOri',...
     'oriModulation','oriPrefAmp','oriAntiAmp',...
+    'roiOriDeviation','roiVertDeviation','roiCardDeviation',... 
     'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');
 
 %%
