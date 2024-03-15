@@ -48,7 +48,7 @@ nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 
-for isub=[7:8]
+for isub=[6:8]
     
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
@@ -62,7 +62,7 @@ for isub=[7:8]
     fixPoint(1,1,:) = [255 0 0];
     
     iimg=0;
-    for imgNum=allImgs
+    for imgNum=allImgs(1250:2500)
         iimg = iimg+1;
         
         pyramidfilename = ['pyrImg' num2str(imgNum) '.mat'];

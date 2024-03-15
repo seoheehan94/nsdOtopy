@@ -62,7 +62,7 @@ for isub=[6:8]
     fixPoint(1,1,:) = [255 0 0];
     
     iimg=0;
-    for imgNum=allImgs(2500:end)
+    for imgNum=allImgs(4000:end)
         iimg = iimg+1;
         
         pyramidfilename = ['pyrImg' num2str(imgNum) '.mat'];
