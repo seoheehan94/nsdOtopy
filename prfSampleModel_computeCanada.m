@@ -1,4 +1,4 @@
-% prfSampleModel.m
+% prfSampleModel_computeCanada.m
 %
 % associated with the following publication: Roth, ZN, Kay, K, and Merriam, EP (2022).
 % Massive natural scene sampling reveals reliable coarse-scale orientation tuning in human V1
@@ -12,13 +12,15 @@
 %   uses files created by: nsdStim.m
 %   creates files used by: regressPrfSplit.m
 
-function prfSampleModel(isub,visualRegion)
+function prfSampleModel_computeCanada(isub,visualRegion)
 % addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 delete(gcp('nocreate'));
-g=gcp
-distcomp.feature( 'LocalUseMpiexec', false ); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
+gg=parcluster('local'); 
+gg.NumWorkers=38; 
+g=parpool(gg,38)
+distcomp.feature( 'LocalUseMpiexec', false); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
 
-nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
+nsdfolder = 'hanseohe/scratch/nsddata/';
 nsdDesignFilename = fullfile(nsdfolder, 'nsd_expdesign.mat');
 nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
@@ -54,8 +56,8 @@ x = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 y = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 [X,Y] = meshgrid(x,-y);%flip up-down
 
-pyramidfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
+pyramidfolder = 'hanseohe/scratch/stimuli/pyramid/';%to save model outputs
+betasfolder = ['hanseohe/projects/def-waltherd/hanseohe/projects/nsddata/ppdata/subj0' num2str(isub)];
 angFile = fullfile(betasfolder,'prf_angle.nii.gz');
 eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
 sizeFile = fullfile(betasfolder,'prf_size.nii.gz');
@@ -69,7 +71,7 @@ r2Data = niftiread(r2file);
 visualRoisFile = fullfile(betasfolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
 visRoiData = niftiread(visualRoisFile);
 
-tic
+tic;
 %%
 
 roiData = visRoiData;
@@ -136,12 +138,12 @@ for roinum=1:length(rois)
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
 end
 
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/';
+prffolder = 'hanseohe/projects/def-waltherd/hanseohe/nsddata/prfsample/';
 save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
     'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
     'roiPrf','-v7.3');
 delete(g);
-
+toc;
 %% CSS pRF from Kay et al., J Neurophysiology, 2013
     function r = prfResp(S,x,y,x0,y0,sigma, n, g)
         G = exp(-((x-x0).^2+(y-y0).^2)/(2*sigma^2));

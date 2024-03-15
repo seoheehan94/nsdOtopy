@@ -48,7 +48,7 @@ nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 
-for isub=[2:8]
+for isub=[6:8]
     
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
@@ -63,10 +63,11 @@ for isub=[2:8]
     
     iimg=0;
     for imgNum=allImgs
-        iimg = iimg+1
+        iimg = iimg+1;
         
         pyramidfilename = ['pyrImg' num2str(imgNum) '.mat'];
         if ~isfile(fullfile(pyramidfolder, pyramidfilename))%if file exists already no need to remake it
+            fprintf('%s....\n',pyramidfilename);
             origImg = h5read(stimfilename,'/imgBrick/',[1 1 1 imgNum],[3 imgSizeX imgSizeY nImgs]);
             
             origImg = double(origImg);
