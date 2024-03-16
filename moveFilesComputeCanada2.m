@@ -7,7 +7,7 @@ nsdDesign = load(nsdDesignFilename);
 % mkdir subj06
 % mkdir subj07
 % mkdir subj08
-for isub= 6:6
+for isub= 7:7
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
