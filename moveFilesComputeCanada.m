@@ -8,18 +8,23 @@ nsdDesign = load(nsdDesignFilename);
 % mkdir subj07
 % mkdir subj08
 for isub= 6:8
-    fileList = '';
+    
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
-
+    folderName = ['pyramid/subj0', num2str(isub)];
     for curImg = 1: length(allImgs)
         curImgName = ['pyramid/pyrImg', num2str(allImgs(curImg)), '.mat'];
-        folderName = ['pyramid/pyrImg/subj0', num2str(isub)];
-        movefile(curImgName, folderName)
 
+        if isfile(fullfile(curImgName))
+            fprintf('%s....\n',curImgName);
+            movefile(curImgName, folderName)
+        end
 
     end
-    % command = ['scp -r ', fileList, 'hanseohe@beluga4.computecanada.ca:/home/hanseohe/scratch/stimuli/pyramid'];
-    % system(command);
+    command = ['scp -r pyramid/subj0', num2str(isub), '/ hanseohe@beluga4.computecanada.ca:/home/hanseohe/scratch/stimuli/pyramid'];
+    system(command);
+
+    % movefile([folderName, '/*'], 'pyramid/')
+
 
 end
