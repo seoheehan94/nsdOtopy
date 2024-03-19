@@ -110,8 +110,10 @@ end
 
 %%
 ifig=ifig+1; h=figure(ifig); clf;
-rows=2;
-cols=3;
+% rows=2;
+rows=3;
+% cols=3;
+cols=1;
 isplit = nsplits;
 isubplot=0;
 
@@ -126,25 +128,25 @@ xlabel('\itx position (deg)');
 ylabel('\ity position (deg)');
 
 %% preferred ORIENTATION - single splits
-cols=2*cols;
-isubplot=cols;
-for isplit=1:2
-    isubplot = isubplot+1;
-    subplot(rows,cols, isubplot);
-    plotOriLines(allOri{iroi}(isplit,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdR2{iroi}(3,:)));
-    
-    xlabel('\itx position (deg)');
-    if isplit==1
-        ylabel('\ity position (deg)');
-    else
-        set(gca,'yTick',[]);
-        set(gca,'yTicklabels',{});
-    end
-end
-isplit=3;
+% cols=2*cols;
+% isubplot=cols;
+% for isplit=1:2
+%     isubplot = isubplot+1;
+%     subplot(rows,cols, isubplot);
+%     plotOriLines(allOri{iroi}(isplit,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdR2{iroi}(3,:)));
+% 
+%     xlabel('\itx position (deg)');
+%     if isplit==1
+%         ylabel('\ity position (deg)');
+%     else
+%         set(gca,'yTick',[]);
+%         set(gca,'yTicklabels',{});
+%     end
+% end
+% isplit=3;
 
 %% orientation color legend
-cols = cols/2;
+% cols = cols/2;
 isubplot=2;
 subplot(rows,cols, isubplot);
 noris = 16;

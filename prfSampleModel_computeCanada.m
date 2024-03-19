@@ -16,11 +16,11 @@ function prfSampleModel_computeCanada(isub,visualRegion)
 % addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 delete(gcp('nocreate'));
 gg=parcluster('local'); 
-gg.NumWorkers=38; 
-g=parpool(gg,38)
+gg.NumWorkers=20; 
+g=parpool(gg,20)
 distcomp.feature( 'LocalUseMpiexec', false); % https://www.mathworks.com/matlabcentral/answers/447051-starting-matlab-pool-hangs-in-2018b
 
-nsdfolder = 'hanseohe/scratch/nsddata/';
+nsdfolder = '/home/hanseohe/projects/def-waltherd/hanseohe/nsddata/';
 nsdDesignFilename = fullfile(nsdfolder, 'nsd_expdesign.mat');
 nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
@@ -56,8 +56,9 @@ x = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 y = -(backgroundSize*imgScaling)/2+0.5:(backgroundSize*imgScaling)/2-0.5;
 [X,Y] = meshgrid(x,-y);%flip up-down
 
-pyramidfolder = 'hanseohe/scratch/stimuli/pyramid/';%to save model outputs
-betasfolder = ['hanseohe/projects/def-waltherd/hanseohe/projects/nsddata/ppdata/subj0' num2str(isub)];
+pyramidfolder = '
+/';%to save model outputs
+betasfolder = ['/home/hanseohe/projects/def-waltherd/hanseohe/nsddata/ppdata/subj0' num2str(isub)];
 angFile = fullfile(betasfolder,'prf_angle.nii.gz');
 eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
 sizeFile = fullfile(betasfolder,'prf_size.nii.gz');
@@ -138,7 +139,7 @@ for roinum=1:length(rois)
     prfSampleLevOri{roinum} = prfSampleLevOriRoi;
 end
 
-prffolder = 'hanseohe/projects/def-waltherd/hanseohe/nsddata/prfsample/';
+prffolder = '/home/hanseohe/projects/def-waltherd/hanseohe/nsddata/prfsample/';
 save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
     'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
     'roiPrf','-v7.3');
