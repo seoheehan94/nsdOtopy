@@ -1,91 +1,17 @@
-%analyze_length.m
+%analyze_length_grating.m
 
 %   uses files created by: regressPrfSplit_length.m, getVoxPref_length.m
 %   creates files used by:
+
+%% 2. Grating voxel preference %%
 prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/prfsample_Len/';
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
 combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
-
-%% 1.  Coef voxel preference %%
-for isub = 2:8
-    cd('/home/hanseohe/Documents/GitHub/nsdOtopy/length');
-
+for isub = 1:8
     fprintf('%d ...\n',isub);
     clearvars -except isub roiNames combinedRoiNames prffolder
-    %% set up
-    
-
-    bandpass = 1; bandMin = 1; bandMax = 1;
-    bandpassStr = '';
-    if bandpass
-        bandpassStr = ['_bandpass' num2str(bandMin) 'to' num2str(bandMax)];
-    end
-
-    mean_split1 = struct;
-    mean_split2 = struct;
-    mean_all = struct;
-    allLenCoef = struct;
-    maxCoefLen = struct;
-
-    %% load file
-    for visualRegion = 1:7
-        thisfield = combinedRoiNames{visualRegion};
-        load(fullfile(prffolder,['regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
-            'nsd', 'numLevels', 'numLengths','rois','nvox','roiPrf','nsplits');
-
-        % get mean coef
-        if visualRegion == 4 || visualRegion == 5 || visualRegion == 6 || visualRegion == 7
-
-            mean_split1.(thisfield) = squeeze(mean(nsd.voxLenCoef{1}(1,:,1:8),2));
-            mean_split2.(thisfield) = squeeze(mean(nsd.voxLenCoef{1}(2,:,1:8),2));
-
-            % average splits
-            nsd.voxLenCoef{1}(nsplits+1,:,:) = mean(nsd.voxLenCoef{1},1);
-            mean_all.(thisfield) = squeeze(mean(nsd.voxLenCoef{1}(3,:,1:8),2));
-            allLenCoef.(thisfield) = nsd.voxLenCoef{1}(:,:,1:8);
-
-        else %for other regions, combine ventral and dorsal
-            % combine ventral and dorsal
-            oldNsd = nsd;
-            nsd.voxLenCoef{1} = [];
-            nsd.voxLenCoef{2} = [];
-            for iroi=1:length(rois)
-                nsd.voxLenCoef{1} = cat(2,nsd.voxLenCoef{1},oldNsd.voxLenCoef{iroi});
-            end
-
-            mean_split1.(thisfield) = squeeze(mean(nsd.voxLenCoef{1}(1,:,1:8),2));
-            mean_split2.(thisfield) = squeeze(mean(nsd.voxLenCoef{1}(2,:,1:8),2));
-
-            % average splits
-            nsd.voxLenCoef{1}(nsplits+1,:,:) = mean(nsd.voxLenCoef{1},1);
-            mean_all.(thisfield) = squeeze(mean(nsd.voxLenCoef{1}(3,:,1:8),2));
-            allLenCoef.(thisfield) = nsd.voxLenCoef{1}(:,:,1:8);
-        end
-
-        % find preferred length for each voxel: find the bin with max coef for
-        % each voxel
-        [~, nvox, ~] = size(allLenCoef.(thisfield));
-        for ivox = 1: nvox
-            [~, ilength] = max(allLenCoef.(thisfield)(3,ivox,:));
-            maxCoefLen.(thisfield)(1,ivox) = ilength;
-        end
-    end
-
-    saveName = [prffolder, 'voxLenCoef_sub', num2str(isub), '.mat'];
-    save(saveName, 'allLenCoef', 'mean_all', 'mean_split1', 'mean_split2','maxCoefLen');
-
-end
-
-%% make a brain volume
-roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
-combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/prfsample_Len/';
-
-for isub = 3:8
-        clearvars -except isub roiNames combinedRoiNames prffolder
-
-    load(fullfile([prffolder, 'voxLenCoef_sub', num2str(isub), '.mat']));
+    load(fullfile([prffolder, 'voxModelPref_sub', num2str(isub), '.mat']), 'roiLen');
 
     % save all ROIs to create overlay
     roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
@@ -119,7 +45,7 @@ for isub = 3:8
             curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
         end
         thisfield = combinedRoiNames{visualRegion};
-        newBrain(curOurBrain == visualRegion) = maxCoefLen.(thisfield)(1,:);
+        newBrain(curOurBrain == visualRegion) = roiLen{visualRegion}(3,:);
     end
     newBrain(newBrain < 0) = -1;
 
@@ -134,22 +60,21 @@ for isub = 3:8
         curNewBrain(curOurBrain ~= visualRegion) = -1;
         thisfield = combinedRoiNames{visualRegion};
 
-        curNewBrain(curOurBrain == visualRegion) = maxCoefLen.(thisfield)(1,:);
+        curNewBrain(curOurBrain == visualRegion) = roiLen{visualRegion}(3,:);
 
         newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
     end
 
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrain_sub', num2str(isub), '.mat'];
+    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/grating_lengthBrain_sub', num2str(isub), '.mat'];
     save(saveName, 'newBrain');
 
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrainbyROI_sub', num2str(isub), '.mat'];
+    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/grating_lengthBrainbyROI_sub', num2str(isub), '.mat'];
     save(saveName, 'newBrainbyROI');
-
 
     %% Divide by Eccentricity
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'lengthBrain_sub', num2str(isub), '.mat']);
-    load([saveFolder, 'lengthBrainbyROI_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'grating_lengthBrain_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'grating_lengthBrainbyROI_sub', num2str(isub), '.mat']);
 
     betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
     eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
@@ -161,10 +86,10 @@ for isub = 3:8
     eccData(eccData>4.2) = NaN;
     eccData(r2Data<0) = NaN;
     % edges = [0 1 2 3 4.2];
-    eccData(eccData >=  3 & eccData <=  4.2) = 4;
-    eccData(eccData >=  2 & eccData <  3) = 3;
-    eccData(eccData >=  1 & eccData <  2) = 2;
-    eccData(eccData >=  0 & eccData <  1) = 1;
+    eccData(eccData >=  0 | eccData <  1) = 1;
+    eccData(eccData >=  1 | eccData <  2) = 2;
+    eccData(eccData >=  2 | eccData <  3) = 3;
+    eccData(eccData >=  3 | eccData <=  4.2) = 4;
 
     for curEcc = 1:4
         curNewBrain = newBrain;
@@ -180,6 +105,7 @@ for isub = 3:8
             newBrainbyROIbyECC(:,:,:,curSubBrik) =curNewBrain;
         end
     end
+
     %% save afni file
     % size(newBrain)
     cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume');
@@ -193,21 +119,19 @@ for isub = 3:8
     currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
     [err,V,Info] = BrikLoad(currOneBeta);
 
-    Info.RootName = ['lengthBrain_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrain_sub', num2str(isub)];
+    Info.RootName = ['grating_lengthBrain_sub', num2str(isub), '+orig'];
+    opt.Prefix = ['grating_lengthBrain_sub', num2str(isub)];
     WriteBrik(newBrain,Info,opt);
-    Info.RootName = ['lengthBrainbyROI_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyROI_sub', num2str(isub)];
+    Info.RootName = ['grating_lengthBrainbyROI_sub', num2str(isub), '+orig'];
+    opt.Prefix = ['grating_lengthBrainbyROI_sub', num2str(isub)];
     WriteBrik(newBrainbyROI,Info,opt);
 
-    Info.RootName = ['lengthBrainbyECC_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyECC_sub', num2str(isub)];
-    WriteBrik(newBrainbyECC,Info,opt);
-    Info.RootName = ['lengthBrainbyROIbyECC_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyROIbyECC_sub', num2str(isub)];
+    Info.RootName = ['grating_lengthBrainbyECC_sub', num2str(isub), '+orig'];
+    opt.Prefix = ['grating_lengthBrainbyECC_sub', num2str(isub)];
+    WriteBrik(newBrain,Info,opt);
+    Info.RootName = ['grating_lengthBrainbyROIbyECC_sub', num2str(isub), '+orig'];
+    opt.Prefix = ['grating_lengthBrainbyROIbyECC_sub', num2str(isub)];
     WriteBrik(newBrainbyROIbyECC,Info,opt);
-
-
 
     %% save nifti file
     % niftiwrite(newBrain,'lengthBrain_sub1.nii');
@@ -229,3 +153,8 @@ for isub = 3:8
     %
     % niftiwrite(newBrain,'lengthBrain_sub1.nii',info_new);
 end
+
+
+
+
+
