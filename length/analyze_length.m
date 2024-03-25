@@ -82,68 +82,68 @@ roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
 combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/prfsample_Len/';
 
-for isub = 3:8
+for isub = 1:8
         clearvars -except isub roiNames combinedRoiNames prffolder
 
-    load(fullfile([prffolder, 'voxLenCoef_sub', num2str(isub), '.mat']));
-
-    % save all ROIs to create overlay
-    roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-    visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
-    visRoiData = niftiread(visualRoisFile);
-    placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
-    placeRoiData = niftiread(placesRoisFile);
-
-    allRoiData = visRoiData;
-    allRoiData(placeRoiData == 1) = 8;
-    allRoiData(placeRoiData == 2) = 9;
-    allRoiData(placeRoiData == 3) = 10;
-
-    ourBrain = allRoiData;
-    ourBrain(ourBrain == 2) = 1;
-    ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
-    ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
-    ourBrain(ourBrain == 7) = 4;
-    ourBrain(ourBrain == 8) = 5;
-    ourBrain(ourBrain == 9) = 6;
-    ourBrain(ourBrain == 10) = 7;
-
-    % make a brain volume
-    newBrain = ourBrain;
-    newBrain(newBrain > 0) = 0;
-    for visualRegion = 1:7
-        curOurBrain = ourBrain;
-        if visualRegion == 2
-            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-        elseif visualRegion == 3
-            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-        end
-        thisfield = combinedRoiNames{visualRegion};
-        newBrain(curOurBrain == visualRegion) = maxCoefLen.(thisfield)(1,:);
-    end
-    newBrain(newBrain < 0) = -1;
-
-    for visualRegion = 1:7
-        curOurBrain = ourBrain;
-        if visualRegion == 2
-            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-        elseif visualRegion == 3
-            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-        end
-        curNewBrain = curOurBrain;
-        curNewBrain(curOurBrain ~= visualRegion) = -1;
-        thisfield = combinedRoiNames{visualRegion};
-
-        curNewBrain(curOurBrain == visualRegion) = maxCoefLen.(thisfield)(1,:);
-
-        newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
-    end
-
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrain_sub', num2str(isub), '.mat'];
-    save(saveName, 'newBrain');
-
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrainbyROI_sub', num2str(isub), '.mat'];
-    save(saveName, 'newBrainbyROI');
+    % load(fullfile([prffolder, 'voxLenCoef_sub', num2str(isub), '.mat']));
+    % 
+    % % save all ROIs to create overlay
+    % roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
+    % visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
+    % visRoiData = niftiread(visualRoisFile);
+    % placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
+    % placeRoiData = niftiread(placesRoisFile);
+    % 
+    % allRoiData = visRoiData;
+    % allRoiData(placeRoiData == 1) = 8;
+    % allRoiData(placeRoiData == 2) = 9;
+    % allRoiData(placeRoiData == 3) = 10;
+    % 
+    % ourBrain = allRoiData;
+    % ourBrain(ourBrain == 2) = 1;
+    % ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
+    % ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
+    % ourBrain(ourBrain == 7) = 4;
+    % ourBrain(ourBrain == 8) = 5;
+    % ourBrain(ourBrain == 9) = 6;
+    % ourBrain(ourBrain == 10) = 7;
+    % 
+    % % make a brain volume
+    % newBrain = ourBrain;
+    % newBrain(newBrain > 0) = 0;
+    % for visualRegion = 1:7
+    %     curOurBrain = ourBrain;
+    %     if visualRegion == 2
+    %         curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+    %     elseif visualRegion == 3
+    %         curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+    %     end
+    %     thisfield = combinedRoiNames{visualRegion};
+    %     newBrain(curOurBrain == visualRegion) = maxCoefLen.(thisfield)(1,:);
+    % end
+    % newBrain(newBrain < 0) = -1;
+    % 
+    % for visualRegion = 1:7
+    %     curOurBrain = ourBrain;
+    %     if visualRegion == 2
+    %         curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+    %     elseif visualRegion == 3
+    %         curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+    %     end
+    %     curNewBrain = curOurBrain;
+    %     curNewBrain(curOurBrain ~= visualRegion) = -1;
+    %     thisfield = combinedRoiNames{visualRegion};
+    % 
+    %     curNewBrain(curOurBrain == visualRegion) = maxCoefLen.(thisfield)(1,:);
+    % 
+    %     newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
+    % end
+    % 
+    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrain_sub', num2str(isub), '.mat'];
+    % save(saveName, 'newBrain');
+    % 
+    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrainbyROI_sub', num2str(isub), '.mat'];
+    % save(saveName, 'newBrainbyROI');
 
 
     %% Divide by Eccentricity
@@ -193,12 +193,12 @@ for isub = 3:8
     currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
     [err,V,Info] = BrikLoad(currOneBeta);
 
-    Info.RootName = ['lengthBrain_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrain_sub', num2str(isub)];
-    WriteBrik(newBrain,Info,opt);
-    Info.RootName = ['lengthBrainbyROI_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyROI_sub', num2str(isub)];
-    WriteBrik(newBrainbyROI,Info,opt);
+    % Info.RootName = ['lengthBrain_sub', num2str(isub), '+orig'];
+    % opt.Prefix = ['lengthBrain_sub', num2str(isub)];
+    % WriteBrik(newBrain,Info,opt);
+    % Info.RootName = ['lengthBrainbyROI_sub', num2str(isub), '+orig'];
+    % opt.Prefix = ['lengthBrainbyROI_sub', num2str(isub)];
+    % WriteBrik(newBrainbyROI,Info,opt);
 
     Info.RootName = ['lengthBrainbyECC_sub', num2str(isub), '+orig'];
     opt.Prefix = ['lengthBrainbyECC_sub', num2str(isub)];
