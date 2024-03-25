@@ -158,25 +158,26 @@ for isub = 1:8
     r2Data = niftiread(r2file);
 
     % image size 8.4° of visual angle. Cut off should be half of the size
-    eccData(eccData>4.2) = NaN;
-    eccData(r2Data<0) = NaN;
+    % eccData(eccData>4.2) = NaN;
+    eccData(r2Data<=0) = NaN;
     % edges = [0 1 2 3 4.2];
-    eccData(eccData >=  3 & eccData <=  4.2) = 4;
-    eccData(eccData >=  2 & eccData <  3) = 3;
-    eccData(eccData >=  1 & eccData <  2) = 2;
-    eccData(eccData >=  0 & eccData <  1) = 1;
+    eccData(eccData > 4.2) = 5;
+    eccData(eccData >= 3 & eccData <= 4.2) = 4;
+    eccData(eccData >= 2 & eccData < 3) = 3;
+    eccData(eccData >= 1 & eccData < 2) = 2;
+    eccData(eccData >= 0 & eccData < 1) = 1;
 
-    for curEcc = 1:4
+    for curEcc = 1:5
         curNewBrain = newBrain;
         curNewBrain(eccData ~= curEcc) = -1;
         newBrainbyECC(:,:,:,curEcc) =curNewBrain;
     end
  
     for visualRegion = 1:7
-        for curEcc = 1:4
+        for curEcc = 1:5
             curNewBrain = newBrainbyROI(:,:,:,visualRegion);
             curNewBrain(eccData ~= curEcc) = -1;
-            curSubBrik = curEcc + 4*(visualRegion-1);
+            curSubBrik = curEcc + 5*(visualRegion-1);
             newBrainbyROIbyECC(:,:,:,curSubBrik) =curNewBrain;
         end
     end

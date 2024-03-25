@@ -11,65 +11,65 @@ combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 for isub = 1:8
     fprintf('%d ...\n',isub);
     clearvars -except isub roiNames combinedRoiNames prffolder
-    load(fullfile([prffolder, 'voxModelPref_sub', num2str(isub), '.mat']), 'roiLen');
-
-    % save all ROIs to create overlay
-    roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-    visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
-    visRoiData = niftiread(visualRoisFile);
-    placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
-    placeRoiData = niftiread(placesRoisFile);
-
-    allRoiData = visRoiData;
-    allRoiData(placeRoiData == 1) = 8;
-    allRoiData(placeRoiData == 2) = 9;
-    allRoiData(placeRoiData == 3) = 10;
-
-    ourBrain = allRoiData;
-    ourBrain(ourBrain == 2) = 1;
-    ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
-    ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
-    ourBrain(ourBrain == 7) = 4;
-    ourBrain(ourBrain == 8) = 5;
-    ourBrain(ourBrain == 9) = 6;
-    ourBrain(ourBrain == 10) = 7;
-
-    % make a brain volume
-    newBrain = ourBrain;
-    newBrain(newBrain > 0) = 0;
-    for visualRegion = 1:7
-        curOurBrain = ourBrain;
-        if visualRegion == 2
-            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-        elseif visualRegion == 3
-            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-        end
-        thisfield = combinedRoiNames{visualRegion};
-        newBrain(curOurBrain == visualRegion) = roiLen{visualRegion}(3,:);
-    end
-    newBrain(newBrain < 0) = -1;
-
-    for visualRegion = 1:7
-        curOurBrain = ourBrain;
-        if visualRegion == 2
-            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-        elseif visualRegion == 3
-            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-        end
-        curNewBrain = curOurBrain;
-        curNewBrain(curOurBrain ~= visualRegion) = -1;
-        thisfield = combinedRoiNames{visualRegion};
-
-        curNewBrain(curOurBrain == visualRegion) = roiLen{visualRegion}(3,:);
-
-        newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
-    end
-
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/grating_lengthBrain_sub', num2str(isub), '.mat'];
-    save(saveName, 'newBrain');
-
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/grating_lengthBrainbyROI_sub', num2str(isub), '.mat'];
-    save(saveName, 'newBrainbyROI');
+    % load(fullfile([prffolder, 'voxModelPref_sub', num2str(isub), '.mat']), 'roiLen');
+    % 
+    % % save all ROIs to create overlay
+    % roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
+    % visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
+    % visRoiData = niftiread(visualRoisFile);
+    % placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
+    % placeRoiData = niftiread(placesRoisFile);
+    % 
+    % allRoiData = visRoiData;
+    % allRoiData(placeRoiData == 1) = 8;
+    % allRoiData(placeRoiData == 2) = 9;
+    % allRoiData(placeRoiData == 3) = 10;
+    % 
+    % ourBrain = allRoiData;
+    % ourBrain(ourBrain == 2) = 1;
+    % ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
+    % ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
+    % ourBrain(ourBrain == 7) = 4;
+    % ourBrain(ourBrain == 8) = 5;
+    % ourBrain(ourBrain == 9) = 6;
+    % ourBrain(ourBrain == 10) = 7;
+    % 
+    % % make a brain volume
+    % newBrain = ourBrain;
+    % newBrain(newBrain > 0) = 0;
+    % for visualRegion = 1:7
+    %     curOurBrain = ourBrain;
+    %     if visualRegion == 2
+    %         curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+    %     elseif visualRegion == 3
+    %         curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+    %     end
+    %     thisfield = combinedRoiNames{visualRegion};
+    %     newBrain(curOurBrain == visualRegion) = roiLen{visualRegion}(3,:);
+    % end
+    % newBrain(newBrain < 0) = -1;
+    % 
+    % for visualRegion = 1:7
+    %     curOurBrain = ourBrain;
+    %     if visualRegion == 2
+    %         curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+    %     elseif visualRegion == 3
+    %         curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+    %     end
+    %     curNewBrain = curOurBrain;
+    %     curNewBrain(curOurBrain ~= visualRegion) = -1;
+    %     thisfield = combinedRoiNames{visualRegion};
+    % 
+    %     curNewBrain(curOurBrain == visualRegion) = roiLen{visualRegion}(3,:);
+    % 
+    %     newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
+    % end
+    % 
+    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/grating_lengthBrain_sub', num2str(isub), '.mat'];
+    % save(saveName, 'newBrain');
+    % 
+    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/grating_lengthBrainbyROI_sub', num2str(isub), '.mat'];
+    % save(saveName, 'newBrainbyROI');
 
     %% Divide by Eccentricity
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
@@ -83,25 +83,26 @@ for isub = 1:8
     r2Data = niftiread(r2file);
 
     % image size 8.4° of visual angle. Cut off should be half of the size
-    eccData(eccData>4.2) = NaN;
-    eccData(r2Data<0) = NaN;
+    % eccData(eccData>4.2) = NaN;
+    eccData(r2Data<=0) = NaN;
     % edges = [0 1 2 3 4.2];
-    eccData(eccData >=  3 & eccData <=  4.2) = 4;
-    eccData(eccData >=  2 & eccData <  3) = 3;
-    eccData(eccData >=  1 & eccData <  2) = 2;
-    eccData(eccData >=  0 & eccData <  1) = 1;
+    eccData(eccData > 4.2) = 5;
+    eccData(eccData >= 3 & eccData <= 4.2) = 4;
+    eccData(eccData >= 2 & eccData < 3) = 3;
+    eccData(eccData >= 1 & eccData < 2) = 2;
+    eccData(eccData >= 0 & eccData < 1) = 1;
     
-    for curEcc = 1:4
+    for curEcc = 1:5
         curNewBrain = newBrain;
         curNewBrain(eccData ~= curEcc) = -1;
         newBrainbyECC(:,:,:,curEcc) =curNewBrain;
     end
  
     for visualRegion = 1:7
-        for curEcc = 1:4
+        for curEcc = 1:5
             curNewBrain = newBrainbyROI(:,:,:,visualRegion);
             curNewBrain(eccData ~= curEcc) = -1;
-            curSubBrik = curEcc + 4*(visualRegion-1);
+            curSubBrik = curEcc + 5*(visualRegion-1);
             newBrainbyROIbyECC(:,:,:,curSubBrik) =curNewBrain;
         end
     end
@@ -156,32 +157,32 @@ end
 
 
 %%
-placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
-placeRoiData = niftiread(placesRoisFile);
-PPA_raw =placeRoiData(placeRoiData=2);
-placeRoiData(placeRoiData~=2)=NaN;
-PPA_raw2 = placeRoiData(~isnan(placeRoiData)); %961
-
-PPA_VA = placeRoiData(eccData>4.2);
-PPA_VA = PPA_VA(~isnan(PPA_VA));
-
-PPA_VAcutoff = placeRoiData(eccData<=4.2);
-PPA_VAcutoff = PPA_VAcutoff(~isnan(PPA_VAcutoff));
-PPA_r2cutoff = placeRoiData(r2Data>0);
-PPA_r2cutoff = PPA_r2cutoff(~isnan(PPA_r2cutoff));
-PPA_bothcutoff = placeRoiData(r2Data>0 & eccData<=4.2);
-PPA_bothcutoff = PPA_bothcutoff(~isnan(PPA_bothcutoff));
-
-placeRoiData2 = placeRoiData;
-placeRoiData2(r2Data<=0)=NaN;
-ppar2cutff=placeRoiData2(~isnan(placeRoiData2));
-placeRoiData2(eccData>4.2)=NaN;
-ppavacutff=placeRoiData2(~isnan(placeRoiData2));
-ppabothcutff=placeRoiData2(~isnan(placeRoiData2));
-
-V1_r2cutoff = V1(r2Data>0);
-V1_r2cutoff = V1_r2cutoff(~isnan(V1_r2cutoff));
-V1_VAcutoff = V1(eccData<=4.2);
-V1_VAcutoff = V1_VAcutoff(~isnan(V1_VAcutoff));
-V1_bothcutoff = V1(r2Data>0 & eccData<=4.2);
-V1_bothcutoff = V1_bothcutoff(~isnan(V1_bothcutoff));
+% placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
+% placeRoiData = niftiread(placesRoisFile);
+% PPA_raw =placeRoiData(placeRoiData=2);
+% placeRoiData(placeRoiData~=2)=NaN;
+% PPA_raw2 = placeRoiData(~isnan(placeRoiData)); %961
+% 
+% PPA_VA = placeRoiData(eccData>4.2);
+% PPA_VA = PPA_VA(~isnan(PPA_VA));
+% 
+% PPA_VAcutoff = placeRoiData(eccData<=4.2);
+% PPA_VAcutoff = PPA_VAcutoff(~isnan(PPA_VAcutoff));
+% PPA_r2cutoff = placeRoiData(r2Data>0);
+% PPA_r2cutoff = PPA_r2cutoff(~isnan(PPA_r2cutoff));
+% PPA_bothcutoff = placeRoiData(r2Data>0 & eccData<=4.2);
+% PPA_bothcutoff = PPA_bothcutoff(~isnan(PPA_bothcutoff));
+% 
+% placeRoiData2 = placeRoiData;
+% placeRoiData2(r2Data<=0)=NaN;
+% ppar2cutff=placeRoiData2(~isnan(placeRoiData2));
+% placeRoiData2(eccData>4.2)=NaN;
+% ppavacutff=placeRoiData2(~isnan(placeRoiData2));
+% ppabothcutff=placeRoiData2(~isnan(placeRoiData2));
+% 
+% V1_r2cutoff = V1(r2Data>0);
+% V1_r2cutoff = V1_r2cutoff(~isnan(V1_r2cutoff));
+% V1_VAcutoff = V1(eccData<=4.2);
+% V1_VAcutoff = V1_VAcutoff(~isnan(V1_VAcutoff));
+% V1_bothcutoff = V1(r2Data>0 & eccData<=4.2);
+% V1_bothcutoff = V1_bothcutoff(~isnan(V1_bothcutoff));
