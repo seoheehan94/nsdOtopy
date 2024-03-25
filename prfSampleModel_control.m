@@ -12,7 +12,7 @@
 %   uses files created by: nsdStim.m
 %   creates files used by: regressPrfSplit.m
 
-function prfSampleModel(isub,visualRegion)
+function prfSampleModel_control(isub,visualRegion)
 % addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 delete(gcp('nocreate'));
 g=gcp
