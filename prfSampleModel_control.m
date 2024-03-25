@@ -146,7 +146,7 @@ save(fullfile(prffolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(
     'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
     'roiPrf','-v7.3');
 delete(g);
-
+toc;
 %% CSS pRF from Kay et al., J Neurophysiology, 2013
     function r = prfResp(S,x,y,x0,y0,sigma, n, g)
         G = exp(-((x-x0).^2+(y-y0).^2)/(2*sigma^2));
