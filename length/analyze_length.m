@@ -157,9 +157,11 @@ for isub = 1:8
     eccData = niftiread(eccFile);
     r2Data = niftiread(r2file);
 
+    
+
     % image size 8.4° of visual angle. Cut off should be half of the size
     % eccData(eccData>4.2) = NaN;
-    eccData(r2Data<=0) = NaN;
+    
     % edges = [0 1 2 3 4.2];
     eccData(eccData > 4.2) = 5;
     eccData(eccData >= 3 & eccData <= 4.2) = 4;
@@ -167,6 +169,7 @@ for isub = 1:8
     eccData(eccData >= 1 & eccData < 2) = 2;
     eccData(eccData >= 0 & eccData < 1) = 1;
 
+    % get brainvolume
     for curEcc = 1:5
         curNewBrain = newBrain;
         curNewBrain(eccData ~= curEcc) = -1;
@@ -181,6 +184,8 @@ for isub = 1:8
             newBrainbyROIbyECC(:,:,:,curSubBrik) =curNewBrain;
         end
     end
+
+    
     %% save afni file
     % size(newBrain)
     cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume');
@@ -229,4 +234,6 @@ for isub = 1:8
     % info_new.raw.srow_z = info_old.raw.srow_z;
     %
     % niftiwrite(newBrain,'lengthBrain_sub1.nii',info_new);
+
+    
 end

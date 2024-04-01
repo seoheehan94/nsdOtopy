@@ -17,7 +17,7 @@ tic
 toSavePdf = 0;
 
 imgFormat = 'jpg';
-subjects = [1:4];
+subjects = [1:8];
 % subjects = [7];
 ifig=0;
 nrois = 4;
@@ -111,7 +111,7 @@ end
 %%
 ifig=ifig+1; h=figure(ifig); clf;
 % rows=2;
-rows=3;
+rows=1;
 % cols=3;
 cols=1;
 isplit = nsplits;
@@ -147,58 +147,58 @@ ylabel('\ity position (deg)');
 
 %% orientation color legend
 % cols = cols/2;
-isubplot=2;
-subplot(rows,cols, isubplot);
-noris = 16;
-oris = linspace(0,2*pi,noris+1);
-oris = oris(1:end-1);
-R = 0.3;
-[oriX, oriY] = pol2cart(pi/2-oris,R);
-linelength = 0.1;
-linewidth = 4;
-cMap = turbo(256);
-
-angleColor = zeros(100,100);
-[X,Y] = meshgrid(-100:100, -100:100);
-[TH,R] = cart2pol(X,Y);
-TH(R>100) = NaN;
-imagesc(mod(pi/2+TH,pi));
-colormap turbo
-axis square
-
-axis square
-axis off
-
-
-%% scale legend
-isubplot=isubplot+1;
-subplot(rows,cols, isubplot);
-nlines = 6;
-orientations = (pi/4)*ones(1,nlines);
-x = 100*linspace(-1, 1, nlines);
-y = ones(1,nlines);
-snr = linspace(0.01, 0.2, nlines);
-snr = 3*snr;
-snr = snr*200;
-lineWidth = 0.01*snr;
-lineLength = 0.4*snr;
-cMap = turbo(256);
-for iline=1:nlines
-    drawOriLine(x(iline), y(iline), pi/2-orientations(iline), lineLength(iline), lineWidth(iline), cMap(1+floor((orientations(iline))*255/(pi)),:));
-    hold on
-end
-xlim([-interpSz interpSz]); ylim([-interpSz interpSz]);
-
-axis square
-axis off
-
-%%
-set(gcf,'position',[150 180 3*250 rows*210]);
-h.Units = 'centimeters';
-h.PaperSize=[10 3.5];
-if toSavePdf
-    print('-painters','-dpdf',[figFolder 'fig3_left']);
-end
+% isubplot=2;
+% subplot(rows,cols, isubplot);
+% noris = 16;
+% oris = linspace(0,2*pi,noris+1);
+% oris = oris(1:end-1);
+% R = 0.3;
+% [oriX, oriY] = pol2cart(pi/2-oris,R);
+% linelength = 0.1;
+% linewidth = 4;
+% cMap = turbo(256);
+% 
+% angleColor = zeros(100,100);
+% [X,Y] = meshgrid(-100:100, -100:100);
+% [TH,R] = cart2pol(X,Y);
+% TH(R>100) = NaN;
+% imagesc(mod(pi/2+TH,pi));
+% colormap turbo
+% axis square
+% 
+% axis square
+% axis off
+% 
+% 
+% %% scale legend
+% isubplot=isubplot+1;
+% subplot(rows,cols, isubplot);
+% nlines = 6;
+% orientations = (pi/4)*ones(1,nlines);
+% x = 100*linspace(-1, 1, nlines);
+% y = ones(1,nlines);
+% snr = linspace(0.01, 0.2, nlines);
+% snr = 3*snr;
+% snr = snr*200;
+% lineWidth = 0.01*snr;
+% lineLength = 0.4*snr;
+% cMap = turbo(256);
+% for iline=1:nlines
+%     drawOriLine(x(iline), y(iline), pi/2-orientations(iline), lineLength(iline), lineWidth(iline), cMap(1+floor((orientations(iline))*255/(pi)),:));
+%     hold on
+% end
+% xlim([-interpSz interpSz]); ylim([-interpSz interpSz]);
+% 
+% axis square
+% axis off
+% 
+% %%
+% set(gcf,'position',[150 180 3*250 rows*210]);
+% h.Units = 'centimeters';
+% h.PaperSize=[10 3.5];
+% if toSavePdf
+%     print('-painters','-dpdf',[figFolder 'fig3_left']);
+% end
 
 toc
 %%

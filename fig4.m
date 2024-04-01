@@ -22,7 +22,7 @@ nbins = 20;
 sigMarkersize = 15;
 
 imgFormat = 'jpg';
-subjects = [1:4];
+subjects = [1:8];
 
 ifig=0;
 nrois = 4;
