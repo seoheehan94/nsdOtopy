@@ -12,7 +12,7 @@
 %   uses files created by: prfSampleModel.m, prfSampleModel_synth.m
 %   creates files used by: getVoxPref.m
 
-function regressPrfSplit(isub,visualRegions)
+function regressPrfSplit_control(isub,visualRegions)
 
 tic
 
