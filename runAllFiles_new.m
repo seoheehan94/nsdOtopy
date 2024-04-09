@@ -26,8 +26,6 @@ regressPrfSplit_new(sub, 4);
 end
 
 %% 
-getVoxPref_new(1,4)
-getVoxPref_new(2,4)
-getVoxPref_new(3,4)
-getVoxPref_new(4,4)
-getVoxPref_new(5,4); getVoxPref_new(6,4); getVoxPref_new(7,4); getVoxPref_new(8,4);
+for sub = 1:8
+    getVoxPref_new(sub,4);
+end

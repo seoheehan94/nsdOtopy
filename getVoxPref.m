@@ -375,6 +375,8 @@ save([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig'
                 end
                 prefAngle = mod(prefAngle,2*pi);%from [-pi, pi] to [0 2pi]
                 prefAngle = prefAngle./2;%range 0 to pi.
+                % prefAngle2 = mod(preAngle, pi);
+
         end
     end
 

@@ -83,7 +83,7 @@ edgeAlpha = 0.3;
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
+prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample_Ori_control/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);
@@ -110,7 +110,7 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref2_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig','roiLevFull',...
+    load([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig','roiLevFull',...
         'roiOri','roiNsdCorr','roiNsdOriCorr','roiNsdOriR2','roiNsdR2',...
         'roiSynthCorr','roiSynthOriCorr','roiSynthOri',...
         'roiSynthLevVig','roiSynthLevFull', ...

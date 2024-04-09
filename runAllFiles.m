@@ -26,6 +26,6 @@ regressPrfSplit(sub, 4);
 end
 %
 %% getVoxPref
-for sub = 5:8
+for sub = 1:8
     getVoxPref(sub,4)
 end
