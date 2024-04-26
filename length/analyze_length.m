@@ -146,46 +146,7 @@ for isub = 1:8
     % save(saveName, 'newBrainbyROI');
 
 
-    %% Divide by Eccentricity
-    saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'lengthBrain_sub', num2str(isub), '.mat']);
-    load([saveFolder, 'lengthBrainbyROI_sub', num2str(isub), '.mat']);
-
-    betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-    eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
-    r2file = fullfile(betasfolder,'prf_R2.nii.gz');
-    eccData = niftiread(eccFile);
-    r2Data = niftiread(r2file);
-
-    
-
-    % image size 8.4° of visual angle. Cut off should be half of the size
-    % eccData(eccData>4.2) = NaN;
-    
-    % edges = [0 1 2 3 4.2];
-    eccData(eccData > 4.2) = 5;
-    eccData(eccData >= 3 & eccData <= 4.2) = 4;
-    eccData(eccData >= 2 & eccData < 3) = 3;
-    eccData(eccData >= 1 & eccData < 2) = 2;
-    eccData(eccData >= 0 & eccData < 1) = 1;
-
-    % get brainvolume
-    for curEcc = 1:5
-        curNewBrain = newBrain;
-        curNewBrain(eccData ~= curEcc) = -1;
-        newBrainbyECC(:,:,:,curEcc) =curNewBrain;
-    end
  
-    for visualRegion = 1:7
-        for curEcc = 1:5
-            curNewBrain = newBrainbyROI(:,:,:,visualRegion);
-            curNewBrain(eccData ~= curEcc) = -1;
-            curSubBrik = curEcc + 5*(visualRegion-1);
-            newBrainbyROIbyECC(:,:,:,curSubBrik) =curNewBrain;
-        end
-    end
-
-    
     %% save afni file
     % size(newBrain)
     cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume');
@@ -206,12 +167,6 @@ for isub = 1:8
     % opt.Prefix = ['lengthBrainbyROI_sub', num2str(isub)];
     % WriteBrik(newBrainbyROI,Info,opt);
 
-    Info.RootName = ['lengthBrainbyECC_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyECC_sub', num2str(isub)];
-    WriteBrik(newBrainbyECC,Info,opt);
-    Info.RootName = ['lengthBrainbyROIbyECC_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyROIbyECC_sub', num2str(isub)];
-    WriteBrik(newBrainbyROIbyECC,Info,opt);
 
 
 
