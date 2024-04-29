@@ -7,7 +7,7 @@ roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
 combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
 
-for isub = 2:8
+for isub = 1:8
         clearvars -except isub roiNames combinedRoiNames prffolder
 
     %% apply exclustion criteria
@@ -49,8 +49,8 @@ for isub = 2:8
         topM(topM<median(A)) = NaN;
         bottomM(bottomM>=median(A)) = NaN;
         
-        eccMedBrainbyROI(:,:,:,(2*visualRegion-1)) =topM;
-        eccMedBrainbyROI(:,:,:,2*visualRegion) =bottomM;
+        medianEccBrainbyROI(:,:,:,(2*visualRegion-1)) =topM;
+        medianEccBrainbyROI(:,:,:,2*visualRegion) =bottomM;
        
 
         newBrain = newBrainbyROI(:,:,:,visualRegion);
@@ -61,36 +61,38 @@ for isub = 2:8
 
         newBrainbyROIbyEccMed(:,:,:,(2*visualRegion-1)) =topNewBrain;
         newBrainbyROIbyEccMed(:,:,:,2*visualRegion) =bottomNewBrain;
-   
-    
+
+
+
     end
 
-    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/eccMedBrainbyROI_sub', num2str(isub), '.mat'];
-    % save(saveName, 'newBrainbyROI');
-
+    
     
    
- %% save afni file
-    % size(newBrain)
-    cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume');
-    %3dinfo betas_session01.nii.gz
-    %3dcalc -a betas_session01.nii.gz[1] -expr a -prefix oneBeta
-    % command = ['3dinfo betas_session01_sub', num2str(isub), '.nii.gz'];
-    % system(command);
-    % command = ['3dcalc -a betas_session01_sub', num2str(isub), '.nii.gz[1] -expr a -prefix oneBeta_sub', num2str(isub)];
-    % system(command);
-
-    currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
-    [err,V,Info] = BrikLoad(currOneBeta);
 
 
-    Info.RootName = ['eccMedBrainbyROI_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['eccMedBrainbyROI_sub', num2str(isub)];
-    WriteBrik(eccMedBrainbyROI,Info,opt);
+   
+    for visualRegion = 1:7
+        for curEcc = 1:5
+            curBrain = newBrainbyROI(:,:,:,visualRegion);
+            curBrain(eccData ~= curEcc) = -1;
+            curSubBrik = curEcc + 5*(visualRegion-1);
+            newBrainbyROIbyECC(:,:,:,curSubBrik) =curBrain;
+        end
+    end
 
-    Info.RootName = ['lengthBrainbyROIbyECCMed_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyROIbyECCMed_sub', num2str(isub)];
-    WriteBrik(newBrainbyROIbyEccMed,Info,opt);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

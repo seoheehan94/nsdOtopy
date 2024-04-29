@@ -1,4 +1,4 @@
-% nsdStim.m
+% nsdStim_curvature.m
 %
 % associated with the following publication: Roth, ZN, Kay, K, and Merriam, EP (2022).
 % Massive natural scene sampling reveals reliable coarse-scale orientation tuning in human V1
@@ -13,25 +13,32 @@
 
 % uses the steerable pyramid: https://github.com/elimerriam/stimulusVignetting
 
+close all;
+clear all;
 
-close all
-clear all
+prefAnalysis = 'max';
 
 interpImgSize = 714;
 backgroundSize = 1024;
 imgScaling = 0.5;
+% backgroundSize = [512 512];
+% renderSize = [357,357];
 
+addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'));
+addpath(genpath('/home/hanseohe/Documents/GitHub/mrTools'));
+addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'));
+
+%cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-pyramidfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/pyramid/';%to save model outputs
+curvfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/curvfilter/';%to save model outputs
 
 %%
 % construct quad frequency filters
-numOrientations = 8;
-bandwidth = 1;
+
+numCurvs = 8;
 dims = [backgroundSize backgroundSize];
 dims = dims*imgScaling;
-numLevels = maxLevel(dims,bandwidth);
-[freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numOrientations, bandwidth);
+numLevels = 4;
 
 %%
 stimfolder = '/bwdata/NSDData/stmuli/';
@@ -47,9 +54,9 @@ nsdDesignFilename = fullfile(nsdfolder, 'nsd_expdesign.mat');
 nsdDesign = load(nsdDesignFilename);
 allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
+vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
-for isub=[6:8]
-    
+for isub=1:8
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
@@ -64,11 +71,11 @@ for isub=[6:8]
     for imgNum=allImgs
         iimg = iimg+1;
         
-        pyramidfilename = ['pyrImg' num2str(imgNum) '.mat'];
-        if ~isfile(fullfile(pyramidfolder, pyramidfilename))%if file exists already no need to remake it
-            fprintf('%s....\n',pyramidfilename);
+        filename = ['curvImg' num2str(imgNum) '.mat'];
+        if ~isfile(fullfile(curvfolder, filename))%if file exists already no need to remake it
+            fprintf('%s....\n',filename);
             origImg = h5read(stimfilename,'/imgBrick/',[1 1 1 imgNum],[3 imgSizeX imgSizeY nImgs]);
-            
+           
             origImg = double(origImg);
             origImg = permute(origImg,[3 2 1]);%[425,425,3]
             
@@ -91,29 +98,40 @@ for isub=[6:8]
             
             %change to grayscale
             % for now, simply by averaging across RGB channels
-            bigImg = mean(bigImg,3);
+            % bigImg = mean(bigImg,3);
             
             %DOWNSAMPLE
             bigImg = imresize(bigImg,imgScaling);
-            %% pass image through steerable pyramid
+            bigImg = im2double(bigImg);
+           
+            % figure;imagesc(bigImg)
+            %% pass image through curvature filter
+            curvMap = generateCurvatureMap(bigImg, prefAnalysis);
             
-            [pyr, pind] = buildQuadBands(bigImg, freqRespsImag, freqRespsReal);
-            sumOri = cell(numLevels,1);
-            modelOri = cell(numLevels,1);
-            for ilev = 1:numLevels
-                % loop over levels and orientations of the pyramid
-                % initialize output
-                sumOri{ilev}(:,:) = zeros(dims(1), dims(2));
-                modelOri{ilev} = zeros(numOrientations, dims(1), dims(2));
-                for orientation = 1:numOrientations
-                    thisBand = abs(accessSteerBand(pyr, pind, numOrientations,ilev, orientation)).^2;
-                    sumOri{ilev}(:,:) = sumOri{ilev}(:,:) + thisBand;
-                    modelOri{ilev}(orientation,:,:) = thisBand;
-                end
-            end
-            
-            save(fullfile(pyramidfolder, pyramidfilename), 'interpImgSize','backgroundSize','imgScaling',...
-                'numOrientations','bandwidth','dims','bigImg','sumOri','modelOri','numLevels');
+            modelCurv = permute(curvMap,[3 1 2]);
+            modelCurv(isnan(modelCurv)) = 0;
+            % figure;
+            % % Loop through each subplot
+            % for i = 1:8
+            %     % Extract the slice from curvMap
+            %     slice = squeeze(curvMap(i,:,:));
+            % 
+            %     % Create a subplot
+            %     subplot(2, 4, i);
+            % 
+            %     % Display the slice
+            %     imagesc(slice);
+            % 
+            %     % Add title for each subplot
+            %     title(['Slice ' num2str(i)]);
+            % 
+            %     sgtitle('sigma 4 length 30')
+            % end
+            % 
+
+
+            save(fullfile(curvfolder, filename),...
+                'numCurvs','dims','modelCurv','numLevels', 'curvMap');
         end
     end
 end
