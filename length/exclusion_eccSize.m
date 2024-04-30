@@ -7,7 +7,7 @@ roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
 combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
 
-for isub = 2:8
+for isub = 1:8
         clearvars -except isub roiNames combinedRoiNames prffolder
 
     %% apply exclustion criteria
@@ -28,13 +28,19 @@ for isub = 2:8
     % nnz(~isnan(eccData))
     % nnz(~isnan(sizeData))
 
+    [a,b,c] = ind2sub(size(eccDataNew),find(eccDataNew == 1000));
 
+eccData(a(1), b(1), c(1))
+sizeData(a(1), b(1), c(1))
+exclusionData(a(1), b(1), c(1))
     %% get median for each ROI
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
     load([saveFolder, 'lengthBrainbyROI_sub', num2str(isub), '.mat']);
 
     eccDataNew=eccData;
     eccDataNew(isnan(exclusionData)) = NaN;
+    sizeDataNew=sizeData;
+    sizeDataNew(isnan(exclusionData)) = NaN;
     % nnz(~isnan(eccDatanew))
 
     for visualRegion = 1:7
@@ -66,7 +72,10 @@ for isub = 2:8
     end
 
     saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/eccMedBrainbyROI_sub', num2str(isub), '.mat'];
-    % save(saveName, 'newBrainbyROI');
+    save(saveName, 'eccMedBrainbyROI');
+
+    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/lengthBrainbyROIbyECCMed_sub', num2str(isub), '.mat'];
+    save(saveName, 'newBrainbyROIbyEccMed');
 
     
    
@@ -80,18 +89,18 @@ for isub = 2:8
     % command = ['3dcalc -a betas_session01_sub', num2str(isub), '.nii.gz[1] -expr a -prefix oneBeta_sub', num2str(isub)];
     % system(command);
 
-    currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
-    [err,V,Info] = BrikLoad(currOneBeta);
-
-
-    Info.RootName = ['eccMedBrainbyROI_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['eccMedBrainbyROI_sub', num2str(isub)];
-    WriteBrik(eccMedBrainbyROI,Info,opt);
-
-    Info.RootName = ['lengthBrainbyROIbyECCMed_sub', num2str(isub), '+orig'];
-    opt.Prefix = ['lengthBrainbyROIbyECCMed_sub', num2str(isub)];
-    WriteBrik(newBrainbyROIbyEccMed,Info,opt);
-
+    % currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
+    % [err,V,Info] = BrikLoad(currOneBeta);
+    % 
+    % 
+    % Info.RootName = ['eccMedBrainbyROI_sub', num2str(isub), '+orig'];
+    % opt.Prefix = ['eccMedBrainbyROI_sub', num2str(isub)];
+    % WriteBrik(eccMedBrainbyROI,Info,opt);
+    % 
+    % Info.RootName = ['lengthBrainbyROIbyECCMed_sub', num2str(isub), '+orig'];
+    % opt.Prefix = ['lengthBrainbyROIbyECCMed_sub', num2str(isub)];
+    % WriteBrik(newBrainbyROIbyEccMed,Info,opt);
+    % 
 
 
 

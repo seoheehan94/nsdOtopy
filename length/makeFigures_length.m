@@ -738,141 +738,33 @@ end
 
 
 %% Eccentricity median split scatterplot
-fullecc_lenpref = struct;
 ecc_lenpref = struct;
-prfecc_lenpref = struct;
 
 for isub = 1:8
     
-    clearvars eccBrainbyROI prfeccBrainbyROI
+    clearvars eccMedBrainbyROI newBrainbyROIbyEccMed
     
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'lengthBrain_sub', num2str(isub), '.mat']);
-    load([saveFolder, 'lengthBrainbyROI_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'eccMedBrainbyROI_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'lengthBrainbyROIbyECCMed_sub', num2str(isub), '.mat']);
 
-    betasfolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-    eccFile = fullfile(betasfolder,'prf_eccentricity.nii.gz');
 
-    r2file = fullfile(betasfolder,'prf_R2.nii.gz');
-    eccData = niftiread(eccFile);
-    r2Data = niftiread(r2file);
-    eccData(r2Data<=0) = NaN;
-
-    %eccentricity < 20
-    for visualRegion = 1:7
-        curNewBrain = newBrainbyROI(:,:,:,visualRegion);
-        curNewBrain(curNewBrain~=-1) = eccData(curNewBrain~=-1);
-        eccBrainbyROI(:,:,:,visualRegion) =curNewBrain;
-    end
-    for visualRegion = 1:7
+    for visualRegion = 1:14
         thisfield = ['sub', num2str(isub)];
-        thisEcc = eccBrainbyROI(:,:,:,visualRegion);
-        thisEcc = thisEcc(thisEcc ~= -1);
-        thisVoxPref = newBrainbyROI(:,:,:,visualRegion);
-        thisVoxPref = thisVoxPref(thisVoxPref ~= -1);
-        fullecc_lenpref.(thisfield){visualRegion}(:,1)=thisEcc;
-        fullecc_lenpref.(thisfield){visualRegion}(:,2)=thisVoxPref;
-        [row,col]=find(fullecc_lenpref.(thisfield){visualRegion}>=20);
-        fullecc_lenpref.(thisfield){visualRegion}(row,col)= NaN;
+        thisEcc = eccMedBrainbyROI(:,:,:,visualRegion);
+        thisVoxPref = newBrainbyROIbyEccMed(:,:,:,visualRegion);
+        thisEcc = thisEcc(~isnan(thisEcc));
+        thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
+        ecc_lenpref.(thisfield){visualRegion}(:,1)=thisEcc;
+        ecc_lenpref.(thisfield){visualRegion}(:,2)=thisVoxPref;
     end
-
-    % eccentricity <= 4.2
-    % eccData(eccData > 4.2) = NaN;
-    % for visualRegion = 1:7
-    %     curNewBrain = newBrainbyROI(:,:,:,visualRegion);
-    %     curNewBrain(curNewBrain~=-1) = eccData(curNewBrain~=-1);
-    %     eccBrainbyROI(:,:,:,visualRegion) =curNewBrain;
-    % end
-    % for visualRegion = 1:7
-    %     thisfield = ['sub', num2str(isub)];
-    %     thisEcc = eccBrainbyROI(:,:,:,visualRegion);
-    %     thisEcc = thisEcc(thisEcc ~= -1);
-    %     thisVoxPref = newBrainbyROI(:,:,:,visualRegion);
-    %     thisVoxPref = thisVoxPref(thisVoxPref ~= -1);
-    %     ecc_lenpref.(thisfield){visualRegion}(:,1)=thisEcc;
-    %     ecc_lenpref.(thisfield){visualRegion}(:,2)=thisVoxPref;
-    % end
 
 end
 
 %% combine all participants - preffered length x eccentricity
-% eccentricity < 20 %
-fullecc_lenpref_all={};
-for visualRegion = 1:7
-    currRoi = [];
-    for isub = 1:8
-        subName = ['sub', num2str(isub)];
-        currRoi = [currRoi; fullecc_lenpref.(subName){visualRegion}];
 
-    end
-    fullecc_lenpref_all{visualRegion} = currRoi;
-end
-
-%scatterplot
-figure;
-subplot(4,2,1)
-scatter(fullecc_lenpref_all{1}(:,2), fullecc_lenpref_all{1}(:,1));
-[r,p] =corr(fullecc_lenpref_all{1}(:,2), fullecc_lenpref_all{1}(:,1),'rows','complete');
-title(['v1: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,2)
-scatter(fullecc_lenpref_all{2}(:,2), fullecc_lenpref_all{2}(:,1));
-[r,p] =corr(fullecc_lenpref_all{2}(:,2), fullecc_lenpref_all{2}(:,1),'rows','complete');
-title(['v2: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,3)
-scatter(fullecc_lenpref_all{3}(:,2), fullecc_lenpref_all{3}(:,1));
-[r,p] =corr(fullecc_lenpref_all{3}(:,2), fullecc_lenpref_all{3}(:,1),'rows','complete');
-title(['v3: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,4)
-scatter(fullecc_lenpref_all{4}(:,2), fullecc_lenpref_all{4}(:,1));
-[r,p] =corr(fullecc_lenpref_all{4}(:,2), fullecc_lenpref_all{4}(:,1),'rows','complete');
-title(['v4: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,5)
-scatter(fullecc_lenpref_all{5}(:,2), fullecc_lenpref_all{5}(:,1));
-[r,p] =corr(fullecc_lenpref_all{5}(:,2), fullecc_lenpref_all{5}(:,1),'rows','complete');
-title(['OPA: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,6)
-scatter(fullecc_lenpref_all{6}(:,2), fullecc_lenpref_all{6}(:,1));
-[r,p] =corr(fullecc_lenpref_all{6}(:,2), fullecc_lenpref_all{6}(:,1),'rows','complete');
-title(['PPA: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,7)
-scatter(fullecc_lenpref_all{7}(:,2), fullecc_lenpref_all{7}(:,1));
-[r,p] =corr(fullecc_lenpref_all{7}(:,2), fullecc_lenpref_all{7}(:,1),'rows','complete');
-title(['RSC: ', num2str(r), '/', num2str(p)]);
-
-totalTitle = 'all sub preferred length x full eccentricity';
-sgtitle(totalTitle);
-
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_fullE_allsub.png');
-
-% Line plot
-for visualRegion = 1:7
-    V = cell(1, 8);
-    for i = 1:8
-        V{i} = fullecc_lenpref_all{visualRegion}(fullecc_lenpref_all{visualRegion}(:,2) == i, :);
-    end
-
-    colors = jet(8);
-    figure;
-    hold on;
-    for i = 1:8
-        histogram(V{i}(:,1), 'FaceColor', colors(i,:), 'EdgeColor', 'none', 'DisplayName', ['lengthBin', num2str(i)]);
-    end
-    hold off;
-    legend('Location', 'best');
-    title(['ecc<=20 ',combinedRoiNames{visualRegion}]);
-
-    saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_fullE_', combinedRoiNames{visualRegion}, '.png']);
-end
-
-% eccentricity <= 4.2 %
 ecc_lenpref_all={};
-for visualRegion = 1:7
+for visualRegion = 1:14
     currRoi = [];
     for isub = 1:8
         subName = ['sub', num2str(isub)];
@@ -883,40 +775,75 @@ for visualRegion = 1:7
 end
 
 figure;
-subplot(4,2,1)
+subplot(7,2,1)
 scatter(ecc_lenpref_all{1}(:,2), ecc_lenpref_all{1}(:,1));
 [r,p] =corr(ecc_lenpref_all{1}(:,2), ecc_lenpref_all{1}(:,1),'rows','complete');
-title(['v1: ', num2str(r), '/', num2str(p)]);
+title(['v1 high ecc: ', num2str(r), '/', num2str(p)]);
 
-subplot(4,2,2)
+subplot(7,2,2)
 scatter(ecc_lenpref_all{2}(:,2), ecc_lenpref_all{2}(:,1));
 [r,p] =corr(ecc_lenpref_all{2}(:,2), ecc_lenpref_all{2}(:,1),'rows','complete');
-title(['v2: ', num2str(r), '/', num2str(p)]);
+title(['v1 low ecc: ', num2str(r), '/', num2str(p)]);
 
-subplot(4,2,3)
+subplot(7,2,3)
 scatter(ecc_lenpref_all{3}(:,2), ecc_lenpref_all{3}(:,1));
 [r,p] =corr(ecc_lenpref_all{3}(:,2), ecc_lenpref_all{3}(:,1),'rows','complete');
-title(['v3: ', num2str(r), '/', num2str(p)]);
+title(['v2 high ecc: ', num2str(r), '/', num2str(p)]);
 
-subplot(4,2,4)
+subplot(7,2,4)
 scatter(ecc_lenpref_all{4}(:,2), ecc_lenpref_all{4}(:,1));
 [r,p] =corr(ecc_lenpref_all{4}(:,2), ecc_lenpref_all{4}(:,1),'rows','complete');
-title(['v4: ', num2str(r), '/', num2str(p)]);
+title(['v2 low ecc: ', num2str(r), '/', num2str(p)]);
 
-subplot(4,2,5)
+subplot(7,2,5)
 scatter(ecc_lenpref_all{5}(:,2), ecc_lenpref_all{5}(:,1));
 [r,p] =corr(ecc_lenpref_all{5}(:,2), ecc_lenpref_all{5}(:,1),'rows','complete');
-title(['OPA: ', num2str(r), '/', num2str(p)]);
+title(['v3 high ecc: ', num2str(r), '/', num2str(p)]);
 
-subplot(4,2,6)
+subplot(7,2,6)
 scatter(ecc_lenpref_all{6}(:,2), ecc_lenpref_all{6}(:,1));
 [r,p] =corr(ecc_lenpref_all{6}(:,2), ecc_lenpref_all{6}(:,1),'rows','complete');
-title(['PPA: ', num2str(r), '/', num2str(p)]);
+title(['v3 low ecc: ', num2str(r), '/', num2str(p)]);
 
-subplot(4,2,7)
+subplot(7,2,7)
 scatter(ecc_lenpref_all{7}(:,2), ecc_lenpref_all{7}(:,1));
 [r,p] =corr(ecc_lenpref_all{7}(:,2), ecc_lenpref_all{7}(:,1),'rows','complete');
-title(['RSC: ', num2str(r), '/', num2str(p)]);
+title(['v4 high ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,8)
+scatter(ecc_lenpref_all{8}(:,2), ecc_lenpref_all{8}(:,1));
+[r,p] =corr(ecc_lenpref_all{8}(:,2), ecc_lenpref_all{8}(:,1),'rows','complete');
+title(['v4 low ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,9)
+scatter(ecc_lenpref_all{9}(:,2), ecc_lenpref_all{9}(:,1));
+[r,p] =corr(ecc_lenpref_all{9}(:,2), ecc_lenpref_all{9}(:,1),'rows','complete');
+title(['OPA high ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,10)
+scatter(ecc_lenpref_all{10}(:,2), ecc_lenpref_all{10}(:,1));
+[r,p] =corr(ecc_lenpref_all{10}(:,2), ecc_lenpref_all{10}(:,1),'rows','complete');
+title(['OPA low ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,11)
+scatter(ecc_lenpref_all{11}(:,2), ecc_lenpref_all{11}(:,1));
+[r,p] =corr(ecc_lenpref_all{11}(:,2), ecc_lenpref_all{11}(:,1),'rows','complete');
+title(['PPA high ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,12)
+scatter(ecc_lenpref_all{12}(:,2), ecc_lenpref_all{12}(:,1));
+[r,p] =corr(ecc_lenpref_all{12}(:,2), ecc_lenpref_all{12}(:,1),'rows','complete');
+title(['PPA low ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,13)
+scatter(ecc_lenpref_all{13}(:,2), ecc_lenpref_all{13}(:,1));
+[r,p] =corr(ecc_lenpref_all{13}(:,2), ecc_lenpref_all{13}(:,1),'rows','complete');
+title(['RSC high ecc: ', num2str(r), '/', num2str(p)]);
+
+subplot(7,2,14)
+scatter(ecc_lenpref_all{14}(:,2), ecc_lenpref_all{14}(:,1));
+[r,p] =corr(ecc_lenpref_all{14}(:,2), ecc_lenpref_all{14}(:,1),'rows','complete');
+title(['RSC low ecc: ', num2str(r), '/', num2str(p)]);
 
 totalTitle = 'all sub preferred length x eccentricity';
 sgtitle(totalTitle);
@@ -941,79 +868,6 @@ for visualRegion = 1:7
     title(['ecc<=4.2 ',combinedRoiNames{visualRegion}]);
 
     saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_E_', combinedRoiNames{visualRegion}, '.png']);
-
-
-% prf-eccrois
-prfecc_lenpref_all={};
-for visualRegion = 1:7
-    currRoi = [];
-    for isub = 1:8
-        subName = ['sub', num2str(isub)];
-        currRoi = [currRoi; prfecc_lenpref.(subName){visualRegion}];
-
-    end
-    prfecc_lenpref_all{visualRegion} = currRoi;
-end
-
-%scatterplot
-figure;
-subplot(4,2,1)
-scatter(prfecc_lenpref_all{1}(:,2), prfecc_lenpref_all{1}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{1}(:,2), prfecc_lenpref_all{1}(:,1),'rows','complete');
-title(['v1: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,2)
-scatter(prfecc_lenpref_all{2}(:,2), prfecc_lenpref_all{2}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{2}(:,2), prfecc_lenpref_all{2}(:,1),'rows','complete');
-title(['v2: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,3)
-scatter(prfecc_lenpref_all{3}(:,2), prfecc_lenpref_all{3}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{3}(:,2), prfecc_lenpref_all{3}(:,1),'rows','complete');
-title(['v3: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,4)
-scatter(prfecc_lenpref_all{4}(:,2), prfecc_lenpref_all{4}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{4}(:,2), prfecc_lenpref_all{4}(:,1),'rows','complete');
-title(['v4: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,5)
-scatter(prfecc_lenpref_all{5}(:,2), prfecc_lenpref_all{5}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{5}(:,2), prfecc_lenpref_all{5}(:,1),'rows','complete');
-title(['OPA: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,6)
-scatter(prfecc_lenpref_all{6}(:,2), prfecc_lenpref_all{6}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{6}(:,2), prfecc_lenpref_all{6}(:,1),'rows','complete');
-title(['PPA: ', num2str(r), '/', num2str(p)]);
-
-subplot(4,2,7)
-scatter(prfecc_lenpref_all{7}(:,2), prfecc_lenpref_all{7}(:,1),'jitter','on');
-[r,p] =corr(prfecc_lenpref_all{7}(:,2), prfecc_lenpref_all{7}(:,1),'rows','complete');
-title(['RSC: ', num2str(r), '/', num2str(p)]);
-
-totalTitle = 'all sub preferred length x prf-eccrois';
-sgtitle(totalTitle);
-
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_prfE_allsub.png');
-
-% Line plot
-for visualRegion = 1:7
-    V = cell(1, 8);
-    for i = 1:8
-        V{i} = prfecc_lenpref_all{visualRegion}(prfecc_lenpref_all{visualRegion}(:,2) == i, :);
-        VV(i,:) = [sum(V{i}(:,1) == 1),sum(V{i}(:,1) == 2),sum(V{i}(:,1) == 3),sum(V{i}(:,1) == 4),sum(V{i}(:,1) == 5)];
-    end
-
-    colors = jet(8);
-    figure;
-    plot(VV');
-    legend('lengthBin1', 'lengthBin2','lengthBin3','lengthBin4','lengthBin5','lengthBin6','lengthBin7','lengthBin8')
-    legend('Location', 'best');
-    title(['prf-eccrois ',combinedRoiNames{visualRegion}]);
-
-    % saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_fullE_', combinedRoiNames{visualRegion}, '.png']);
-end
 
 
 end
