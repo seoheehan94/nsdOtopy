@@ -775,83 +775,25 @@ for visualRegion = 1:14
 end
 
 figure;
-subplot(7,2,1)
-scatter(ecc_lenpref_all{1}(:,2), ecc_lenpref_all{1}(:,1));
-[r,p] =corr(ecc_lenpref_all{1}(:,2), ecc_lenpref_all{1}(:,1),'rows','complete');
-title(['v1 high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,2)
-scatter(ecc_lenpref_all{2}(:,2), ecc_lenpref_all{2}(:,1));
-[r,p] =corr(ecc_lenpref_all{2}(:,2), ecc_lenpref_all{2}(:,1),'rows','complete');
-title(['v1 low ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,3)
-scatter(ecc_lenpref_all{3}(:,2), ecc_lenpref_all{3}(:,1));
-[r,p] =corr(ecc_lenpref_all{3}(:,2), ecc_lenpref_all{3}(:,1),'rows','complete');
-title(['v2 high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,4)
-scatter(ecc_lenpref_all{4}(:,2), ecc_lenpref_all{4}(:,1));
-[r,p] =corr(ecc_lenpref_all{4}(:,2), ecc_lenpref_all{4}(:,1),'rows','complete');
-title(['v2 low ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,5)
-scatter(ecc_lenpref_all{5}(:,2), ecc_lenpref_all{5}(:,1));
-[r,p] =corr(ecc_lenpref_all{5}(:,2), ecc_lenpref_all{5}(:,1),'rows','complete');
-title(['v3 high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,6)
-scatter(ecc_lenpref_all{6}(:,2), ecc_lenpref_all{6}(:,1));
-[r,p] =corr(ecc_lenpref_all{6}(:,2), ecc_lenpref_all{6}(:,1),'rows','complete');
-title(['v3 low ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,7)
-scatter(ecc_lenpref_all{7}(:,2), ecc_lenpref_all{7}(:,1));
-[r,p] =corr(ecc_lenpref_all{7}(:,2), ecc_lenpref_all{7}(:,1),'rows','complete');
-title(['v4 high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,8)
-scatter(ecc_lenpref_all{8}(:,2), ecc_lenpref_all{8}(:,1));
-[r,p] =corr(ecc_lenpref_all{8}(:,2), ecc_lenpref_all{8}(:,1),'rows','complete');
-title(['v4 low ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,9)
-scatter(ecc_lenpref_all{9}(:,2), ecc_lenpref_all{9}(:,1));
-[r,p] =corr(ecc_lenpref_all{9}(:,2), ecc_lenpref_all{9}(:,1),'rows','complete');
-title(['OPA high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,10)
-scatter(ecc_lenpref_all{10}(:,2), ecc_lenpref_all{10}(:,1));
-[r,p] =corr(ecc_lenpref_all{10}(:,2), ecc_lenpref_all{10}(:,1),'rows','complete');
-title(['OPA low ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,11)
-scatter(ecc_lenpref_all{11}(:,2), ecc_lenpref_all{11}(:,1));
-[r,p] =corr(ecc_lenpref_all{11}(:,2), ecc_lenpref_all{11}(:,1),'rows','complete');
-title(['PPA high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,12)
-scatter(ecc_lenpref_all{12}(:,2), ecc_lenpref_all{12}(:,1));
-[r,p] =corr(ecc_lenpref_all{12}(:,2), ecc_lenpref_all{12}(:,1),'rows','complete');
-title(['PPA low ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,13)
-scatter(ecc_lenpref_all{13}(:,2), ecc_lenpref_all{13}(:,1));
-[r,p] =corr(ecc_lenpref_all{13}(:,2), ecc_lenpref_all{13}(:,1),'rows','complete');
-title(['RSC high ecc: ', num2str(r), '/', num2str(p)]);
-
-subplot(7,2,14)
-scatter(ecc_lenpref_all{14}(:,2), ecc_lenpref_all{14}(:,1));
-[r,p] =corr(ecc_lenpref_all{14}(:,2), ecc_lenpref_all{14}(:,1),'rows','complete');
-title(['RSC low ecc: ', num2str(r), '/', num2str(p)]);
-
-totalTitle = 'all sub preferred length x eccentricity';
+for visualRegion = 1:14
+    subplot(7, 2, visualRegion);
+    scatter(ecc_lenpref_all{visualRegion}(:,2), ecc_lenpref_all{visualRegion}(:,1));
+    [r, p] = corr(ecc_lenpref_all{visualRegion}(:,2), ecc_lenpref_all{visualRegion}(:,1), 'rows', 'complete');
+    if mod(visualRegion, 2) == 1
+        eccType = 'low';
+    else
+        eccType = 'high';
+    end
+    realRegion = ceil(visualRegion/2);    
+    title(sprintf('%s ecc %s: %f/%f', eccType, combinedRoiNames{realRegion}, r, p));
+end
+totalTitle = 'all sub preferred length x eccentricity median';
 sgtitle(totalTitle);
 
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_E_allsub.png');
+saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_medE_allsub.png');
 
 % Line plot
-for visualRegion = 1:7
+for visualRegion = 1:14
     V = cell(1, 8);
     for i = 1:8
         V{i} = ecc_lenpref_all{visualRegion}(ecc_lenpref_all{visualRegion}(:,2) == i, :);
@@ -865,9 +807,199 @@ for visualRegion = 1:7
     end
     hold off;
     legend('Location', 'best');
-    title(['ecc<=4.2 ',combinedRoiNames{visualRegion}]);
+    if mod(visualRegion,2) == 1
+        eccCond = 'low ecc ';
+    else
+        eccCond = 'high ecc ';
+    end
+    realRegion = ceil(visualRegion/2);
 
-    saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_E_', combinedRoiNames{visualRegion}, '.png']);
+    title([eccCond,combinedRoiNames{realRegion}]);
+
+    saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_',eccCond,'_', combinedRoiNames{realRegion}, '.png']);
 
 
 end
+
+%% Voxel Preference split by median eccentricity
+lenpref = struct;
+
+for isub = 1:8
+    
+    clearvars  newBrainbyROIbyEccMed
+    
+    saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
+    load([saveFolder, 'lengthBrainbyROIbyECCMed_sub', num2str(isub), '.mat']);
+
+
+    for visualRegion = 1:14
+        subName = ['sub', num2str(isub)];
+        thisVoxPref = newBrainbyROIbyEccMed(:,:,:,visualRegion);
+        thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
+        lenpref.(subName){visualRegion}=thisVoxPref;
+    end
+
+end
+%% combine all participants - preferred length from coef
+alllenPref={};
+for visualRegion = 1:14
+    currRoi = [];
+    for isub = 1:8
+        subName = ['sub', num2str(isub)];
+
+        currRoi = [currRoi; lenpref.(subName){visualRegion}];
+
+    end
+    alllenPref{visualRegion} = currRoi;
+end
+
+figure;
+for visualRegion = 1:14
+    subplot(7, 2, visualRegion);
+    histogram(alllenPref{visualRegion});
+    if mod(visualRegion, 2) == 1
+        eccType = 'low';
+    else
+        eccType = 'high';
+    end
+    realRegion = ceil(visualRegion/2);
+    title(sprintf('%s ecc %s', eccType, combinedRoiNames{realRegion}));
+    
+end
+totalTitle = 'all sub number of preferred length bin';
+sgtitle(totalTitle);
+
+saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLengthbyMedECC_allsub.png');
+
+%% Size median split scatterplot
+size_lenpref = struct;
+
+for isub = 1:8
+    
+    clearvars sizeMedBrainbyROI newBrainbyROIbySizeMed
+    
+    saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
+    load([saveFolder, 'sizeMedBrainbyROI_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'lengthBrainbyROIbySizeMed_sub', num2str(isub), '.mat']);
+
+
+    for visualRegion = 1:14
+        thisfield = ['sub', num2str(isub)];
+        thisSize = sizeMedBrainbyROI(:,:,:,visualRegion);
+        thisVoxPref = newBrainbyROIbySizeMed(:,:,:,visualRegion);
+        thisSize = thisSize(~isnan(thisSize));
+        thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
+        size_lenpref.(thisfield){visualRegion}(:,1)=thisSize;
+        size_lenpref.(thisfield){visualRegion}(:,2)=thisVoxPref;
+    end
+
+end
+
+%% combine all participants - preffered length x size
+
+size_lenpref_all={};
+for visualRegion = 1:14
+    currRoi = [];
+    for isub = 1:8
+        subName = ['sub', num2str(isub)];
+        currRoi = [currRoi; size_lenpref.(subName){visualRegion}];
+
+    end
+    size_lenpref_all{visualRegion} = currRoi;
+end
+
+figure;
+for visualRegion = 1:14
+    subplot(7, 2, visualRegion);
+    scatter(size_lenpref_all{visualRegion}(:,2), size_lenpref_all{visualRegion}(:,1));
+    [r, p] = corr(size_lenpref_all{visualRegion}(:,2), size_lenpref_all{visualRegion}(:,1), 'rows', 'complete');
+    if mod(visualRegion, 2) == 1
+        sizeType = 'low';
+    else
+        sizeType = 'high';
+    end
+    realRegion = ceil(visualRegion/2);    
+    title(sprintf('%s size %s: %f/%f', sizeType, combinedRoiNames{realRegion}, r, p));
+end
+totalTitle = 'all sub preferred length x size median';
+sgtitle(totalTitle);
+
+saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_medSize_allsub.png');
+
+% Line plot
+for visualRegion = 1:14
+    V = cell(1, 8);
+    for i = 1:8
+        V{i} = size_lenpref_all{visualRegion}(size_lenpref_all{visualRegion}(:,2) == i, :);
+    end
+
+    colors = jet(8);
+    figure;
+    hold on;
+    for i = 1:8
+        histogram(V{i}(:,1), 'FaceColor', colors(i,:), 'EdgeColor', 'none', 'DisplayName', ['lengthBin', num2str(i)]);
+    end
+    hold off;
+    legend('Location', 'best');
+    if mod(visualRegion,2) == 1
+        sizeType = 'low size ';
+    else
+        sizeType = 'high size ';
+    end
+    realRegion = ceil(visualRegion/2);
+
+    title([sizeType,combinedRoiNames{realRegion}]);
+
+    saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_',sizeType,'_', combinedRoiNames{realRegion}, '.png']);
+end
+
+%% Voxel Preference split by median size
+lenpref = struct;
+
+for isub = 1:8
+    
+    clearvars  newBrainbyROIbySizeMed
+    
+    saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
+    load([saveFolder, 'lengthBrainbyROIbySizeMed_sub', num2str(isub), '.mat']);
+
+
+    for visualRegion = 1:14
+        subName = ['sub', num2str(isub)];
+        thisVoxPref = newBrainbyROIbySizeMed(:,:,:,visualRegion);
+        thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
+        lenpref.(subName){visualRegion}=thisVoxPref;
+    end
+
+end
+%% combine all participants - preferred length from coef
+alllenPref={};
+for visualRegion = 1:14
+    currRoi = [];
+    for isub = 1:8
+        subName = ['sub', num2str(isub)];
+
+        currRoi = [currRoi; lenpref.(subName){visualRegion}];
+
+    end
+    alllenPref{visualRegion} = currRoi;
+end
+
+figure;
+for visualRegion = 1:14
+    subplot(7, 2, visualRegion);
+    histogram(alllenPref{visualRegion});
+    if mod(visualRegion, 2) == 1
+        sizeType = 'low';
+    else
+        sizeType = 'high';
+    end
+    realRegion = ceil(visualRegion/2);
+    title(sprintf('%s size %s', sizeType, combinedRoiNames{realRegion}));
+    
+end
+totalTitle = 'all sub number of preferred length bin';
+sgtitle(totalTitle);
+
+saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLengthbyMedSize_allsub.png');
+
