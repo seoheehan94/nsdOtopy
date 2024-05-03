@@ -43,10 +43,7 @@ for rot=1:length(rotationList)
     accumulator(:,:,rot)=(abs(filteredImg).^8);
 end
 
-
 accumulator=squeeze(mean(accumulator,3));
 recMap = NaN(size(Img));
 recMap(Img == 1) = accumulator(Img == 1);
-% keyboard;
-output=mean2(accumulator(Img==1));
-
+output=mean(accumulator(Img==1));
