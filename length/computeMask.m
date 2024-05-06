@@ -12,7 +12,8 @@ centerX = imageSize / 2;
 centerY = imageSize / 2;
 
 % Initialize radius
-radius = 169;
+% radius = 169;
+radius = 170;
 
 % Initialize masks
 centerMask = false(imageSize);
@@ -45,5 +46,5 @@ subplot(1, 2, 2);
 imshow(peripheryMask);
 title('Periphery Mask');
 
-save('centerMask.mat', 'centerMask');
-save('peripheryMask.mat', 'peripheryMask');
+save('centerMask2.mat', 'centerMask');
+save('peripheryMask2.mat', 'peripheryMask');

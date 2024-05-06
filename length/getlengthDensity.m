@@ -5,8 +5,8 @@ imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/';
 imgSubFolder=dir(imgFolder); 
 imgSubFolder = imgSubFolder(ismember({imgSubFolder(:).name},{'images01','images02','images03','images04','images05'}));
 
-load("centerMask.mat");
-load("peripheryMask.mat");
+load("centerMask2.mat");
+load("peripheryMask2.mat");
 
 for k=1:length(imgSubFolder)
     thisFolder = imgSubFolder(k).name;
@@ -41,16 +41,32 @@ for k=1:length(imgSubFolder)
         
     end
 
-    save(['normFDMSum0',num2str(k)],'normSumList');
+    save(['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/Centervs.Periphery/2normFDMSum0',num2str(k)],'normSumList');
  end
 
 
 
 
+%%
+fileFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/Centervs.Periphery/';
+fileDir = dir([fileFolder, 'norm*']);
+TotalList = [];
+for k=1:length(fileDir)
+    load([fileFolder, fileDir(k).name]);
+    TotalList = [TotalList; normSumList];
+end
 
+%center, periphery
+mean(TotalList, "omitnan")
 
+fileFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/Centervs.Periphery/';
+fileDir = dir([fileFolder, '2norm*']);
+TotalList2 = [];
+for k=1:length(fileDir)
+    load([fileFolder, fileDir(k).name]);
+    TotalList2 = [TotalList2; normSumList];
+end
 
-
-
-
+%center, periphery
+mean(TotalList, "omitnan")
 
