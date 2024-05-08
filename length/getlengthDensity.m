@@ -27,6 +27,8 @@ for k=1:length(imgSubFolder)
         FDMperiph = FDM;
         FDMperiph(peripheryMask==0) =0;
 
+        figure;imagesc(FDMcenter)
+        figure;imagesc(FDMperiph)
         %Sum all the values divided by non-zero pixels
         sumFDMcenter = sum(FDMcenter(:));
         numPixcenter = length(FDMcenter(FDMcenter~=0));
@@ -58,6 +60,7 @@ end
 
 %center, periphery
 mean(TotalList, "omitnan")
+median(TotalList, "omitnan")
 
 fileFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/Centervs.Periphery/';
 fileDir = dir([fileFolder, '2norm*']);
@@ -68,5 +71,6 @@ for k=1:length(fileDir)
 end
 
 %center, periphery
-mean(TotalList, "omitnan")
+mean(TotalList2, "omitnan")
+median(TotalList2, "omitnan")
 
