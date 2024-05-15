@@ -737,22 +737,22 @@ end
 
 
 
-%% Eccentricity median split scatterplot
+%% Eccentricity center vs periphery scatterplot
 ecc_lenpref = struct;
 
 for isub = 1:8
     
-    clearvars eccMedBrainbyROI newBrainbyROIbyEccMed
+    clearvars cVSpBrainbyROI newBrainbyROIbycVSp
     
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'eccMedBrainbyROI_sub', num2str(isub), '.mat']);
-    load([saveFolder, 'lengthBrainbyROIbyECCMed_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'eccBrainbyROI_cVSp_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'lengthBrainbyROIbycVSp_sub', num2str(isub), '.mat']);
 
 
     for visualRegion = 1:14
         thisfield = ['sub', num2str(isub)];
-        thisEcc = eccMedBrainbyROI(:,:,:,visualRegion);
-        thisVoxPref = newBrainbyROIbyEccMed(:,:,:,visualRegion);
+        thisEcc = cVSpBrainbyROI(:,:,:,visualRegion);
+        thisVoxPref = newBrainbyROIbycVSp(:,:,:,visualRegion);
         thisEcc = thisEcc(~isnan(thisEcc));
         thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
         ecc_lenpref.(thisfield){visualRegion}(:,1)=thisEcc;
@@ -761,7 +761,7 @@ for isub = 1:8
 
 end
 
-%% combine all participants - preffered length x eccentricity
+% combine all participants - preffered length x eccentricity
 
 ecc_lenpref_all={};
 for visualRegion = 1:14
@@ -780,17 +780,17 @@ for visualRegion = 1:14
     scatter(ecc_lenpref_all{visualRegion}(:,2), ecc_lenpref_all{visualRegion}(:,1));
     [r, p] = corr(ecc_lenpref_all{visualRegion}(:,2), ecc_lenpref_all{visualRegion}(:,1), 'rows', 'complete');
     if mod(visualRegion, 2) == 1
-        eccType = 'low';
+        eccType = 'center';
     else
-        eccType = 'high';
+        eccType = 'periphery';
     end
     realRegion = ceil(visualRegion/2);    
-    title(sprintf('%s ecc %s: %f/%f', eccType, combinedRoiNames{realRegion}, r, p));
+    title(sprintf('%s %s: %f/%f', eccType, combinedRoiNames{realRegion}, r, p));
 end
-totalTitle = 'all sub preferred length x eccentricity median';
+totalTitle = 'all sub preferred length x ecc by center vs. periphery';
 sgtitle(totalTitle);
 
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_medE_allsub.png');
+saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_cVSp_allsub.png');
 
 % Line plot
 for visualRegion = 1:14
@@ -808,9 +808,9 @@ for visualRegion = 1:14
     hold off;
     legend('Location', 'best');
     if mod(visualRegion,2) == 1
-        eccCond = 'low ecc ';
+        eccCond = 'center ';
     else
-        eccCond = 'high ecc ';
+        eccCond = 'periphery ';
     end
     realRegion = ceil(visualRegion/2);
 
@@ -821,26 +821,26 @@ for visualRegion = 1:14
 
 end
 
-%% Voxel Preference split by median eccentricity
+%% Voxel Preference center vs periphery
 lenpref = struct;
 
 for isub = 1:8
     
-    clearvars  newBrainbyROIbyEccMed
+    clearvars  newBrainbyROIbycVSp
     
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'lengthBrainbyROIbyECCMed_sub', num2str(isub), '.mat']);
+    load([saveFolder, 'lengthBrainbyROIbycVSp_sub', num2str(isub), '.mat']);
 
 
     for visualRegion = 1:14
         subName = ['sub', num2str(isub)];
-        thisVoxPref = newBrainbyROIbyEccMed(:,:,:,visualRegion);
+        thisVoxPref = newBrainbyROIbycVSp(:,:,:,visualRegion);
         thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
         lenpref.(subName){visualRegion}=thisVoxPref;
     end
 
 end
-%% combine all participants - preferred length from coef
+% combine all participants - preferred length from coef
 alllenPref={};
 for visualRegion = 1:14
     currRoi = [];
@@ -858,148 +858,16 @@ for visualRegion = 1:14
     subplot(7, 2, visualRegion);
     histogram(alllenPref{visualRegion});
     if mod(visualRegion, 2) == 1
-        eccType = 'low';
+        eccType = 'center';
     else
-        eccType = 'high';
+        eccType = 'periphery';
     end
     realRegion = ceil(visualRegion/2);
-    title(sprintf('%s ecc %s', eccType, combinedRoiNames{realRegion}));
+    title(sprintf('%s %s', eccType, combinedRoiNames{realRegion}));
     
 end
 totalTitle = 'all sub number of preferred length bin';
 sgtitle(totalTitle);
 
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLengthbyMedECC_allsub.png');
-
-%% Size median split scatterplot
-size_lenpref = struct;
-
-for isub = 1:8
-    
-    clearvars sizeMedBrainbyROI newBrainbyROIbySizeMed
-    
-    saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'sizeMedBrainbyROI_sub', num2str(isub), '.mat']);
-    load([saveFolder, 'lengthBrainbyROIbySizeMed_sub', num2str(isub), '.mat']);
-
-
-    for visualRegion = 1:14
-        thisfield = ['sub', num2str(isub)];
-        thisSize = sizeMedBrainbyROI(:,:,:,visualRegion);
-        thisVoxPref = newBrainbyROIbySizeMed(:,:,:,visualRegion);
-        thisSize = thisSize(~isnan(thisSize));
-        thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
-        size_lenpref.(thisfield){visualRegion}(:,1)=thisSize;
-        size_lenpref.(thisfield){visualRegion}(:,2)=thisVoxPref;
-    end
-
-end
-
-%% combine all participants - preffered length x size
-
-size_lenpref_all={};
-for visualRegion = 1:14
-    currRoi = [];
-    for isub = 1:8
-        subName = ['sub', num2str(isub)];
-        currRoi = [currRoi; size_lenpref.(subName){visualRegion}];
-
-    end
-    size_lenpref_all{visualRegion} = currRoi;
-end
-
-figure;
-for visualRegion = 1:14
-    subplot(7, 2, visualRegion);
-    scatter(size_lenpref_all{visualRegion}(:,2), size_lenpref_all{visualRegion}(:,1));
-    [r, p] = corr(size_lenpref_all{visualRegion}(:,2), size_lenpref_all{visualRegion}(:,1), 'rows', 'complete');
-    if mod(visualRegion, 2) == 1
-        sizeType = 'low';
-    else
-        sizeType = 'high';
-    end
-    realRegion = ceil(visualRegion/2);    
-    title(sprintf('%s size %s: %f/%f', sizeType, combinedRoiNames{realRegion}, r, p));
-end
-totalTitle = 'all sub preferred length x size median';
-sgtitle(totalTitle);
-
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLen_medSize_allsub.png');
-
-% Line plot
-for visualRegion = 1:14
-    V = cell(1, 8);
-    for i = 1:8
-        V{i} = size_lenpref_all{visualRegion}(size_lenpref_all{visualRegion}(:,2) == i, :);
-    end
-
-    colors = jet(8);
-    figure;
-    hold on;
-    for i = 1:8
-        histogram(V{i}(:,1), 'FaceColor', colors(i,:), 'EdgeColor', 'none', 'DisplayName', ['lengthBin', num2str(i)]);
-    end
-    hold off;
-    legend('Location', 'best');
-    if mod(visualRegion,2) == 1
-        sizeType = 'low size ';
-    else
-        sizeType = 'high size ';
-    end
-    realRegion = ceil(visualRegion/2);
-
-    title([sizeType,combinedRoiNames{realRegion}]);
-
-    saveas(gcf,['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/line_prefLen_',sizeType,'_', combinedRoiNames{realRegion}, '.png']);
-end
-
-%% Voxel Preference split by median size
-lenpref = struct;
-
-for isub = 1:8
-    
-    clearvars  newBrainbyROIbySizeMed
-    
-    saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
-    load([saveFolder, 'lengthBrainbyROIbySizeMed_sub', num2str(isub), '.mat']);
-
-
-    for visualRegion = 1:14
-        subName = ['sub', num2str(isub)];
-        thisVoxPref = newBrainbyROIbySizeMed(:,:,:,visualRegion);
-        thisVoxPref = thisVoxPref(~isnan(thisVoxPref));
-        lenpref.(subName){visualRegion}=thisVoxPref;
-    end
-
-end
-%% combine all participants - preferred length from coef
-alllenPref={};
-for visualRegion = 1:14
-    currRoi = [];
-    for isub = 1:8
-        subName = ['sub', num2str(isub)];
-
-        currRoi = [currRoi; lenpref.(subName){visualRegion}];
-
-    end
-    alllenPref{visualRegion} = currRoi;
-end
-
-figure;
-for visualRegion = 1:14
-    subplot(7, 2, visualRegion);
-    histogram(alllenPref{visualRegion});
-    if mod(visualRegion, 2) == 1
-        sizeType = 'low';
-    else
-        sizeType = 'high';
-    end
-    realRegion = ceil(visualRegion/2);
-    title(sprintf('%s size %s', sizeType, combinedRoiNames{realRegion}));
-    
-end
-totalTitle = 'all sub number of preferred length bin';
-sgtitle(totalTitle);
-
-saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLengthbyMedSize_allsub.png');
+saveas(gcf,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/prefLengthbycVSp_allsub.png');
 

@@ -40,5 +40,5 @@ addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'))
 
 %% getVoxPref
 for sub = 1:8
-    getVoxPref(sub,4)
+    getVoxPref_curvature(sub,4)
 end
