@@ -6,9 +6,11 @@ prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/prfsample_Len/';
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
 combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
+allsubMedianValues_ecc=[];
 
 for isub = 1:8
-        clearvars -except isub roiNames combinedRoiNames prffolder
+    isub
+        clearvars -except isub roiNames combinedRoiNames prffolder allsubMedianValues_ecc
 
     %% apply exclustion criteria
     
@@ -47,6 +49,20 @@ for isub = 1:8
     saveFolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/';
     load([saveFolder, 'lengthBrainbyROI_sub', num2str(isub), '.mat']);
     
+    % median for all ROI
+    % curBrain = newBrainbyROI(:);
+    % curBrain(curBrain ~= -1) = eccDataNew(curBrain ~= -1);
+    % curBrain(curBrain == -1) = NaN;
+    % A = curBrain(~isnan(curBrain));
+    % medianValues_ecc(visualRegion) = median(A);
+    
+    
+    
+    % totalmedianValues 
+
+
+
+    % median for each ROI
     medianValues_ecc = zeros(1, 7);
      for visualRegion = 1:7
         curBrain = newBrainbyROI(:,:,:,visualRegion);
@@ -107,6 +123,8 @@ for isub = 1:8
         newBrainbyROIbySizeMed(:,:,:,2*visualRegion) =topNewBrain;
     end
 
+
+    allsubMedianValues_ecc(isub,:)=medianValues_ecc;
     % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/brainVolume/sizeMedBrainbyROI_sub', num2str(isub), '.mat'];
     % save(saveName, 'sizeMedBrainbyROI');
     % 
@@ -147,5 +165,7 @@ for isub = 1:8
 
 
 end
-writematrix(medianValues_ecc,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/medianValues_ecc.txt');
-writematrix(medianValues_size,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/medianValues_size.txt');
+
+
+%writematrix(allsubMedianValues_ecc,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/allsubMedianValues_ecc.txt');
+%writematrix(medianValues_size,'/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/len_hist/medianValues_size.txt');
