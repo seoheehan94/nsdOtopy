@@ -36,18 +36,16 @@ for sub = 1:8
 % fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 4);
 % regressPrfSplit_curvature(sub, 4);
 
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
-regressPrfSplit_curvature(sub, 1);
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
-regressPrfSplit_curvature(sub, 2);
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 3);
-regressPrfSplit_curvature(sub, 3);
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 4);
-regressPrfSplit_curvature(sub, 4);
+fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 5);
+regressPrfSplit_curvature(sub, 5);
+fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 6);
+regressPrfSplit_curvature(sub, 6);
+fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 7);
+regressPrfSplit_curvature(sub, 7);
 
 end
 
 %% getVoxPref
-% for sub = 1:8
-%     getVoxPref_curvature(sub,4)
-% end
+for sub = 1:8
+    getVoxPref_curvature(sub,7)
+end
