@@ -46,6 +46,6 @@ regressPrfSplit_curvature(sub, 7);
 end
 
 %% getVoxPref
-for sub = 1:8
-    getVoxPref_curvature(sub,7)
-end
+% for sub = 1:8
+%     getVoxPref_curvature(sub,7)
+% end
