@@ -9,7 +9,7 @@ combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
 
 %% 1.  Coef voxel preference %%
-for isub = 1:8
+for isub = 5:8
     cd('/home/hanseohe/Documents/GitHub/nsdOtopy/Curvature');
 
     fprintf('%d ...\n',isub);
@@ -85,65 +85,65 @@ prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/prfsample_Curv/
 for isub = 1:8
         clearvars -except isub roiNames combinedRoiNames prffolder
 
-    % load(fullfile([prffolder, 'voxCurvCoef_sub', num2str(isub), '.mat']));
-    % 
-    % % save all ROIs to create overlay
-    % roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-    % visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
-    % visRoiData = niftiread(visualRoisFile);
-    % placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
-    % placeRoiData = niftiread(placesRoisFile);
-    % 
-    % allRoiData = visRoiData;
-    % allRoiData(placeRoiData == 1) = 8;
-    % allRoiData(placeRoiData == 2) = 9;
-    % allRoiData(placeRoiData == 3) = 10;
-    % 
-    % ourBrain = allRoiData;
-    % ourBrain(ourBrain == 2) = 1;
-    % ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
-    % ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
-    % ourBrain(ourBrain == 7) = 4;
-    % ourBrain(ourBrain == 8) = 5;
-    % ourBrain(ourBrain == 9) = 6;
-    % ourBrain(ourBrain == 10) = 7;
-    % 
-    % % make a brain volume
-    % newBrain = ourBrain;
-    % newBrain(newBrain > 0) = 0;
-    % for visualRegion = 1:7
-    %     curOurBrain = ourBrain;
-    %     if visualRegion == 2
-    %         curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-    %     elseif visualRegion == 3
-    %         curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-    %     end
-    %     thisfield = combinedRoiNames{visualRegion};
-    %     newBrain(curOurBrain == visualRegion) = maxCoefCurv.(thisfield)(1,:);
-    % end
-    % newBrain(newBrain < 0) = -1;
-    % 
-    % for visualRegion = 1:7
-    %     curOurBrain = ourBrain;
-    %     if visualRegion == 2
-    %         curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-    %     elseif visualRegion == 3
-    %         curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-    %     end
-    %     curNewBrain = curOurBrain;
-    %     curNewBrain(curOurBrain ~= visualRegion) = -1;
-    %     thisfield = combinedRoiNames{visualRegion};
-    % 
-    %     curNewBrain(curOurBrain == visualRegion) = maxCoefCurv.(thisfield)(1,:);
-    % 
-    %     newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
-    % end
-    % 
-    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume/curvBrain_sub', num2str(isub), '.mat'];
-    % save(saveName, 'newBrain');
-    % 
-    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume/curvBrainbyROI_sub', num2str(isub), '.mat'];
-    % save(saveName, 'newBrainbyROI');
+    load(fullfile([prffolder, 'voxCurvCoef_sub', num2str(isub), '.mat']));
+
+    % save all ROIs to create overlay
+    roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
+    visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
+    visRoiData = niftiread(visualRoisFile);
+    placesRoisFile = fullfile(roifolder,'roi/floc-places.nii.gz'); %OPA, PPA, RSC
+    placeRoiData = niftiread(placesRoisFile);
+
+    allRoiData = visRoiData;
+    allRoiData(placeRoiData == 1) = 8;
+    allRoiData(placeRoiData == 2) = 9;
+    allRoiData(placeRoiData == 3) = 10;
+
+    ourBrain = allRoiData;
+    ourBrain(ourBrain == 2) = 1;
+    ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
+    ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
+    ourBrain(ourBrain == 7) = 4;
+    ourBrain(ourBrain == 8) = 5;
+    ourBrain(ourBrain == 9) = 6;
+    ourBrain(ourBrain == 10) = 7;
+
+    % make a brain volume
+    newBrain = ourBrain;
+    newBrain(newBrain > 0) = 0;
+    for visualRegion = 1:7
+        curOurBrain = ourBrain;
+        if visualRegion == 2
+            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+        elseif visualRegion == 3
+            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+        end
+        thisfield = combinedRoiNames{visualRegion};
+        newBrain(curOurBrain == visualRegion) = maxCoefCurv.(thisfield)(1,:);
+    end
+    newBrain(newBrain < 0) = -1;
+
+    for visualRegion = 1:7
+        curOurBrain = ourBrain;
+        if visualRegion == 2
+            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+        elseif visualRegion == 3
+            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+        end
+        curNewBrain = curOurBrain;
+        curNewBrain(curOurBrain ~= visualRegion) = -1;
+        thisfield = combinedRoiNames{visualRegion};
+
+        curNewBrain(curOurBrain == visualRegion) = maxCoefCurv.(thisfield)(1,:);
+
+        newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
+    end
+
+    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume/curvBrain_sub', num2str(isub), '.mat'];
+    save(saveName, 'newBrain');
+
+    saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume/curvBrainbyROI_sub', num2str(isub), '.mat'];
+    save(saveName, 'newBrainbyROI');
 
 
  
@@ -160,12 +160,12 @@ for isub = 1:8
     currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
     [err,V,Info] = BrikLoad(currOneBeta);
 
-    % Info.RootName = ['curvBrain_sub', num2str(isub), '+orig'];
-    % opt.Prefix = ['curvBrain_sub', num2str(isub)];
-    % WriteBrik(newBrain,Info,opt);
-    % Info.RootName = ['curvBrainbyROI_sub', num2str(isub), '+orig'];
-    % opt.Prefix = ['curvBrainbyROI_sub', num2str(isub)];
-    % WriteBrik(newBrainbyROI,Info,opt);
+    Info.RootName = ['curvBrain_sub', num2str(isub), '+orig'];
+    opt.Prefix = ['curvBrain_sub', num2str(isub)];
+    WriteBrik(newBrain,Info,opt);
+    Info.RootName = ['curvBrainbyROI_sub', num2str(isub), '+orig'];
+    opt.Prefix = ['curvBrainbyROI_sub', num2str(isub)];
+    WriteBrik(newBrainbyROI,Info,opt);
 
 
 end
