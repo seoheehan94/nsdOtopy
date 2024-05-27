@@ -8,7 +8,7 @@ imgSubFolder = imgSubFolder(ismember({imgSubFolder(:).name},{'images01','images0
 load("/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/Centervs.Periphery/centerMask.mat");
 load("/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Length/Centervs.Periphery/peripheryMask.mat");
 
-for k=3:length(imgSubFolder)
+for k=4:length(imgSubFolder)
     thisFolder = imgSubFolder(k).name;
     imFilePath = natsortfiles(dir([imgFolder, thisFolder,'/*.mat']));
 
@@ -27,8 +27,8 @@ for k=3:length(imgSubFolder)
         FDMperiph = FDM;
         FDMperiph(peripheryMask==0) =0;
 
-        figure;imagesc(FDMcenter)
-        figure;imagesc(FDMperiph)
+        % figure;imagesc(FDMcenter)
+        % figure;imagesc(FDMperiph)
         %Sum all the values divided by non-zero pixels
         sumFDMcenter = sum(FDMcenter(:));
         numPixcenter = length(FDMcenter(FDMcenter~=0));
