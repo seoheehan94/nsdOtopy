@@ -9,7 +9,7 @@ combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
 
 %% 1.  Coef voxel preference %%
-for isub = 5:8
+for isub = 1:8
     cd('/home/hanseohe/Documents/GitHub/nsdOtopy/Curvature');
 
     fprintf('%d ...\n',isub);
@@ -83,7 +83,7 @@ combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/prfsample_Curv/';
 
 for isub = 1:8
-        clearvars -except isub roiNames combinedRoiNames prffolder
+    clearvars -except isub roiNames combinedRoiNames prffolder
 
     load(fullfile([prffolder, 'voxCurvCoef_sub', num2str(isub), '.mat']));
 
@@ -113,11 +113,11 @@ for isub = 1:8
     newBrain(newBrain > 0) = 0;
     for visualRegion = 1:7
         curOurBrain = ourBrain;
-        if visualRegion == 2
-            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-        elseif visualRegion == 3
-            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-        end
+        % if visualRegion == 2
+        %     curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+            % elseif visualRegion == 3
+            %     curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+        % end
         thisfield = combinedRoiNames{visualRegion};
         newBrain(curOurBrain == visualRegion) = maxCoefCurv.(thisfield)(1,:);
     end
@@ -125,11 +125,11 @@ for isub = 1:8
 
     for visualRegion = 1:7
         curOurBrain = ourBrain;
-        if visualRegion == 2
-            curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-        elseif visualRegion == 3
-            curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-        end
+        % if visualRegion == 2
+        %     curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
+        % elseif visualRegion == 3
+        %     curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
+        % end
         curNewBrain = curOurBrain;
         curNewBrain(curOurBrain ~= visualRegion) = -1;
         thisfield = combinedRoiNames{visualRegion};
@@ -146,7 +146,7 @@ for isub = 1:8
     save(saveName, 'newBrainbyROI');
 
 
- 
+
     %% save afni file
     % size(newBrain)
     cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume');
