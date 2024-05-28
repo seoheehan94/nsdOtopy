@@ -18,7 +18,7 @@ offsetX = round((backgroundSize(2) - renderSize(2))/2);
 
 
 for c = 1:vecLD.numContours
-    curvs = vecLD.curvatures(c);
+    curvs = vecLD.curvatures{c};
         for s = 1:size(vecLD.contours{c},1)
             thisMap = zeros(backgroundSize(1),backgroundSize(2),3);
             newcord = vecLD.contours{c}(s,:);
