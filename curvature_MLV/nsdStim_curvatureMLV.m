@@ -64,7 +64,7 @@ for isub=1:8
     
     iimg=0;
     for imgNum=allImgs
-        iimg = iimg+1;
+        iimg = iimg+1
         
         filename = ['curvImg' num2str(imgNum) '.mat'];
         if ~isfile(fullfile(curvfolder, filename))%if file exists already no need to remake it
