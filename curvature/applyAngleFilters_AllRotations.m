@@ -41,6 +41,8 @@ for rot=1:length(rotationList)
     filteredImg=abs(filteredImg./sum(sum(abs(filter))));
     
     accumulator(:,:,rot)=(abs(filteredImg).^8);
+
+ 
 end
 
 accumulator=squeeze(mean(accumulator,3));

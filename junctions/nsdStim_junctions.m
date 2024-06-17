@@ -1,4 +1,4 @@
-% nsdStim_curvatureMLV.m
+% nsdStim_junctions.m
 %
 % associated with the following publication: Roth, ZN, Kay, K, and Merriam, EP (2022).
 % Massive natural scene sampling reveals reliable coarse-scale orientation tuning in human V1
@@ -19,21 +19,18 @@ clear all;
 backgroundSize = [512 512];
 renderSize = [357,357];
 
-addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'));
-addpath(genpath('/home/hanseohe/Documents/GitHub/mrTools'));
-addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'));
-
-%cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
+cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-curvfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/curvfilter_MLV/';%to save model outputs
+juncfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/juncfilter/';%to save model outputs
 
 %%
 % construct quad frequency filters
 
-numCurvs = 8;
+numJunctions = 4;
 bandwidth = 1;
 dims = backgroundSize;
 numLevels = 1;
+[freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numJunctions, bandwidth);
 
 %%
 stimfolder = '/bwdata/NSDData/stmuli/';
@@ -51,7 +48,7 @@ allImgs = nsdDesign.sharedix; %indices of the shared 1000 images
 
 vecLDfolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
 
-for isub=1:8
+for isub=[1:8]
     
     allImgs = nsdDesign.subjectim(isub,nsdDesign.masterordering);%indices of all 10000 images used for this subject
     allImgs = unique(allImgs);
@@ -66,8 +63,8 @@ for isub=1:8
     for imgNum=allImgs
         iimg = iimg+1
         
-        filename = ['curvImg' num2str(imgNum) '.mat'];
-        if ~isfile(fullfile(curvfolder, filename))%if file exists already no need to remake it
+        juncfilename = ['juncImg' num2str(imgNum) '.mat'];
+        if ~isfile(fullfile(juncfolder, juncfilename))%if file exists already no need to remake it
             imgName = ['img' num2str(imgNum) '.mat'];
             if imgNum <= 14600*1
                 imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images01/';
@@ -82,24 +79,25 @@ for isub=1:8
             end
 
             load(fullfile(imgFolder, imgName));
+           
+            %% pass image through junction filter
+            juncMap = generateJunctionMap(vecLD, NaN, backgroundSize, renderSize);
+   
+            binWidth2 = 90 / length(vecLD.orientationBins);
+            horIdx = (juncMap > (180-binWidth2));
+            juncMap(horIdx) = juncMap(horIdx) - 180;
             
-            %% pass image through curvature filter
-            curvMap = generateCurvatureMap_MLV(vecLD, NaN, backgroundSize, renderSize);
-
-            binWidth = 180 / length(vecLD.betterCurvatureBins);
-            binBoundary = [0 : binWidth : 180];
-            binCenter = binBoundary(2:end) - binWidth/2;
-
+            %vecLD.orientationBins
             for binIdx = 1: length(vecLD.orientationBins)
-                curvbinmap{1,binIdx} = (abs(curvMap-binCenter(binIdx)) <= binWidth/2);
+                juncbinmap{1,binIdx} = (abs(juncMap-vecLD.orientationBins(binIdx)) <= binWidth2);
 
             end
+            modelJunc=cat(3,juncbinmap{:});
+            modelJunc = permute(modelJunc,[3 1 2]);
 
-            modelCurv=cat(3,curvbinmap{:});
-            modelCurv = permute(modelCurv,[3 1 2]);
-
-            save(fullfile(curvfolder, filename),...
-                'numCurvs','dims','modelCurv','numLevels', 'curvMap');
+            save(fullfile(juncfolder, juncfilename),...
+                'numJunctions','bandwidth','dims','modelJunc','numLevels', 'juncMap');
         end
     end
 end
+

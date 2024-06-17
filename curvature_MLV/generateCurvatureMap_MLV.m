@@ -18,15 +18,15 @@ offsetX = round((backgroundSize(2) - renderSize(2))/2);
 
 
 for c = 1:vecLD.numContours
-    curvs = vecLD.curvatures{c};
-        for s = 1:size(vecLD.contours{c},1)
+    curvs = vecLD.betterCurvatureContours{c};
+        for s = 1:size(curvs,1)
             thisMap = zeros(backgroundSize(1),backgroundSize(2),3);
-            newcord = vecLD.contours{c}(s,:);
+            newcord = curvs(s,1:4);
             newcord(1,[1,3]) = newcord(1,[1,3])*scaleX + offsetX;
             newcord(1,[2,4]) = newcord(1,[2,4])*scaleY + offsetY;
             thisMap = insertShape(thisMap,'Line',newcord,'Color',[1,0,0],'LineWidth',1,'Opacity',1,'SmoothEdges',false);
             thisMap = thisMap(:,:,1);
             thisIdx = (thisMap > 0);
-            curvMap(thisIdx) = curvs(s);
+            curvMap(thisIdx) = curvs(s,5);
         end
 end
