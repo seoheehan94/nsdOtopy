@@ -28,20 +28,20 @@ addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'))
 %% regressPrfSplit
 for sub = 2:8
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
-regressPrfSplit_curvatureMLV(sub, 1);
+regressPrfSplit_curvMLV(sub, 1);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
-regressPrfSplit_curvatureMLV(sub, 2);
+regressPrfSplit_curvMLV(sub, 2);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 3);
-regressPrfSplit_curvatureMLV(sub, 3);
+regressPrfSplit_curvMLV(sub, 3);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 4);
-regressPrfSplit_curvatureMLV(sub, 4);
+regressPrfSplit_curvMLV(sub, 4);
 
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 5);
-regressPrfSplit_curvatureMLV(sub, 5);
+regressPrfSplit_curvMLV(sub, 5);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 6);
-regressPrfSplit_curvatureMLV(sub, 6);
+regressPrfSplit_curvMLV(sub, 6);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 7);
-regressPrfSplit_curvatureMLV(sub, 7);
+regressPrfSplit_curvMLV(sub, 7);
 
 end
 
