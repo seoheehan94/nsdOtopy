@@ -1,4 +1,4 @@
-% nsdStim.m
+% nsdStim_junctions.m
 %
 % associated with the following publication: Roth, ZN, Kay, K, and Merriam, EP (2022).
 % Massive natural scene sampling reveals reliable coarse-scale orientation tuning in human V1
@@ -21,19 +21,19 @@ renderSize = [357,357];
 
 cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-orifolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/orientationfilter/';%to save model outputs
+juncfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/juncfilter/';%to save model outputs
 
 %%
 % construct quad frequency filters
 
-numOrientations = 8;
+numJunctions = 4;
 bandwidth = 1;
 dims = backgroundSize;
 numLevels = 1;
-[freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numOrientations, bandwidth);
+[freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numJunctions, bandwidth);
 
 %%
-stimfolder = '/bwdata/NSDData/stimuli/';
+stimfolder = '/bwdata/NSDData/stmuli/';
 stimfilename = fullfile(stimfolder,'nsd_stimuli.hdf5');%[3 1360 714 220]
 stiminfo = h5info(stimfilename);
 
@@ -63,8 +63,8 @@ for isub=[1:8]
     for imgNum=allImgs
         iimg = iimg+1
         
-        orifilename = ['oriImg' num2str(imgNum) '.mat'];
-        if ~isfile(fullfile(orifolder, orifilename))%if file exists already no need to remake it
+        juncfilename = ['juncImg' num2str(imgNum) '.mat'];
+        if ~isfile(fullfile(juncfolder, juncfilename))%if file exists already no need to remake it
             imgName = ['img' num2str(imgNum) '.mat'];
             if imgNum <= 14600*1
                 imgFolder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli/images01/';
@@ -85,22 +85,22 @@ for isub=[1:8]
                 vecLD.orientations{c} = vecLD.orientations{c}-90;
             end
            
-            oriMap = generateOrientationMap(vecLD, NaN, backgroundSize, renderSize);
+            juncMap = generateJunctionMap(vecLD, NaN, backgroundSize, renderSize);
    
             binWidth2 = 90 / length(vecLD.orientationBins);
-            horIdx = (oriMap > (180-binWidth2));
-            oriMap(horIdx) = oriMap(horIdx) - 180;
+            horIdx = (juncMap > (180-binWidth2));
+            juncMap(horIdx) = juncMap(horIdx) - 180;
             
             %vecLD.orientationBins
             for binIdx = 1: length(vecLD.orientationBins)
-                oribinmap{1,binIdx} = (abs(oriMap-vecLD.orientationBins(binIdx)) <= binWidth2);
+                juncbinmap{1,binIdx} = (abs(juncMap-vecLD.orientationBins(binIdx)) <= binWidth2);
 
             end
-            modelOri=cat(3,oribinmap{:});
-            modelOri = permute(modelOri,[3 1 2]);
+            modelJunc=cat(3,juncbinmap{:});
+            modelJunc = permute(modelJunc,[3 1 2]);
 
-            save(fullfile(orifolder, orifilename),...
-                'numOrientations','bandwidth','dims','modelOri','numLevels', 'oriMap');
+            save(fullfile(juncfolder, juncfilename),...
+                'numJunctions','bandwidth','dims','modelJunc','numLevels', 'juncMap');
         end
     end
 end

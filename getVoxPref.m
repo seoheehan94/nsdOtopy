@@ -33,7 +33,7 @@ toSavePdf = 0;
 numOrientations = 8;
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 nperms=1000;
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
+prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
 
 interpSz= 714;
 backgroundSz= 1024;
@@ -367,6 +367,7 @@ save([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig'
                 % 3 - average across gratings spatial frequency, and then circular weighted mean
                 voxAngleResp = squeeze(mean(reshape(voxGratingResp,numvox, numFreqs, numAngles),2));
                 %subtract minimum response (might be negative)
+                keyboard;
                 voxAngleResp = voxAngleResp - min(voxAngleResp,[],2);
                 theta = linspace(0,2*pi,numAngles+1);%for circular calculation
                 theta = theta(1:end-1);

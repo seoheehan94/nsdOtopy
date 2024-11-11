@@ -34,7 +34,7 @@ numLevels = maxLevel(dims,bandwidth);
 [freqRespsImag, freqRespsReal, pind] = makeQuadFRs(dims, numLevels, numOrientations, bandwidth);
 
 %%
-stimfolder = '/bwdata/NSDData/stmuli/';
+stimfolder = '/bwdata/NSDData/stimuli/';
 stimfilename = fullfile(stimfolder,'nsd_stimuli.hdf5');%[3 1360 714 220]
 stiminfo = h5info(stimfilename);
 

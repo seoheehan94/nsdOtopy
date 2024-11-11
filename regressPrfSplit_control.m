@@ -22,7 +22,7 @@ nsessions=nsessionsSub(isub);
 nsplits=2;
 bandpass = 1; bandMin = 1; bandMax = 7;
 
-boxfolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample_Ori_control/';
+boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/';
 betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
 % stimfilename = fullfile(folder,'nsdsynthetic_colorstimuli_subj01.hdf5');
 nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
@@ -93,6 +93,8 @@ for visualRegion=visualRegions
     voxOriPredOriR2 = cell(length(rois),1);
     voxResidOriR2 = cell(length(rois),1);
     voxPredOriR2 = cell(length(rois),1);
+    aicOriSplit = cell(length(rois),1);
+    bicOriSplit = cell(length(rois),1);
     
     pearsonRori = cell(length(rois),1);
     pearsonR = cell(length(rois),1);
@@ -194,6 +196,8 @@ for visualRegion=visualRegions
                 %r2 between splits
                 r2split{roinum}(isplit,ivox) = rsquared(voxResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
                 r2oriSplit{roinum}(isplit,ivox) = rsquared(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
+                aicOriSplit{roinum}(isplit,ivox) = AIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
+                bicOriSplit{roinum}(isplit,ivox) = BIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
                 
                 %corr between splits
                 pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
@@ -213,6 +217,8 @@ for visualRegion=visualRegions
     nsd.r2ori = r2ori;
     nsd.r2split = r2split;
     nsd.r2oriSplit = r2oriSplit;
+    nsd.aicOriSplit = aicOriSplit;
+    nsd.bicOriSplit = bicOriSplit;
     nsd.pearsonRori = pearsonRori;
     nsd.pearsonR = pearsonR;
     nsd.imgNum = imgNum;

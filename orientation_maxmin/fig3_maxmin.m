@@ -14,7 +14,7 @@ close all
 clear all
 tic
 
-toSavePdf = 0;
+toSavePdf = 1;
 
 imgFormat = 'jpg';
 subjects = [1:8];
@@ -34,47 +34,24 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
-figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
+prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
+figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);
-allResidOri = cell(1,nrois);
-allResidOriOri = cell(1,nrois);
-allPredOri = cell(1,nrois);
-allPredOriOri = cell(1,nrois);
-
-allLevVig = cell(1,nrois);
-allLevFull = cell(1,nrois);
 allPrfR2 = cell(1,nrois);
-allNsdCorr = cell(1,nrois);
-allNsdOriCorr = cell(1,nrois);
-allSynthCorr = cell(1,nrois);
-allSynthOriCorr = cell(1,nrois);
 allPrfX = cell(1,nrois);
 allPrfY = cell(1,nrois);
 allPrfEcc = cell(1,nrois);
 allPrfAng = cell(1,nrois);
-allSynthOri = cell(1,nrois);
-allSynthLevVig = cell(1,nrois);
-allSynthLevFull = cell(1,nrois);
-allOriDeviation = cell(1,nrois);
-allVertDeviation = cell(1,nrois);
-allCardDeviation = cell(1,nrois);
+
 allNsdOriR2 = cell(1,nrois);
-allNsdR2 = cell(1,nrois);
 allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref_sub' num2str(subnum) '.mat'],'allRoiPrf','roiLevVig','roiLevFull',...
-        'roiOri','roiNsdCorr','roiNsdOriCorr','roiNsdOriR2','roiNsdR2',...
-        'residOri','residOriOri','predOri','predOriOri',...
-        'roiSynthCorr','roiSynthOriCorr','roiSynthOri',...
-        'roiSynthLevVig','roiSynthLevFull', ...
-        'nsdSynthImprov_pval', 'nsdSynthImprov_corr','roiOriDeviation','roiVertDeviation','roiCardDeviation',...
-        'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');
+    load([prffolder 'voxOriCoef_regress_sub' num2str(subnum) '.mat']);
     
-    subAnalysis(isub) = prefAnalysis;
+    % subAnalysis(isub) = prefAnalysis;
 %     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
 %     subNsdSynthImprov_pval(isub,:,:) = nsdSynthImprov_pval;
     for iroi=1:nrois
@@ -83,18 +60,18 @@ for isub=1:length(subjects)
         allPrfEcc{iroi} = [allPrfEcc{iroi}; allRoiPrf{iroi}.ecc];
         allPrfAng{iroi} = [allPrfAng{iroi}; allRoiPrf{iroi}.ang];
         allPrfR2{iroi} = [allPrfR2{iroi}; allRoiPrf{iroi}.r2];
-        allOri{iroi} =  [allOri{iroi} roiOri{iroi}];
-        allResidOri{iroi} =  [allResidOri{iroi} residOri{iroi}];
-        allResidOriOri{iroi} =  [allResidOriOri{iroi} roiOri{iroi}];
-        allPredOri{iroi} =  [allPredOri{iroi} residOriOri{iroi}];
-        allPredOriOri{iroi} =  [allPredOriOri{iroi} predOriOri{iroi}];
+        allOri{iroi} =  [allOri{iroi} deg2rad(allMeanCoef{iroi})];
+        % allResidOri{iroi} =  [allResidOri{iroi} residOri{iroi}];
+        % allResidOriOri{iroi} =  [allResidOriOri{iroi} roiOri{iroi}];
+        % allPredOri{iroi} =  [allPredOri{iroi} residOriOri{iroi}];
+        % allPredOriOri{iroi} =  [allPredOriOri{iroi} predOriOri{iroi}];
         
-        allLevVig{iroi} = [allLevVig{iroi} roiLevVig{iroi}];
-        allLevFull{iroi} = [allLevFull{iroi} roiLevFull{iroi}];
-        allNsdCorr{iroi} = [allNsdCorr{iroi} roiNsdCorr{iroi}];
-        allNsdOriCorr{iroi} = [allNsdOriCorr{iroi} roiNsdOriCorr{iroi}];
+        % allLevVig{iroi} = [allLevVig{iroi} roiLevVig{iroi}];
+        % allLevFull{iroi} = [allLevFull{iroi} roiLevFull{iroi}];
+        % allNsdCorr{iroi} = [allNsdCorr{iroi} roiNsdCorr{iroi}];
+        % allNsdOriCorr{iroi} = [allNsdOriCorr{iroi} roiNsdOriCorr{iroi}];
         allNsdOriR2{iroi} = [allNsdOriR2{iroi} roiNsdOriR2{iroi}];
-        allNsdR2{iroi} = [allNsdR2{iroi} roiNsdR2{iroi}];
+        % allNsdR2{iroi} = [allNsdR2{iroi} roiNsdR2{iroi}];
 %         allSynthCorr{iroi} = [allSynthCorr{iroi} roiSynthCorr{iroi}];
 %         allSynthOriCorr{iroi} = [allSynthOriCorr{iroi} roiSynthOriCorr{iroi}];
 %         allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
@@ -113,7 +90,7 @@ ifig=ifig+1; h=figure(ifig); clf;
 rows=1;
 % cols=3;
 cols=1;
-isplit = nsplits;
+isplit = 3;
 isubplot=0;
 
 iroi=1;
@@ -121,7 +98,7 @@ iroi=1;
 %% preferred ORIENTATION
 isubplot=isubplot+1;
 subplot(rows,cols, isubplot);
-plotOriLines(allOri{iroi}(isplit,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdR2{iroi}(isplit,:)));
+plotOriLines(allOri{iroi}(1,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdOriR2{iroi}(isplit,:)));
 
 xlabel('\itx position (deg)');
 ylabel('\ity position (deg)');
@@ -193,11 +170,11 @@ ylabel('\ity position (deg)');
 % 
 % %%
 % set(gcf,'position',[150 180 3*250 rows*210]);
-% h.Units = 'centimeters';
-% h.PaperSize=[10 3.5];
-% if toSavePdf
-%     print('-painters','-dpdf',[figFolder 'fig3_left']);
-% end
+h.Units = 'centimeters';
+h.PaperSize=[5 5];
+if toSavePdf
+    print('-painters','-dpdf',[figFolder 'radialBias_regress_control']);
+end
 % 
 % toc
 %%

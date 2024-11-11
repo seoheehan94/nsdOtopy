@@ -6,6 +6,7 @@ clear all;
 filedir = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/';
 condition = {'old', 'ori', 'control'};
 
+addpath(genpath('/usr/local/freesurfer/7.4.1/matlab'));
 [~,M,mr] = load_mgh('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/sub1/oldBrain_sub1_lh_fsaverage.mgh');
 %save_mgh(vol, 'orig.stripped.mgz', M,mr);
 %result = MRIread('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/sub1/angleBrain_sub1_lh_fsaverage.mgh');
@@ -21,14 +22,14 @@ for curcond = 1:3
     % multiply by 2
     vol_lh = vol_lh*2;
     vol_rh = vol_rh*2;
-    vol_lh_r = vol_lh*pi/180;
-    vol_rh_r = vol_rh*pi/180;
+    vol_lh_r = deg2rad(vol_lh);
+    vol_rh_r = deg2rad(vol_rh);
 
     %% get all subjects full model R2 values
     % what to do with -1 and 0?
     for isub=1:8
-        R2_lh(:,isub) = load_mgh([filedir, 'sub', num2str(isub), '/', condition{curcond}, 'R2_sub', num2str(isub), '_lh_fsaverage.mgh']);
-        R2_rh(:,isub) = load_mgh([filedir, 'sub', num2str(isub), '/', condition{curcond}, 'R2_sub', num2str(isub), '_rh_fsaverage.mgh']);
+        R2_lh(:,isub) = load_mgh([filedir, 'sub', num2str(isub), '/', condition{curcond}, 'BrainR2_sub', num2str(isub), '_lh_fsaverage.mgh']);
+        R2_rh(:,isub) = load_mgh([filedir, 'sub', num2str(isub), '/', condition{curcond}, 'BrainR2_sub', num2str(isub), '_rh_fsaverage.mgh']);
     end
 
 

@@ -2,7 +2,7 @@
 clear all;
 cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/brainVolume';
 corrList = [];
-folderDir = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/';
+folderDir = '/bwdata/NSDData/Seohee/Orientation/';
 condition = {'old', 'ori', 'control'};
 subfolderName = {'prfsample/', 'prfsample_Ori/', 'prfsample_Ori_control/'};
 saveName = {'oldBrain','oriBrain','controlBrain'};

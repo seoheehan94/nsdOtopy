@@ -79,7 +79,7 @@ end
 
 %% make a brain volume
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
-combinedRoicd ../..Names = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
+combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/prfsample_Curv/';
 
 for isub = 1:8

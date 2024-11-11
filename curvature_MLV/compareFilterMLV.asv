@@ -1,0 +1,25 @@
+clear all;
+
+filedir = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/';
+
+filterCurv_lh = squeeze(load_mgh([filedir, 'Curvature/surfaceData/curvBrainbyROI_groupmean_lh_fsaverage.mgh']));
+filterCurv_rh = squeeze(load_mgh([filedir, 'Curvature/surfaceData/curvBrainbyROI_groupmean_rh_fsaverage.mgh']));
+MLVCurv_lh = squeeze(load_mgh([filedir, 'Curvature_MLV/surfaceData/curvMLVBrainbyROI_groupmean_lh_fsaverage.mgh']));
+MLVCurv_rh = squeeze(load_mgh([filedir, 'Curvature_MLV/surfaceData/curvMLVBrainbyROI_groupmean_rh_fsaverage.mgh']));
+
+pearsonTotal = [];
+spearmanTotal = [];
+
+for cur = 1:7
+    curFilter = filterCurv_lh(:,cur);
+    curMLV = MLVCurv_lh(:,cur);
+    validIdx = ~isnan(curFilter) & ~isnan(curMLV);
+    curFilter = curFilter(validIdx);
+    curMLV = curMLV(validIdx);
+
+    [pearsonTotal(cur,1), pearsonTotal(cur,2)] = corr(curFilter, curMLV);
+
+
+    [spearmanTotal(cur,1), spearmanTotal(cur,2)] = corr(curFilter, curMLV, 'Type', 'Spearman');
+
+end

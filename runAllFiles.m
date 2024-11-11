@@ -1,6 +1,6 @@
 %% prfSampleModel
 
-addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
+% addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 % for sub = 7:8
 %     fprintf('%s. %d. %d ...\n','prfSampleModel',sub,1);
 %     prfSampleModel(sub,1);
@@ -13,7 +13,7 @@ addpath(genpath('/home/hanseohe/Documents/GitHub/stimulusVignetting'))
 % end
 
 %% regressPrfSplit
-for sub = 5:8
+for sub = 1:8
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
 regressPrfSplit(sub, 1);
 fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
@@ -26,6 +26,6 @@ regressPrfSplit(sub, 4);
 end
 %
 %% getVoxPref
-for sub = 1:8
-    getVoxPref(sub,4)
-end
+% for sub = 1:8
+%     getVoxPref(sub,4)
+% end

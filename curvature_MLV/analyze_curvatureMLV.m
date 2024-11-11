@@ -3,14 +3,14 @@
 %   uses files created by: regressPrfSplit_curvate.m
 %   creates files used by:
 clear all;
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/prfsample_Curv/';
+prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature_MLV/prfsample_CurvMLV/';
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
 combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
 
 
 %% 1.  Coef voxel preference %%
 for isub = 1:8
-    cd('/home/hanseohe/Documents/GitHub/nsdOtopy/Curvature');
+    cd('/home/hanseohe/Documents/GitHub/nsdOtopy/curvature_MLV');
 
     fprintf('%d ...\n',isub);
     clearvars -except isub roiNames combinedRoiNames prffolder
@@ -79,8 +79,8 @@ end
 
 %% make a brain volume
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4','OPA','PPA','RSC'};
-combinedRoicd ../..Names = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
-prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/prfsample_Curv/';
+combinedRoiNames = {'V1','V2','V3','hV4','OPA','PPA','RSC'};
+prffolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/CurvatureMLV/prfsample_CurvMLV/';
 
 for isub = 1:8
     clearvars -except isub roiNames combinedRoiNames prffolder
@@ -139,62 +139,62 @@ for isub = 1:8
     %     newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
     % end
     % 
-    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume/curvBrain_sub', num2str(isub), '.mat'];
+    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/CurvatureMLV/brainVolume/curvMLVBrain_sub', num2str(isub), '.mat'];
     % save(saveName, 'newBrain');
     % 
-    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume/curvBrainbyROI_sub', num2str(isub), '.mat'];
+    % saveName = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/CurvatureMLV/brainVolume/curvMLVBrainbyROI_sub', num2str(isub), '.mat'];
     % save(saveName, 'newBrainbyROI');
     % 
-    % 
-    % 
-    % %% save afni file
-    % % size(newBrain)
-    cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume');
-    % %3dinfo betas_session01.nii.gz
-    % %3dcalc -a betas_session01.nii.gz[1] -expr a -prefix oneBeta
-    % % command = ['3dinfo betas_session01_sub', num2str(isub), '.nii.gz'];
-    % % system(command);
-    % % command = ['3dcalc -a betas_session01_sub', num2str(isub), '.nii.gz[1] -expr a -prefix oneBeta_sub', num2str(isub)];
-    % % system(command);
-    % 
+
+
+    %% save afni file
+    % size(newBrain)
+    cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature_MLV/brainVolume');
+    %3dinfo betas_session01.nii.gz
+    %3dcalc -a betas_session01.nii.gz[1] -expr a -prefix oneBeta
+    % command = ['3dinfo betas_session01_sub', num2str(isub), '.nii.gz'];
+    % system(command);
+    % command = ['3dcalc -a betas_session01_sub', num2str(isub), '.nii.gz[1] -expr a -prefix oneBeta_sub', num2str(isub)];
+    % system(command);
+
     % currOneBeta = ['oneBeta_sub', num2str(isub), '+orig'];
     % [err,V,Info] = BrikLoad(currOneBeta);
     % 
-    % Info.RootName = ['curvBrain_sub', num2str(isub), '+orig'];
-    % opt.Prefix = ['curvBrain_sub', num2str(isub)];
+    % Info.RootName = ['curvMLVBrain_sub', num2str(isub), '+orig'];
+    % opt.Prefix = ['curvMLVBrain_sub', num2str(isub)];
     % WriteBrik(newBrain,Info,opt);
-    % Info.RootName = ['curvBrainbyROI_sub', num2str(isub), '+orig'];
-    % opt.Prefix = ['curvBrainbyROI_sub', num2str(isub)];
+    % Info.RootName = ['curvMLVBrainbyROI_sub', num2str(isub), '+orig'];
+    % opt.Prefix = ['curvMLVBrainbyROI_sub', num2str(isub)];
     % WriteBrik(newBrainbyROI,Info,opt);
 
- % %% save nifti
- %  load(['curvBrain_sub', num2str(isub), '.mat']);
- % 
- %  niftiwrite(newBrain,['curvBrain', '_sub', num2str(isub),'.nii']);
- %  info_old = niftiinfo(['betas_session01_sub', num2str(isub),'.nii.gz']);
- %  info_new = niftiinfo(['curvBrain', '_sub', num2str(isub),'.nii']);
- % 
- %  info_new.PixelDimensions = [1.8, 1.8, 1.8];
- %  info_new.TransformName = info_old.TransformName;
- %  info_new.SpatialDimension = info_old.SpatialDimension;
- %  info_new.Transform = info_old.Transform;
- %  info_new.Qfactor = info_old.Qfactor;
- %  info_new.AuxiliaryFile = info_old.AuxiliaryFile;
- %  info_new.raw.pixdim = info_old.raw.pixdim;
- %  info_new.raw.aux_file = info_old.raw.aux_file;
- %  info_new.raw.sform_code = info_old.raw.sform_code;
- %  info_new.raw.srow_x = info_old.raw.srow_x;
- %  info_new.raw.srow_y = info_old.raw.srow_y;
- %  info_new.raw.srow_z = info_old.raw.srow_z;
- % 
- %  niftiwrite(newBrain,['curvBrain', '_sub', num2str(isub),'.nii'],info_new);
-
   %% save nifti
-  load(['curvBrainbyROI_sub', num2str(isub), '.mat']);
+  % load(['curvMLVBrain_sub', num2str(isub), '.mat']);
+  % 
+  % niftiwrite(newBrain,['curvMLVBrain', '_sub', num2str(isub),'.nii']);
+  % info_old = niftiinfo(['betas_session01_sub', num2str(isub),'.nii.gz']);
+  % info_new = niftiinfo(['curvMLVBrain', '_sub', num2str(isub),'.nii']);
+  % 
+  % info_new.PixelDimensions = [1.8, 1.8, 1.8];
+  % info_new.TransformName = info_old.TransformName;
+  % info_new.SpatialDimension = info_old.SpatialDimension;
+  % info_new.Transform = info_old.Transform;
+  % info_new.Qfactor = info_old.Qfactor;
+  % info_new.AuxiliaryFile = info_old.AuxiliaryFile;
+  % info_new.raw.pixdim = info_old.raw.pixdim;
+  % info_new.raw.aux_file = info_old.raw.aux_file;
+  % info_new.raw.sform_code = info_old.raw.sform_code;
+  % info_new.raw.srow_x = info_old.raw.srow_x;
+  % info_new.raw.srow_y = info_old.raw.srow_y;
+  % info_new.raw.srow_z = info_old.raw.srow_z;
+  % 
+  % niftiwrite(newBrain,['curvMLVBrain', '_sub', num2str(isub),'.nii'],info_new);
 
-  niftiwrite(newBrainbyROI,['curvBrainbyROI', '_sub', num2str(isub),'.nii']);
+   %% save nifti
+  load(['curvMLVBrainbyROI_sub', num2str(isub), '.mat']);
+
+  niftiwrite(newBrainbyROI,['curvMLVBrainbyROI', '_sub', num2str(isub),'.nii']);
   info_old = niftiinfo(['betas_session01_sub', num2str(isub),'.nii.gz']);
-  info_new = niftiinfo(['curvBrainbyROI', '_sub', num2str(isub),'.nii']);
+  info_new = niftiinfo(['curvMLVBrainbyROI', '_sub', num2str(isub),'.nii']);
 
   % info_new.ImageSize = size(newBrainbyROI);
   info_new.PixelDimensions = info_old.PixelDimensions;
@@ -210,7 +210,7 @@ for isub = 1:8
   info_new.raw.srow_y = info_old.raw.srow_y;
   info_new.raw.srow_z = info_old.raw.srow_z;
 
-  niftiwrite(newBrainbyROI,['curvBrainbyROI', '_sub', num2str(isub),'.nii'],info_new);
+  niftiwrite(newBrainbyROI,['curvMLVBrainbyROI', '_sub', num2str(isub),'.nii'],info_new);
 
 
 end
