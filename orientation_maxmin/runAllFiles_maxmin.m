@@ -13,9 +13,10 @@
 % end
 
 %% regressPrfSplit
-isub_values = 1:8;
-visualRegions_values = 1:4;
-pairTypes = {'old_control', 'old_ori', 'control_ori'};
+isub_values = 1;
+visualRegions_values = 4;
+% pairTypes = {'old_control', 'old_ori', 'control_ori'};
+pairTypes = {'old_control', 'old_ori'};
 imgTypes = {'Top', 'Bottom'};
 
 % Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array

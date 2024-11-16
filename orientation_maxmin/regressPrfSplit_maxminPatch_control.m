@@ -12,7 +12,7 @@
 %   uses files created by: prfSampleModel.m, prfSampleModel_synth.m
 %   creates files used by: getVoxPref.m
 
-function regressPrfSplit_maxminPatch(isub,visualRegions,pairType, imgType)
+function regressPrfSplit_maxminPatch_control(isub,visualRegions,pairType, imgType)
 addpath '/home/hanseohe/Documents/GitHub/nsdOtopy'
 tic
 
@@ -22,8 +22,8 @@ nsessions=nsessionsSub(isub);
 nsplits=2;
 bandpass = 1; bandMin = 1; bandMax = 7;
 
-boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample/';
-savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin/';
+boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/';
+savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_control/';
 indicefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/';
 
 betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
@@ -248,9 +248,9 @@ for visualRegion=visualRegions
                 bicOriSplit{roinum}(isplit,ivox) = BIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
                 
                 %corr between splits
-                % pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
-                % pearsonR{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfSample')');
-                % 
+                pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
+                pearsonR{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfSample')');
+                
             end
         end
         
@@ -267,8 +267,8 @@ for visualRegion=visualRegions
     nsd.r2oriSplit = r2oriSplit;
     nsd.aicOriSplit = aicOriSplit;
     nsd.bicOriSplit = bicOriSplit;
-    % nsd.pearsonRori = pearsonRori;
-    % nsd.pearsonR = pearsonR;
+    nsd.pearsonRori = pearsonRori;
+    nsd.pearsonR = pearsonR;
     nsd.imgNum = imgNum;
     nsd.totalNumTrials = totalNumTrials;
     nsd.splitImgTrials = splitImgTrials;
