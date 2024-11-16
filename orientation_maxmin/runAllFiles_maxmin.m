@@ -13,8 +13,8 @@
 % end
 
 %% regressPrfSplit
-isub_values = 1;
-visualRegions_values = 4;
+isub_values = 2:8;
+visualRegions_values = 1:4;
 % pairTypes = {'old_control', 'old_ori', 'control_ori'};
 pairTypes = {'old_control', 'old_ori'};
 imgTypes = {'Top', 'Bottom'};
@@ -31,6 +31,54 @@ for isub = isub_values
                 imgType = imgTypes{imgTypeIdx};
 
                 fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch',isub,visualRegion, pairType, imgType);
+                regressPrfSplit_maxminPatch(isub,visualRegion,pairType, imgType)
+                
+            end
+        end
+    end
+end
+
+isub_values = 1:8;
+visualRegions_values = 1:4;
+pairTypes = {'old_control', 'control_ori'};
+imgTypes = {'Top', 'Bottom'};
+
+% Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
+
+% Loop through all combinations of isub, visualRegions, pairType, and imgType
+for isub = isub_values
+    for visualRegion = visualRegions_values
+        for pairTypeIdx = 1:length(pairTypes)
+            for imgTypeIdx = 1:length(imgTypes)
+                
+                pairType = pairTypes{pairTypeIdx};
+                imgType = imgTypes{imgTypeIdx};
+
+                fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_control',isub,visualRegion, pairType, imgType);
+                regressPrfSplit_maxminPatch(isub,visualRegion,pairType, imgType)
+                
+            end
+        end
+    end
+end
+
+isub_values = 1:8;
+visualRegions_values = 1:4;
+pairTypes = {'old_ori', 'control_ori'};
+imgTypes = {'Top', 'Bottom'};
+
+% Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
+
+% Loop through all combinations of isub, visualRegions, pairType, and imgType
+for isub = isub_values
+    for visualRegion = visualRegions_values
+        for pairTypeIdx = 1:length(pairTypes)
+            for imgTypeIdx = 1:length(imgTypes)
+                
+                pairType = pairTypes{pairTypeIdx};
+                imgType = imgTypes{imgTypeIdx};
+
+                fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_new',isub,visualRegion, pairType, imgType);
                 regressPrfSplit_maxminPatch(isub,visualRegion,pairType, imgType)
                 
             end

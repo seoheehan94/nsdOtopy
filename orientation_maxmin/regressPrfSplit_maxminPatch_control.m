@@ -248,9 +248,9 @@ for visualRegion=visualRegions
                 bicOriSplit{roinum}(isplit,ivox) = BIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
                 
                 %corr between splits
-                pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
-                pearsonR{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfSample')');
-                
+                % pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
+                % pearsonR{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfSample')');
+                % 
             end
         end
         
@@ -267,8 +267,8 @@ for visualRegion=visualRegions
     nsd.r2oriSplit = r2oriSplit;
     nsd.aicOriSplit = aicOriSplit;
     nsd.bicOriSplit = bicOriSplit;
-    nsd.pearsonRori = pearsonRori;
-    nsd.pearsonR = pearsonR;
+    % nsd.pearsonRori = pearsonRori;
+    % nsd.pearsonR = pearsonR;
     nsd.imgNum = imgNum;
     nsd.totalNumTrials = totalNumTrials;
     nsd.splitImgTrials = splitImgTrials;
