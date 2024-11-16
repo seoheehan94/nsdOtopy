@@ -52,8 +52,16 @@ elseif strcmp(pairType, 'old_ori')
     else
         error('Invalid imgType. Must be "Top" or "Bottom".');
     end
+elseif strcmp(pairType, 'control_ori')
+    if strcmp(imgType, 'Top')
+        variableName = 'indicesTop_control_ori';
+    elseif strcmp(imgType, 'Bottom')
+        variableName = 'indicesBottom_control_ori';
+    else
+        error('Invalid imgType. Must be "Top" or "Bottom".');
+    end
 else
-    error('Invalid pairType. Must be "old_control" or "old_ori".');
+    error('Invalid pairType. Must be "old_control" or "old_ori" or "control_ori".');
 end
 
 for visualRegion=visualRegions
@@ -262,7 +270,7 @@ for visualRegion=visualRegions
     nsd.pearsonRori = pearsonRori;
     nsd.pearsonR = pearsonR;
     nsd.imgNum = imgNum;
-    nsd.imgNumTrue = imgNumTrue;
+    nsd.totalNumTrials = totalNumTrials;
     nsd.splitImgTrials = splitImgTrials;
     nsd.voxCoef = voxCoef;
     nsd.voxOriCoef = voxOriCoef;
@@ -361,13 +369,8 @@ for visualRegion=visualRegions
 %     synth.voxOriResidual = voxOriResidual;
     
     %% SAVE RESULTS
-    if imgType == 1
-        subname = 'top20k';
-    elseif imgType == 2
-        subname = 'bottom20k';
-    end
     bandpassStr = ['_bandpass' num2str(bandMin) 'to' num2str(bandMax)];
-    save(fullfile(savefolder,[subname,'regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
+    save(fullfile(savefolder,[variableName,'regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
     toc
