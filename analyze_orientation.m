@@ -79,92 +79,56 @@ for isub = 1:8
         nsd.aicOriSplit{1}(nsplits+1,:) = mean(nsd.aicOriSplit{1},1);
         nsd.bicOriSplit{1}(nsplits+1,:) = mean(nsd.bicOriSplit{1},1);
 
-        % allR2OriSplit.(thisfield) = nsd.r2oriSplit{1}(3,:);
+        allR2OriSplit.(thisfield) = nsd.r2oriSplit{1}(3,:);
         allaicOriSplit.(thisfield) = nsd.aicOriSplit{1}(3,:);
         allbicOriSplit.(thisfield) = nsd.bicOriSplit{1}(3,:);
         allRoiPrf{visualRegion} = roiPrf{1};
         roiNsdOriR2{visualRegion} = nsd.r2oriSplit{1};
 
-        %% get regress angle
-        prefAngle =[];
-        fullCoef = squeeze(nsd.voxOriCoef{1}(3,:,1:end-1));
-        numvox = size(fullCoef,1);
-        numLevels = 7;
-        numOrientations = 8;
-        if con == 1 || con ==3
-            coefMat = reshape(fullCoef,numvox,numLevels,numOrientations);%vox x levels x orientations
-            coefMat_meansf = squeeze(mean(coefMat, 2));
-        elseif con ==2
-            coefMat_meansf = fullCoef;
-        end
-        coefMat_meansf = coefMat_meansf - min(coefMat_meansf,[],2);
-        theta = linspace(0,2*pi,numOrientations+1);%for circular calculation
-        theta = theta(1:end-1);
-        for ivox=1:numvox
-            prefAngle(ivox) = circ_mean(theta',coefMat_meansf(ivox,:)');
-        end
-        prefAngle = mod(prefAngle,2*pi);%from [-pi, pi] to [0 2pi]
-        prefAngle = prefAngle./2;%range 0 to pi.
-        prefAngle = prefAngle / pi *180;
-
-        % allMeanCoef.(thisfield) = prefAngle;
-        allMeanCoef{visualRegion} = prefAngle;
+        % %% get regress angle
+        % prefAngle =[];
+        % fullCoef = squeeze(nsd.voxOriCoef{1}(3,:,1:end-1));
+        % numvox = size(fullCoef,1);
+        % numLevels = 7;
+        % numOrientations = 8;
+        % if con == 1 || con ==3
+        %     coefMat = reshape(fullCoef,numvox,numLevels,numOrientations);%vox x levels x orientations
+        %     coefMat_meansf = squeeze(mean(coefMat, 2));
+        % elseif con ==2
+        %     coefMat_meansf = fullCoef;
+        % end
+        % coefMat_meansf = coefMat_meansf - min(coefMat_meansf,[],2);
+        % theta = linspace(0,2*pi,numOrientations+1);%for circular calculation
+        % theta = theta(1:end-1);
+        % for ivox=1:numvox
+        %     prefAngle(ivox) = circ_mean(theta',coefMat_meansf(ivox,:)');
+        % end
+        % prefAngle = mod(prefAngle,2*pi);%from [-pi, pi] to [0 2pi]
+        % prefAngle = prefAngle./2;%range 0 to pi.
+        % prefAngle = prefAngle / pi *180;
+        % 
+        % % allMeanCoef.(thisfield) = prefAngle;
+        % allMeanCoef{visualRegion} = prefAngle;
     end
 
-     saveName = [curPrf, 'voxOriCoef_regress_sub', num2str(isub), '.mat'];
-    save(saveName, 'allMeanCoef', 'allRoiPrf','roiNsdOriR2');
-
-    %% only top 50% full model R2
-    % totalR2Values = [];
-    % totalR2OriValues = [];
-    % totalR2SplitValues = [];
-    % totalR2OriSplitValues = [];
-
-    % fields = fieldnames(allR2OriSplit);
-    % for i = 1:numel(fields)
-    %     % totalR2Values = [totalR2Values; allR2.(fields{i})(:)];
-    %     % totalR2OriValues = [totalR2OriValues; allR2Ori.(fields{i})(:)];
-    %     % totalR2SplitValues = [totalR2SplitValues; allR2Split.(fields{i})(:)];
-    %     totalR2OriSplitValues = [totalR2OriSplitValues; allR2OriSplit.(fields{i})(:)];
-    % end
-
-    % totalR2.(subList{isub}) = totalR2Values;
-    % totalR2Ori.(subList{isub}) = totalR2OriValues;
-    % totalR2Split.(subList{isub}) = totalR2SplitValues;
-    totalR2OriSplit.(condition{con}).(subList{isub}) = allR2OriSplit;
-    totalaicOriSplit.(condition{con}).(subList{isub}) = allaicOriSplit;
-    totalbicOriSplit.(condition{con}).(subList{isub}) = allbicOriSplit;
+    %  saveName = [curPrf, 'voxOriCoef_regress_sub', num2str(isub), '.mat'];
+    % save(saveName, 'allMeanCoef', 'allRoiPrf','roiNsdOriR2');
 
 
-    % % Determine the cutoff for the top 50%
-    % cutoff = prctile(allR2OriValues, 50);
-    % 
-    % % Create a logical variable for the top 50%
-    % logicalTop50 = struct();
-    % for i = 1:numel(fields)
-    %     logicalTop50.(fields{i}) = allR2Ori.(fields{i}) >= cutoff;
-    % end
-    % 
-    % allMeanCoef_top50 = allMeanCoef;
-    % for i = 1:numel(fields)
-    %     allMeanCoef_top50.(fields{i}) = allMeanCoef_top50.(fields{i}) .* logicalTop50.(fields{i});
-    %     allMeanCoef_top50.(fields{i})(allMeanCoef_top50.(fields{i}) == 0) = -1; % Set 0 values to -1
-    % end
+    %% make a brain volume
+    % save all ROIs to create overlay
+    roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
+    visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
+    visRoiData = niftiread(visualRoisFile);
 
-    % %% make a brain volume
-    % % save all ROIs to create overlay
-    % roifolder = ['/bwdata/NSDData/nsddata/ppdata/subj0' num2str(isub) '/func1pt8mm/'];
-    % visualRoisFile = fullfile(roifolder,'roi/prf-visualrois.nii.gz');%V1v, V1d, V2v, V2d, V3v, V3d, and hV4
-    % visRoiData = niftiread(visualRoisFile);
-    % 
-    % ourBrain = visRoiData;
-    % ourBrain(ourBrain == 2) = 1;
-    % ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
-    % ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
-    % ourBrain(ourBrain == 7) = 4;
-    % 
-    % 
-    % % make a brain volume
+    ourBrain = visRoiData;
+    ourBrain(ourBrain == 2) = 1;
+    ourBrain(ourBrain == 3 | ourBrain == 4) = 2;
+    ourBrain(ourBrain == 5 | ourBrain == 6) = 3;
+    ourBrain(ourBrain == 7) = 4;
+
+
+    % make a brain volume
     % newBrain = ourBrain;
     % newBrain(newBrain > 0) = 0;
     % for visualRegion = 1:4
@@ -194,52 +158,19 @@ for isub = 1:8
     % 
     %     newBrainbyROI(:,:,:,visualRegion) =curNewBrain;
     % end
-    % 
-    % newBrain_top50 = ourBrain;
-    % newBrain_top50(newBrain_top50 > 0) = 0;
-    % for visualRegion = 1:4
-    %     curOurBrain = ourBrain;
-    %     % if visualRegion == 2
-    %     %     curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-    %     % elseif visualRegion == 3
-    %     %     curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-    %     % end
-    %     thisfield = combinedRoiNames{visualRegion};
-    %     newBrain_top50(curOurBrain == visualRegion) = allMeanCoef_top50.(thisfield);
-    % end
-    % newBrain_top50(newBrain_top50 <= 0) = -1;
-    % 
-    % for visualRegion = 1:4
-    %     curOurBrain = ourBrain;
-    %     % if visualRegion == 2
-    %     %     curOurBrain(visRoiData == 3 | visRoiData == 4) = 2;
-    %     % elseif visualRegion == 3
-    %     %     curOurBrain(visRoiData == 5 | visRoiData == 6) = 3;
-    %     % end
-    %     curNewBrain = curOurBrain;
-    %     curNewBrain(curOurBrain ~= visualRegion) = -1;
-    %     thisfield = combinedRoiNames{visualRegion};
-    % 
-    %     curNewBrain(curOurBrain == visualRegion) = allMeanCoef_top50.(thisfield);
-    % 
-    %     newBrainbyROI_top50(:,:,:,visualRegion) =curNewBrain;
-    % end
-    % 
-    % % save(fullfile(savefolder, [condition{con}, 'Brain_sub', num2str(isub), '.mat']), 'newBrain');
-    % % save(fullfile(savefolder, [condition{con}, 'BrainbyROI_sub', num2str(isub), '.mat']), 'newBrainbyROI');
-    % % save(fullfile(savefolder, [condition{con}, 'Brain_top50_sub', num2str(isub), '.mat']), 'newBrain_top50');
-    % % save(fullfile(savefolder, [condition{con}, 'BrainbyROI_top50_sub', num2str(isub), '.mat']), 'newBrainbyROI_top50');
-    % % 
-    % % 
-    % % R2
-    % r2Brain = ourBrain;
-    % r2Brain(ourBrain == 0 | ourBrain == -1) = NaN;
-    % r2Brain(ourBrain > 0) = 0;
-    % for visualRegion = 1:4
-    %     thisfield = combinedRoiNames{visualRegion};
-    %     r2Brain(ourBrain == visualRegion) = allR2Ori.(thisfield);
-    % 
-    % end
+
+    % save(fullfile(savefolder, [condition{con}, 'Brain_sub', num2str(isub), '.mat']), 'newBrain');
+    % save(fullfile(savefolder, [condition{con}, 'BrainbyROI_sub', num2str(isub), '.mat']), 'newBrainbyROI');
+
+    % R2
+    r2Brain = ourBrain;
+    r2Brain(ourBrain == 0 | ourBrain == -1) = NaN;
+    r2Brain(ourBrain > 0) = 0;
+    for visualRegion = 1:4
+        thisfield = combinedRoiNames{visualRegion};
+        r2Brain(ourBrain == visualRegion) = allR2OriSplit.(thisfield);
+
+    end
     % 
     % % %% save afni file
     % % % size(newBrain)
@@ -260,11 +191,11 @@ for isub = 1:8
     % % opt.Prefix = ['curvBrainbyROI_sub', num2str(isub)];
     % % WriteBrik(newBrainbyROI,Info,opt);
     % 
-    % %% save nifti
-    % % cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume_regress');
-    % % load(['oriBrain_sub', num2str(isub), '.mat']);
-    % info_old = niftiinfo(['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/brainVolume/betas_session01_sub', num2str(isub),'.nii.gz']);
-    % 
+    %% save nifti
+    % cd('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Curvature/brainVolume_regress');
+    % load(['oriBrain_sub', num2str(isub), '.mat']);
+    info_old = niftiinfo(['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/brainVolume/betas_session01_sub', num2str(isub),'.nii.gz']);
+
     % niftiwrite(newBrain,[savefolder, '/', condition{con}, 'Brain_sub', num2str(isub),'.nii']);
     % info_new = niftiinfo([savefolder, '/', condition{con}, 'Brain_sub', num2str(isub),'.nii']);
     % info_new.PixelDimensions = [1.8, 1.8, 1.8];
@@ -279,7 +210,7 @@ for isub = 1:8
     % info_new.raw.srow_x = info_old.raw.srow_x;
     % info_new.raw.srow_y = info_old.raw.srow_y;
     % info_new.raw.srow_z = info_old.raw.srow_z;
-    % niftiwrite(newBrain,[savefolder, '/', condition{con}, 'Brain_sub', num2str(isub),'.nii'], info_new);
+    % % niftiwrite(newBrain,[savefolder, '/', condition{con}, 'Brain_sub', num2str(isub),'.nii'], info_new);
     % 
     % niftiwrite(newBrainbyROI,[savefolder, '/', condition{con}, 'BrainbyROI_sub', num2str(isub),'.nii']);
     % info_new = niftiinfo([savefolder, '/', condition{con}, 'BrainbyROI_sub', num2str(isub),'.nii']);
@@ -295,57 +226,24 @@ for isub = 1:8
     % info_new.raw.srow_x = info_old.raw.srow_x;
     % info_new.raw.srow_y = info_old.raw.srow_y;
     % info_new.raw.srow_z = info_old.raw.srow_z;
-    % niftiwrite(newBrainbyROI,[savefolder, '/', condition{con}, 'BrainbyROI_sub', num2str(isub),'.nii'],info_new);
-    % 
-    % niftiwrite(newBrain_top50,[savefolder, '/', condition{con}, 'Brain_top50_sub', num2str(isub),'.nii']);
-    % info_new = niftiinfo([savefolder, '/', condition{con}, 'Brain_top50_sub', num2str(isub),'.nii']);
-    % info_new.PixelDimensions = [1.8, 1.8, 1.8];
-    % info_new.TransformName = info_old.TransformName;
-    % info_new.SpatialDimension = info_old.SpatialDimension;
-    % info_new.Transform = info_old.Transform;
-    % info_new.Qfactor = info_old.Qfactor;
-    % info_new.AuxiliaryFile = info_old.AuxiliaryFile;
-    % info_new.raw.pixdim = info_old.raw.pixdim;
-    % info_new.raw.aux_file = info_old.raw.aux_file;
-    % info_new.raw.sform_code = info_old.raw.sform_code;
-    % info_new.raw.srow_x = info_old.raw.srow_x;
-    % info_new.raw.srow_y = info_old.raw.srow_y;
-    % info_new.raw.srow_z = info_old.raw.srow_z;
-    % niftiwrite(newBrain,[savefolder, '/', condition{con}, 'Brain_top50_sub', num2str(isub),'.nii'], info_new);
-    % 
-    % niftiwrite(newBrainbyROI_top50,[savefolder, '/', condition{con}, 'BrainbyROI_top50_sub', num2str(isub),'.nii']);
-    % info_new = niftiinfo([savefolder, '/', condition{con}, 'BrainbyROI_top50_sub', num2str(isub),'.nii']);
-    % info_new.PixelDimensions = info_old.PixelDimensions;
-    % info_new.TransformName = info_old.TransformName;
-    % info_new.SpatialDimension = info_old.SpatialDimension;
-    % info_new.Transform = info_old.Transform;
-    % info_new.Qfactor = info_old.Qfactor;
-    % info_new.AuxiliaryFile = info_old.AuxiliaryFile;
-    % info_new.raw.pixdim = info_old.raw.pixdim;
-    % info_new.raw.aux_file = info_old.raw.aux_file;
-    % info_new.raw.sform_code = info_old.raw.sform_code;
-    % info_new.raw.srow_x = info_old.raw.srow_x;
-    % info_new.raw.srow_y = info_old.raw.srow_y;
-    % info_new.raw.srow_z = info_old.raw.srow_z;
-    % niftiwrite(newBrainbyROI,[savefolder, '/', condition{con}, 'BrainbyROI_top50_sub', num2str(isub),'.nii'],info_new);
-    % 
-    % 
-    % 
-    % niftiwrite(r2Brain,[savefolder, '/', condition{con}, 'BrainR2_sub', num2str(isub),'.nii']);
-    % info_new = niftiinfo([savefolder, '/', condition{con}, 'BrainR2_sub', num2str(isub),'.nii']);
-    % info_new.PixelDimensions = [1.8, 1.8, 1.8];
-    % info_new.TransformName = info_old.TransformName;
-    % info_new.SpatialDimension = info_old.SpatialDimension;
-    % info_new.Transform = info_old.Transform;
-    % info_new.Qfactor = info_old.Qfactor;
-    % info_new.AuxiliaryFile = info_old.AuxiliaryFile;
-    % info_new.raw.pixdim = info_old.raw.pixdim;
-    % info_new.raw.aux_file = info_old.raw.aux_file;
-    % info_new.raw.sform_code = info_old.raw.sform_code;
-    % info_new.raw.srow_x = info_old.raw.srow_x;
-    % info_new.raw.srow_y = info_old.raw.srow_y;
-    % info_new.raw.srow_z = info_old.raw.srow_z;
-    % niftiwrite(r2Brain,[savefolder, '/', condition{con}, 'BrainR2_sub', num2str(isub),'.nii'],info_new);
+    % % niftiwrite(newBrainbyROI,[savefolder, '/', condition{con}, 'BrainbyROI_sub', num2str(isub),'.nii'],info_new);
+
+
+    niftiwrite(r2Brain,[savefolder, '/', condition{con}, 'BrainR2_sub', num2str(isub),'.nii']);
+    info_new = niftiinfo([savefolder, '/', condition{con}, 'BrainR2_sub', num2str(isub),'.nii']);
+    info_new.PixelDimensions = [1.8, 1.8, 1.8];
+    info_new.TransformName = info_old.TransformName;
+    info_new.SpatialDimension = info_old.SpatialDimension;
+    info_new.Transform = info_old.Transform;
+    info_new.Qfactor = info_old.Qfactor;
+    info_new.AuxiliaryFile = info_old.AuxiliaryFile;
+    info_new.raw.pixdim = info_old.raw.pixdim;
+    info_new.raw.aux_file = info_old.raw.aux_file;
+    info_new.raw.sform_code = info_old.raw.sform_code;
+    info_new.raw.srow_x = info_old.raw.srow_x;
+    info_new.raw.srow_y = info_old.raw.srow_y;
+    info_new.raw.srow_z = info_old.raw.srow_z;
+    niftiwrite(r2Brain,[savefolder, '/', condition{con}, 'BrainR2_sub', num2str(isub),'.nii'],info_new);
 
 end
 

@@ -35,12 +35,10 @@ visRoiData = niftiread(visualRoisFile);
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
 visRoiData = visRoiData(:);
 
-% load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/experiment/getImages/top550.mat');
 load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/top20k.mat');
 load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/bottom20k.mat');
 top20k = top20k.imgNum';
 bottom20k = bottom20k.imgNum';
-% top550 = top550.imgNum';
 
 if imgType == 1
     inputType = top20k;
@@ -199,7 +197,6 @@ for visualRegion=visualRegions
             for ivox=1:nvox(roinum)
                 
                 voxBetas = roiBetas{roinum}(ivox,imgTrials>0)';
-                
                 voxPrfSample = squeeze(prfSampleLev{roinum}(imgNum(imgTrials>0),ivox,:));
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;

@@ -1,5 +1,5 @@
 
-% regressPrfSplit_new.m
+% regressPrfSplit.m
 %
 % associated with the following publication: Roth, ZN, Kay, K, and Merriam, EP (2022).
 % Massive natural scene sampling reveals reliable coarse-scale orientation tuning in human V1
@@ -12,18 +12,19 @@
 %   uses files created by: prfSampleModel.m, prfSampleModel_synth.m
 %   creates files used by: getVoxPref.m
 
-function regressPrfSplit_maxmin_new(isub,visualRegions,imgType)
-
+function regressPrfSplit_maxminPatch(isub,visualRegions,pairType, imgType)
+addpath '/home/hanseohe/Documents/GitHub/nsdOtopy'
 tic
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 nsessionsSub = [40 40 32 30 40 32 40 30];
 nsessions=nsessionsSub(isub);
 nsplits=2;
-bandpass = 1; bandMin = 1; bandMax = 1;
+bandpass = 1; bandMin = 1; bandMax = 7;
 
-boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/';
-savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_Ori/';
+boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample/';
+savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin/';
+indicefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/';
 
 betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
 % stimfilename = fullfile(folder,'nsdsynthetic_colorstimuli_subj01.hdf5');
@@ -35,33 +36,52 @@ visRoiData = niftiread(visualRoisFile);
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
 visRoiData = visRoiData(:);
 
-load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/top20k.mat');
-load('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/bottom20k.mat');
-top20k = top20k.imgNum';
-bottom20k = bottom20k.imgNum';
-
-if imgType == 1
-    inputType = top20k;
-elseif imgType == 2
-    inputType = bottom20k;
+if strcmp(pairType, 'old_control')
+    if strcmp(imgType, 'Top')
+        variableName = 'indicesTop_old_control';
+    elseif strcmp(imgType, 'Bottom')
+        variableName = 'indicesBottom_old_control';
+    else
+        error('Invalid imgType. Must be "Top" or "Bottom".');
+    end
+elseif strcmp(pairType, 'old_ori')
+    if strcmp(imgType, 'Top')
+        variableName = 'indicesTop_old_ori';
+    elseif strcmp(imgType, 'Bottom')
+        variableName = 'indicesBottom_old_ori';
+    else
+        error('Invalid imgType. Must be "Top" or "Bottom".');
+    end
+elseif strcmp(pairType, 'control_ori')
+    if strcmp(imgType, 'Top')
+        variableName = 'indicesTop_control_ori';
+    elseif strcmp(imgType, 'Bottom')
+        variableName = 'indicesBottom_control_ori';
+    else
+        error('Invalid imgType. Must be "Top" or "Bottom".');
+    end
+else
+    error('Invalid pairType. Must be "old_control" or "old_ori" or "control_ori".');
 end
 
 for visualRegion=visualRegions
-    
-    load(fullfile(boxfolder,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
+    loadedData = load(fullfile(indicefolder,['prfSampleIndices_v', num2str(visualRegion), '_sub', num2str(isub), '.mat']), ...
+        variableName);
+    curIndices = loadedData.(variableName);
+    load(fullfile(boxfolder,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf');
     %if prf sampling was done with the nonlinear CSS prf, then we want to
     %define the weights for the constrained model as a sum of the
     %orientation model across orientations:
-     for roinum=1:length(rois)
-         prfSampleLev{roinum} = squeeze(sum(prfSampleLevOri{roinum},4));
-     end
+    % for roinum=1:length(rois)
+    %     prfSampleLev{roinum} = squeeze(sum(prfSampleLevOri{roinum},4));
+    % end
     
     if bandpass
         for roinum=1:length(rois)
             prfSampleLevOri{roinum} = prfSampleLevOri{roinum}(:,:,bandMin:bandMax,:);
-             % prfSampleLev{roinum} = prfSampleLev{roinum}(:,:,bandMin:bandMax);
+            % prfSampleLev{roinum} = prfSampleLev{roinum}(:,:,bandMin:bandMax);
         end
         numLevels = bandMax-bandMin+1;
     end
@@ -89,19 +109,22 @@ for visualRegion=visualRegions
     %if less than 40 sessions, only use image trials that were actually presented
     imgTrials = imgTrials(1:size(roiBetas{roinum},2));
     imgNum = imgNum(1:size(roiBetas{roinum},2));
-    
-    % Filter imgNum and imgTrials to only include values in top20k
-    idx = ismember(imgNum, inputType);
-    imgNumTrue = imgNum(idx);
-    imgNum(~idx) = NaN;
 
-    splitImgTrials = repmat(idx,2,1);
+    for roinum=1:length(rois)
+        for ivox = 1:size(curIndices{roinum},2)
+            matchingIndices = find(curIndices{roinum}(:,ivox) == 1);
+            logicalArray{roinum}(:,ivox) = ismember(imgNum, matchingIndices);
+            totalMidImg{roinum}(ivox) = ceil(median(imgNum(logicalArray{roinum}(:,ivox)'>0)));
+            totalNumTrials{roinum}(ivox) = size(imgNum(logicalArray{roinum}(:,ivox)'>0),2);
+        end
+         maxNumTrials{roinum} = ceil(max(totalNumTrials{roinum})/2);
+
+    end
     
-    midImg = ceil(median(imgNumTrue));
-    splitImgTrials(1,imgNum<midImg) = zeros;
-    splitImgTrials(2,imgNum>=midImg) = zeros;
-    maxNumTrials = max(sum(splitImgTrials,2));
-    
+    % imgTrialSum = cumsum(imgTrials);
+  
+    % maxNumTrials = max(sum(splitImgTrials,2));
+
     r2 = cell(length(rois),1);
     r2ori = cell(length(rois),1);
     r2oriSplit = cell(length(rois),1);
@@ -118,10 +141,10 @@ for visualRegion=visualRegions
     
     for roinum=1:length(rois)
         nvox(roinum) = size(roiBetas{roinum},1);
-        voxOriResidual{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
-        voxResidual{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
-        voxOriResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
-        voxResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
+        voxOriResidual{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials{roinum});
+        voxResidual{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials{roinum});
+        voxOriResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials{roinum});
+        voxResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials{roinum});
         voxOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
         voxCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
         voxPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
@@ -131,10 +154,15 @@ for visualRegion=visualRegions
         voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
         
         %get model coefficients for each voxel, within each split
-        for isplit=1:nsplits
-            imgTrials = splitImgTrials(isplit,:);
-            numTrials = sum(imgTrials);
-            for ivox=1:nvox(roinum)
+        for ivox=1:nvox(roinum)
+            splitImgTrials = repmat(logicalArray{roinum}(:,ivox)',2,1);
+            splitImgTrials(1,imgNum<totalMidImg{roinum}(ivox)) = zeros;
+            splitImgTrials(2,imgNum>=totalMidImg{roinum}(ivox)) = zeros;
+            for isplit=1:nsplits
+                imgTrials = splitImgTrials(isplit,:);
+                numTrials = sum(imgTrials);
+
+
                 voxBetas = roiBetas{roinum}(ivox,imgTrials>0)';
                 voxPrfSample = squeeze(prfSampleLev{roinum}(imgNum(imgTrials>0),ivox,:));
                 %add constant predictor
@@ -191,13 +219,16 @@ for visualRegion=visualRegions
             end
         end
         
-        for isplit=1:nsplits
-            imgTrials = splitImgTrials(isplit,:);
-            numTrials = sum(imgTrials);
-            for ivox=1:nvox(roinum)
+        for ivox=1:nvox(roinum)
+            splitImgTrials = repmat(logicalArray{roinum}(:,ivox)',2,1);
+            splitImgTrials(1,imgNum<totalMidImg{roinum}(ivox)) = zeros;
+            splitImgTrials(2,imgNum>=totalMidImg{roinum}(ivox)) = zeros;
+            
+            for isplit=1:nsplits
+                imgTrials = splitImgTrials(isplit,:);
+                numTrials = sum(imgTrials);
                 
                 voxBetas = roiBetas{roinum}(ivox,imgTrials>0)';
-                keyboard;
                 voxPrfSample = squeeze(prfSampleLev{roinum}(imgNum(imgTrials>0),ivox,:));
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;
@@ -338,13 +369,8 @@ for visualRegion=visualRegions
 %     synth.voxOriResidual = voxOriResidual;
     
     %% SAVE RESULTS
-    if imgType == 1
-        subname = 'top20k';
-    elseif imgType == 2
-        subname = 'bottom20k';
-    end
     bandpassStr = ['_bandpass' num2str(bandMin) 'to' num2str(bandMax)];
-    save(fullfile(savefolder,[subname,'regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
+    save(fullfile(savefolder,[variableName,'regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
     toc

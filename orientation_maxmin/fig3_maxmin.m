@@ -13,8 +13,10 @@
 close all
 clear all
 tic
+addpath(genpath('/home/hanseohe/Documents/GitHub/nsdOtopy'));
 
 toSavePdf = 1;
+imgType = {'top20k', 'bottom20k'};
 
 imgFormat = 'jpg';
 subjects = [1:8];
@@ -34,8 +36,11 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
+prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_control/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
+isubplot=0;
+ifig=ifig+1; h=figure(ifig); clf;
+for curtype = 1:2
 
 allOri = cell(1,nrois);
 allPrfR2 = cell(1,nrois);
@@ -49,7 +54,7 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxOriCoef_regress_sub' num2str(subnum) '.mat']);
+    load([prffolder, imgType{curtype}, 'voxOriCoef_sub' num2str(subnum), '.mat']);
     
     % subAnalysis(isub) = prefAnalysis;
 %     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
@@ -85,13 +90,13 @@ for isub=1:length(subjects)
 end
 
 %%
-ifig=ifig+1; h=figure(ifig); clf;
+
 % rows=2;
 rows=1;
 % cols=3;
-cols=1;
+cols=2;
 isplit = 3;
-isubplot=0;
+
 
 iroi=1;
 
@@ -103,6 +108,9 @@ plotOriLines(allOri{iroi}(1,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3
 xlabel('\itx position (deg)');
 ylabel('\ity position (deg)');
 
+
+ 
+end
 % %% preferred ORIENTATION - single splits
 % cols=2*cols;
 % isubplot=cols;
@@ -171,9 +179,9 @@ ylabel('\ity position (deg)');
 % %%
 % set(gcf,'position',[150 180 3*250 rows*210]);
 h.Units = 'centimeters';
-h.PaperSize=[5 5];
+h.PaperSize=[7.5 5];
 if toSavePdf
-    print('-painters','-dpdf',[figFolder 'radialBias_regress_control']);
+    print('-painters','-dpdf',[figFolder 'radialBias_maxmin_control']);
 end
 % 
 % toc

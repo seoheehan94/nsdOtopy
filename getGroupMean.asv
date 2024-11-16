@@ -11,10 +11,6 @@ addpath(genpath('/usr/local/freesurfer/7.4.1/matlab'));
 %save_mgh(vol, 'orig.stripped.mgz', M,mr);
 %result = MRIread('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/sub1/angleBrain_sub1_lh_fsaverage.mgh');
 
-% 50 percet cutoff for old R2 (participant averaged)
-cutoff_lh = 0.02;
-cutoff_rh = 0.02;
-
 for curcond = 1:3
     %% get all subjects volume in radians
     % what to do with -1 and 0?
@@ -56,27 +52,52 @@ for curcond = 1:3
     prefAngle_rh = prefAngle_rh/pi*180;
     prefAngle_rh = prefAngle_rh';
 
-    %% only top 50% full model R2 of old
-    meanR2_lh = mean(R2_lh,2, "omitnan");
-    meanR2_rh = mean(R2_rh,2, "omitnan");
-    % cutoff_lh = prctile(meanR2_lh, 50);
-    % cutoff_rh = prctile(meanR2_rh, 50);
-    top50_prefAngle_lh = prefAngle_lh;
-    top50_prefAngle_lh(meanR2_lh < cutoff_lh) = 0;
-    top50_prefAngle_rh = prefAngle_rh;
-    top50_prefAngle_rh(meanR2_rh < cutoff_rh) = 0;
+    %% only top 50% full model R2
+    cutoff = prctile(R2_lh, 50);
     %% save
     fileName_lh = [filedir, condition{curcond}, 'Brain_groupmean_lh_fsaverage.mgh'];
     fileName_rh = [filedir, condition{curcond}, 'Brain_groupmean_rh_fsaverage.mgh'];
     save_mgh(prefAngle_lh, fileName_lh, M,mr);
     save_mgh(prefAngle_rh, fileName_rh, M,mr);
-
-    fileName_lh = [filedir, condition{curcond}, 'Brain_groupmean_top50_lh_fsaverage.mgh'];
-    fileName_rh = [filedir, condition{curcond}, 'Brain_groupmean_top50_rh_fsaverage.mgh'];
-    save_mgh(top50_prefAngle_lh, fileName_lh, M,mr);
-    save_mgh(top50_prefAngle_rh, fileName_rh, M,mr);
 end
 
 
 
 
+%%
+  %% only top 50% full model R2
+    % totalR2Values = [];
+    % totalR2OriValues = [];
+    % totalR2SplitValues = [];
+    % totalR2OriSplitValues = [];
+
+    % fields = fieldnames(allR2OriSplit);
+    % for i = 1:numel(fields)
+    %     % totalR2Values = [totalR2Values; allR2.(fields{i})(:)];
+    %     % totalR2OriValues = [totalR2OriValues; allR2Ori.(fields{i})(:)];
+    %     % totalR2SplitValues = [totalR2SplitValues; allR2Split.(fields{i})(:)];
+    %     totalR2OriSplitValues = [totalR2OriSplitValues; allR2OriSplit.(fields{i})(:)];
+    % end
+
+    % totalR2.(subList{isub}) = totalR2Values;
+    % % totalR2Ori.(subList{isub}) = totalR2OriValues;
+    % % totalR2Split.(subList{isub}) = totalR2SplitValues;
+    % totalR2OriSplit.(condition{con}).(subList{isub}) = allR2OriSplit;
+    % totalaicOriSplit.(condition{con}).(subList{isub}) = allaicOriSplit;
+    % totalbicOriSplit.(condition{con}).(subList{isub}) = allbicOriSplit;
+    % 
+    % 
+    % % Determine the cutoff for the top 50%
+    % cutoff = prctile(allR2OriValues, 50);
+    % 
+    % % Create a logical variable for the top 50%
+    % logicalTop50 = struct();
+    % for i = 1:numel(fields)
+    %     logicalTop50.(fields{i}) = allR2Ori.(fields{i}) >= cutoff;
+    % end
+    % 
+    % allMeanCoef_top50 = allMeanCoef;
+    % for i = 1:numel(fields)
+    %     allMeanCoef_top50.(fields{i}) = allMeanCoef_top50.(fields{i}) .* logicalTop50.(fields{i});
+    %     allMeanCoef_top50.(fields{i})(allMeanCoef_top50.(fields{i}) == 0) = -1; % Set 0 values to -1
+    % end
