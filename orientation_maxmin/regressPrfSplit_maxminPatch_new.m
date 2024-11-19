@@ -74,9 +74,9 @@ for visualRegion=visualRegions
     %if prf sampling was done with the nonlinear CSS prf, then we want to
     %define the weights for the constrained model as a sum of the
     %orientation model across orientations:
-    % for roinum=1:length(rois)
-    %     prfSampleLev{roinum} = squeeze(sum(prfSampleLevOri{roinum},4));
-    % end
+    for roinum=1:length(rois)
+        prfSampleLev{roinum} = squeeze(sum(prfSampleLevOri{roinum},4));
+    end
     
     if bandpass
         for roinum=1:length(rois)
