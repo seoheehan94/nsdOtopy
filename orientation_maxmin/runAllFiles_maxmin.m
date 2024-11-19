@@ -13,14 +13,12 @@
 % end
 
 %% regressPrfSplit
-isub_values = 2:8;
-visualRegions_values = 1:4;
+% isub_values = 2:8;
+% visualRegions_values = 1:4;
 % pairTypes = {'old_control', 'old_ori', 'control_ori'};
-pairTypes = {'old_control', 'old_ori'};
-imgTypes = {'Top', 'Bottom'};
-
-% Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
-
+% pairTypes = {'old_control', 'old_ori'};
+% imgTypes = {'Top', 'Bottom'};
+ 
 % % Loop through all combinations of isub, visualRegions, pairType, and imgType
 % for isub = isub_values
 %     for visualRegion = visualRegions_values
@@ -38,55 +36,71 @@ imgTypes = {'Top', 'Bottom'};
 %     end
 % end
 
-isub_values = 1:8;
-visualRegions_values = 1:4;
-pairTypes = {'old_control', 'control_ori'};
-imgTypes = {'Top', 'Bottom'};
-
-% Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
-
-% Loop through all combinations of isub, visualRegions, pairType, and imgType
-for isub = isub_values
-    for visualRegion = visualRegions_values
-        for pairTypeIdx = 1:length(pairTypes)
-            for imgTypeIdx = 1:length(imgTypes)
-                
-                pairType = pairTypes{pairTypeIdx};
-                imgType = imgTypes{imgTypeIdx};
-
-                fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_control',isub,visualRegion, pairType, imgType);
-                regressPrfSplit_maxminPatch_control(isub,visualRegion,pairType, imgType)
-                
-            end
-        end
-    end
-end
-
-isub_values = 1:8;
-visualRegions_values = 1:4;
-pairTypes = {'old_ori', 'control_ori'};
-imgTypes = {'Top', 'Bottom'};
-
-% Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
-
-% Loop through all combinations of isub, visualRegions, pairType, and imgType
-for isub = isub_values
-    for visualRegion = visualRegions_values
-        for pairTypeIdx = 1:length(pairTypes)
-            for imgTypeIdx = 1:length(imgTypes)
-                
-                pairType = pairTypes{pairTypeIdx};
-                imgType = imgTypes{imgTypeIdx};
-
-                fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_new',isub,visualRegion, pairType, imgType);
-                regressPrfSplit_maxminPatch_new(isub,visualRegion,pairType, imgType)
-                
-            end
-        end
-    end
-end
+% isub_values = 1:8;
+% visualRegions_values = 1:4;
+% pairTypes = {'old_control', 'control_ori'};
+% imgTypes = {'Top', 'Bottom'};
+% 
+% % Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
+% 
+% % Loop through all combinations of isub, visualRegions, pairType, and imgType
+% for isub = isub_values
+%     for visualRegion = visualRegions_values
+%         for pairTypeIdx = 1:length(pairTypes)
+%             for imgTypeIdx = 1:length(imgTypes)
+% 
+%                 pairType = pairTypes{pairTypeIdx};
+%                 imgType = imgTypes{imgTypeIdx};
+% 
+%                 fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_control',isub,visualRegion, pairType, imgType);
+%                 regressPrfSplit_maxminPatch_control(isub,visualRegion,pairType, imgType)
+% 
+%             end
+%         end
+%     end
+% end
+% 
+% isub_values = 1:8;
+% visualRegions_values = 1:4;
+% pairTypes = {'old_ori', 'control_ori'};
+% imgTypes = {'Top', 'Bottom'};
+% 
+% % Initialize regressPrfSplit_maxminPatch as needed, e.g., as a struct or cell array
+% 
+% % Loop through all combinations of isub, visualRegions, pairType, and imgType
+% for isub = isub_values
+%     for visualRegion = visualRegions_values
+%         for pairTypeIdx = 1:length(pairTypes)
+%             for imgTypeIdx = 1:length(imgTypes)
+% 
+%                 pairType = pairTypes{pairTypeIdx};
+%                 imgType = imgTypes{imgTypeIdx};
+% 
+%                 fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_new',isub,visualRegion, pairType, imgType);
+%                 regressPrfSplit_maxminPatch_new(isub,visualRegion,pairType, imgType)
+% 
+%             end
+%         end
+%     end
+% end
 %
 %% getVoxPref
-% for sub = 1:8
-%     getVoxPref(sub,4)
-% end
+isub_values = 1:8;
+% pairTypes = {'old_control', 'old_ori', 'control_ori'};
+pairTypes = {'old_control', 'old_ori'};
+imgTypes = {'Top', 'Bottom'};
+ 
+% Loop through all combinations of isub, visualRegions, pairType, and imgType
+for isub = isub_values
+        for pairTypeIdx = 1:length(pairTypes)
+            for imgTypeIdx = 1:length(imgTypes)
+
+                pairType = pairTypes{pairTypeIdx};
+                imgType = imgTypes{imgTypeIdx};
+
+                fprintf('%s. %d. %d. %s. %s. ...\n','getVoxPref_regress_maxminPatch',isub,4, pairType, imgType);
+                getVoxPref_regress_maxminPatch(isub,4,1, pairType, imgType)
+
+            end
+        end 
+end

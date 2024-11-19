@@ -10,14 +10,17 @@
 %   purpose: plot Figure 4
 %   uses files created by: getVoxPref.m
 addpath(genpath('/home/hanseohe/Documents/GitHub/mrTools'))
+
 close all
 clear all
 tic
 
+condition =3; %1=old, 2=ori, 3=control
+
 figRoi=1;
 pvalThresh = 0.025;
 
-toSavePdf = 0;
+toSavePdf = 1;
 nbins = 20;
 sigMarkersize = 15;
 
@@ -71,11 +74,37 @@ for i=2:length(rBinBorders)
 end
 rBinBorders;
 
-vertColor = [133,149,225]/255;
-cardColor = [141,213,147]/255;
-radColor = [239,151,8]/255;
+% vertColor = [133,149,225]/255;
+% cardColor = [141,213,147]/255;
+% vertColor = [239,151,8]/255;
+% cardColor = [239,151,8]/255;
+% radColor = [239,151,8]/255;
+
+% Base color
+if condition == 1
+    baseColor = [133,149,225]/255;
+elseif condition == 2
+    baseColor = [225, 99, 116] / 255;
+elseif condition == 3
+    baseColor = [141,213,147]/255;
+end
+
+% Variations of the base color
+vertColor = baseColor * 1.2;  % Slightly lighter (scaled up to brighten)
+cardColor = baseColor;         % Original color
+radColor = baseColor * 0.8;    % Slightly darker (scaled down to darken)
+
+% Ensure the values stay within [0, 1] range
+vertColor = min(vertColor, 1);  % Cap values to 1
+radColor = max(radColor, 0);    % Ensure values stay above 0
+
 r2Color = [156,222,214]/255;%turquoise
 surfaceAlpha = 0.1;
+
+% Setting different line styles
+lineStyleVert = ':';  % dotted line for binVert
+lineStyleCard = '--'; % dashed line for binCard
+lineStyleRad = '-';   % solid line for binRad
 
 %scatter parameters
 markersize = 1;
@@ -83,24 +112,30 @@ edgeAlpha = 0.3;
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
+if condition == 1
+    prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
+elseif condition == 2
+    prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/'];
+elseif condition == 3
+    prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
+end
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);
-allLevVig = cell(1,nrois);
-allLevFull = cell(1,nrois);
+% allLevVig = cell(1,nrois);
+% allLevFull = cell(1,nrois);
 allPrfR2 = cell(1,nrois);
-allNsdCorr = cell(1,nrois);
-allNsdOriCorr = cell(1,nrois);
-allSynthCorr = cell(1,nrois);
-allSynthOriCorr = cell(1,nrois);
+% allNsdCorr = cell(1,nrois);
+% allNsdOriCorr = cell(1,nrois);
+% allSynthCorr = cell(1,nrois);
+% allSynthOriCorr = cell(1,nrois);
 allPrfX = cell(1,nrois);
 allPrfY = cell(1,nrois);
 allPrfEcc = cell(1,nrois);
 allPrfAng = cell(1,nrois);
-allSynthOri = cell(1,nrois);
-allSynthLevVig = cell(1,nrois);
-allSynthLevFull = cell(1,nrois);
+% allSynthOri = cell(1,nrois);
+% allSynthLevVig = cell(1,nrois);
+% allSynthLevFull = cell(1,nrois);
 allOriDeviation = cell(1,nrois);
 allVertDeviation = cell(1,nrois);
 allCardDeviation = cell(1,nrois);
@@ -110,13 +145,11 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref_sub' num2str(isub) '.mat'],'allRoiPrf','roiLevVig','roiLevFull',...
-        'roiOri','roiNsdCorr','roiNsdOriCorr','roiNsdOriR2','roiNsdR2',...
-        'roiSynthCorr','roiSynthOriCorr','roiSynthOri',...
-        'roiSynthLevVig','roiSynthLevFull', ...
-        'nsdSynthImprov_pval', 'nsdSynthImprov_corr','roiOriDeviation','roiVertDeviation','roiCardDeviation',...
+    load([prffolder 'voxModelPref_regress_sub' num2str(isub) '.mat'],'allRoiPrf',...
+        'roiOri','roiNsdOriR2',...
+        'roiOriDeviation','roiVertDeviation','roiCardDeviation',...
         'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');
-    subAnalysis(isub) = prefAnalysis;
+    % subAnalysis(isub) = prefAnalysis;
 %     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
 %     subNsdSynthImprov_pval(isub,:,:) = nsdSynthImprov_pval;
     for iroi=figRoi
@@ -126,12 +159,12 @@ for isub=1:length(subjects)
         allPrfAng{iroi} = [allPrfAng{iroi}; allRoiPrf{iroi}.ang];
         allPrfR2{iroi} = [allPrfR2{iroi}; allRoiPrf{iroi}.r2];
         allOri{iroi} =  [allOri{iroi} roiOri{iroi}];
-        allLevVig{iroi} = [allLevVig{iroi} roiLevVig{iroi}];
-        allLevFull{iroi} = [allLevFull{iroi} roiLevFull{iroi}];
-        allNsdCorr{iroi} = [allNsdCorr{iroi} roiNsdCorr{iroi}];
-        allNsdOriCorr{iroi} = [allNsdOriCorr{iroi} roiNsdOriCorr{iroi}];
-        allNsdOriR2{iroi} = [allNsdOriR2{iroi} roiNsdOriR2{iroi}];
-        allNsdR2{iroi} = [allNsdR2{iroi} roiNsdR2{iroi}];
+        % allLevVig{iroi} = [allLevVig{iroi} roiLevVig{iroi}];
+        % allLevFull{iroi} = [allLevFull{iroi} roiLevFull{iroi}];
+        % allNsdCorr{iroi} = [allNsdCorr{iroi} roiNsdCorr{iroi}];
+        % allNsdOriCorr{iroi} = [allNsdOriCorr{iroi} roiNsdOriCorr{iroi}];
+        % allNsdOriR2{iroi} = [allNsdOriR2{iroi} roiNsdOriR2{iroi}];
+        % allNsdR2{iroi} = [allNsdR2{iroi} roiNsdR2{iroi}];
 %         allSynthCorr{iroi} = [allSynthCorr{iroi} roiSynthCorr{iroi}];
 %         allSynthOriCorr{iroi} = [allSynthOriCorr{iroi} roiSynthOriCorr{iroi}];
 %         allSynthOri{iroi} = [allSynthOri{iroi}; roiSynthOri{iroi}'];
@@ -144,70 +177,68 @@ for isub=1:length(subjects)
     end
 end
 %% SCHEMATIC
-ifig=ifig+1; h=figure(ifig); clf;
-rows=1;
-cols=3;
-isubplot=0;
+% ifig=ifig+1; h=figure(ifig); clf;
+% rows=1;
+% cols=3;
+% isubplot=0;
 
-%lines
-nlines = 15;
-necc = 4;
-eccVals = linspace(1,9,necc);
-linesPerEcc = 16;
-ecc = [];
-ang = [];
-for iecc=1:necc
-    ecc = [ecc eccVals(iecc)*ones(1,nlines)./degPerPix];
-    tempang = linspace(0, 2*pi, nlines+1);
-    ang = [ang tempang(1:end-1)];
-end
-[x, y] = pol2cart(ang, ecc);
-r2 = 0.9*ones(size(x));
-
-% vertical
-isubplot=isubplot+1;
-subplot(rows,cols,isubplot);
-vertOri = (0)*ones(size(x));
-plotOriLines(vertOri, x, y,(0.4*r2),vertColor);
-
-% cardinal
-isubplot=isubplot+1;
-subplot(rows,cols,isubplot);
-cardOri = pi/2*ones(size(x));
-cardOri((ang>pi/4 & ang<3*pi/4) |  (ang<7*pi/4 & ang>5*pi/4)) = 0;
-plotOriLines(cardOri, x, y,(0.4*r2),cardColor);
-
-% radial
-isubplot=isubplot+1;
-subplot(rows,cols,isubplot);
-radOri = pi/2-mod(ang,pi);
-plotOriLines(radOri, x, y,(0.4*r2),radColor);
-
-%%
-set(gcf,'position',[150 180 420 200]);
-if toSavePdf
-    savepdf(h, [figFolder 'fig4_schematic.pdf']);
-end
+% %lines
+% nlines = 15;
+% necc = 4;
+% eccVals = linspace(1,9,necc);
+% linesPerEcc = 16;
+% ecc = [];
+% ang = [];
+% for iecc=1:necc
+%     ecc = [ecc eccVals(iecc)*ones(1,nlines)./degPerPix];
+%     tempang = linspace(0, 2*pi, nlines+1);
+%     ang = [ang tempang(1:end-1)];
+% end
+% [x, y] = pol2cart(ang, ecc);
+% r2 = 0.9*ones(size(x));
+% 
+% % vertical
+% isubplot=isubplot+1;
+% subplot(rows,cols,isubplot);
+% vertOri = (0)*ones(size(x));
+% plotOriLines(vertOri, x, y,(0.4*r2),vertColor);
+% 
+% % cardinal
+% isubplot=isubplot+1;
+% subplot(rows,cols,isubplot);
+% cardOri = pi/2*ones(size(x));
+% cardOri((ang>pi/4 & ang<3*pi/4) |  (ang<7*pi/4 & ang>5*pi/4)) = 0;
+% plotOriLines(cardOri, x, y,(0.4*r2),cardColor);
+% 
+% % radial
+% isubplot=isubplot+1;
+% subplot(rows,cols,isubplot);
+% radOri = pi/2-mod(ang,pi);
+% plotOriLines(radOri, x, y,(0.4*r2),radColor);
+% 
+% %%
+% set(gcf,'position',[150 180 420 200]);
+% if toSavePdf
+%     print('-painters','-dpdf',[figFolder 'ideal_schematic']);
+% end
+% toSavePdf = 0;
 %%
 ifig=ifig+1; h=figure(ifig); clf;
 iroi=figRoi;
 isplit=nsplits;
 isubplot=0;
-rows=4;
+rows=3;
 cols=2;
 %% line plot: vertical, cardinal, and radial deviation vs. pRF eccentricity
 isubplot=isubplot+1;
 subplot(rows,cols, isubplot);
-thresh = -inf;
-improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
-improv = improv';
 tempVert = abs(allVertDeviation{iroi}(isplit,:));
 tempRad = abs(allOriDeviation{iroi}(isplit,:));
 tempCard = abs(allCardDeviation{iroi}(isplit,:));
 clear binSubVert binSubCard binSubRad binVert binCard binRad binSemVert binSemCard binSemRad
 for ibin=1:nbins
     for isub=subjects
-        goodInd = allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & improv>thresh &  allPrfEcc{iroi}>=binBorders(ibin) & allPrfEcc{iroi}<binBorders(ibin+1);
+        goodInd = allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & allPrfEcc{iroi}>=binBorders(ibin) & allPrfEcc{iroi}<binBorders(ibin+1);
         binSubVert(isub,ibin) = mean(tempVert(goodInd));
         binSubCard(isub,ibin) = mean(tempCard(goodInd));
         binSubRad(isub,ibin) = mean(tempRad(goodInd));
@@ -220,14 +251,15 @@ binSemVert = std(binSubVert)/sqrt(length(subjects));
 binSemCard = std(binSubCard)/sqrt(length(subjects));
 binSemRad = std(binSubRad)/sqrt(length(subjects));
 
-plot(binCenters,binVert,'linewidth',linewidth,'color',vertColor); hold all
+plot(binCenters,binVert,'linewidth',linewidth,'color',vertColor, 'LineStyle', lineStyleVert); hold all
 dsErrorsurface(binCenters,binVert,binSemVert,vertColor,surfaceAlpha);
-plot(binCenters,binCard,'linewidth',linewidth,'color',cardColor);
+plot(binCenters,binCard,'linewidth',linewidth,'color',cardColor, 'LineStyle', lineStyleCard);
 dsErrorsurface(binCenters,binCard,binSemCard,cardColor,surfaceAlpha);
-plot(binCenters,binRad,'linewidth',linewidth,'color',radColor);
+plot(binCenters,binRad,'linewidth',linewidth,'color',radColor, 'LineStyle', lineStyleRad);
 dsErrorsurface(binCenters,binRad,binSemRad,radColor,surfaceAlpha);
 
 xlim([0 10]);
+ylim([0.35 1.05]);
 axis square
 xlabel('\iteccentricity (deg)');
 ylabel('\itdeviation (rad)');
@@ -236,9 +268,9 @@ ylabel('\itdeviation (rad)');
 %% POLAR plot: vertical, cardinal, and radial deviation vs. pRF angle
 isubplot=isubplot+1;
 subplot(rows,cols,isubplot);
-thresh = -inf;
-improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
-improv = improv';
+% thresh = -inf;
+% improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
+% improv = improv';
 tempVert = abs(allVertDeviation{iroi}(isplit,:));
 tempRad = abs(allOriDeviation{iroi}(isplit,:));
 tempCard = abs(allCardDeviation{iroi}(isplit,:));
@@ -246,7 +278,7 @@ tempCard = abs(allCardDeviation{iroi}(isplit,:));
 clear binSubVert binSubCard binSubRad binVert binCard binRad binSemVert binSemCard binSemRad
 for ibin=1:nbins
     for isub=subjects
-        goodInd = allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & improv>thresh &  allPrfAng{iroi}*pi/180>=angBinBorders(ibin) & allPrfAng{iroi}*pi/180<angBinBorders(ibin+1);
+        goodInd = allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & allPrfAng{iroi}*pi/180>=angBinBorders(ibin) & allPrfAng{iroi}*pi/180<angBinBorders(ibin+1);
         binSubVert(isub,ibin) = mean(tempVert(goodInd));
         binSubCard(isub,ibin) = mean(tempCard(goodInd));
         binSubRad(isub,ibin) = mean(tempRad(goodInd));
@@ -259,17 +291,17 @@ binSemVert = std(binSubVert)/sqrt(length(subjects));
 binSemCard = std(binSubCard)/sqrt(length(subjects));
 binSemRad = std(binSubRad)/sqrt(length(subjects));
 
-polarplot([angBinCenters angBinCenters(1)],[binVert binVert(1)],'color',vertColor,'linewidth',linewidth); hold all
-polarplot([angBinCenters angBinCenters(1)],[binCard binCard(1)],'color',cardColor, 'linewidth',linewidth);
-polarplot([angBinCenters angBinCenters(1)],[binRad binRad(1)],'color',radColor,'linewidth',linewidth);
+polarplot([angBinCenters angBinCenters(1)],[binVert binVert(1)],'color',vertColor,'linewidth',linewidth, 'LineStyle', lineStyleVert); hold all
+polarplot([angBinCenters angBinCenters(1)],[binCard binCard(1)],'color',cardColor, 'linewidth',linewidth, 'LineStyle', lineStyleCard);
+polarplot([angBinCenters angBinCenters(1)],[binRad binRad(1)],'color',radColor,'linewidth',linewidth, 'LineStyle', lineStyleRad);
 thetaticks(0:45:315); thetaticklabels({'0','','\pi/2','', '\pi','','3\pi/2',''});
 
 %% line plot: per subject, orientation deviation from VERTICAL minus from RADIAL vs. pRF eccentricity
 isubplot=isubplot+1;
-thresh = -inf;
+% thresh = -inf;
 subplot(rows,cols, isubplot);
-improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
-improv = improv';
+% improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
+% improv = improv';
 temp = abs(allVertDeviation{iroi}(isplit,:)) - abs(allOriDeviation{iroi}(isplit,:));
 xlim([0 10]);
 plot([0:10],0*[0:10],'k');
@@ -277,14 +309,14 @@ hold on
 clear binData
 for isub=subjects
     for ibin=1:nbins
-        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & improv>thresh &  allPrfEcc{iroi}>=binBorders(ibin) & allPrfEcc{iroi}<binBorders(ibin+1)));
+        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & allPrfEcc{iroi}>=binBorders(ibin) & allPrfEcc{iroi}<binBorders(ibin+1)));
     end
 end
 plot(binCenters,binData,'color',0.7*[1 1 1]);
 
 [~, pvalRadVert, ciRadVert, statsRadVert] = ttest(binData);
 sigBins = pvalRadVert<pvalThresh;
-plot(binCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',radColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
+plot(binCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',cardColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
 box on
 axis square
 xlabel('\iteccentricity (deg)');
@@ -294,13 +326,13 @@ ylabel('\it\Delta deviation (rad)');
 
 isubplot=isubplot+1;
 subplot(rows,cols, isubplot);
-thresh = -inf;
-improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
-improv = improv';
+% thresh = -inf;
+% improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
+% improv = improv';
 temp = abs(allVertDeviation{iroi}(isplit,:)) - abs(allOriDeviation{iroi}(isplit,:));
 for isub=subjects
     for ibin=1:nbins
-        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & improv>thresh &  allPrfAng{iroi}*pi/180>=angBinBorders(ibin) & allPrfAng{iroi}*pi/180<angBinBorders(ibin+1)));
+        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & allPrfAng{iroi}*pi/180>=angBinBorders(ibin) & allPrfAng{iroi}*pi/180<angBinBorders(ibin+1)));
     end
 end
 polarplot([angBinCenters angBinCenters(1)],[binData binData(:,1)],'color',0.7*[1 1 1]);
@@ -308,7 +340,7 @@ hold on
 
 [~, pvalRadVert, ciRadVert, statsRadVert] = ttest(binData);
 sigBins = pvalRadVert<pvalThresh;
-polarplot(angBinCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',radColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
+polarplot(angBinCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',cardColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
 
 rlim([min(binData(:))-0.1 max(binData(:))+0.1])
 thetaticks(0:45:315); thetaticklabels({'0','','\pi/2','', '\pi','','3\pi/2',''});
@@ -316,9 +348,9 @@ thetaticks(0:45:315); thetaticklabels({'0','','\pi/2','', '\pi','','3\pi/2',''})
 %% line plot: per subject, orientation deviation from CARDINAL minus from RADIAL vs. pRF eccentricity
 isubplot=isubplot+1;
 subplot(rows,cols, isubplot);
-thresh = -inf;
-improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
-improv = improv';
+% thresh = -inf;
+% improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
+% improv = improv';
 temp = abs(allCardDeviation{iroi}(isplit,:)) - abs(allOriDeviation{iroi}(isplit,:));
 xlim([0 10]);
 plot([0:10],0*[0:10],'k');
@@ -326,13 +358,13 @@ hold on
 clear binData
 for isub=subjects
     for ibin=1:nbins
-        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & improv>thresh &  allPrfEcc{iroi}>=binBorders(ibin) & allPrfEcc{iroi}<binBorders(ibin+1)));
+        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & allPrfEcc{iroi}>=binBorders(ibin) & allPrfEcc{iroi}<binBorders(ibin+1)));
     end
 end
 plot(binCenters,binData,'color',0.7*[1 1 1]);
 [~, pvalRadCard, ciRadCard, statsRadCard] = ttest(binData);
 sigBins = pvalRadCard<pvalThresh;
-plot(binCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',radColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
+plot(binCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',cardColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
 box on
 axis square
 xlabel('\iteccentricity (deg)');
@@ -342,13 +374,13 @@ ylabel('\it\Delta deviation (rad)');
 %% POLAR plot: per subject, orientation deviation from CARDINAL minus from RADIAL vs. pRF eccentricity
 isubplot=isubplot+1;
 subplot(rows,cols, isubplot);
-thresh = -inf;
-improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
-improv = improv';
+% thresh = -inf;
+% improv = allNsdOriCorr{iroi}(isplit,:) - allNsdCorr{iroi}(isplit,:);
+% improv = improv';
 temp = abs(allCardDeviation{iroi}(isplit,:)) - abs(allOriDeviation{iroi}(isplit,:));
 for isub=subjects
     for ibin=1:nbins
-        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & improv>thresh &  allPrfAng{iroi}*pi/180>=angBinBorders(ibin) & allPrfAng{iroi}*pi/180<angBinBorders(ibin+1)));
+        binData(isub,ibin) = mean(temp(allSubInd{iroi}==isub & allPrfR2{iroi}>prfThresh & allPrfAng{iroi}*pi/180>=angBinBorders(ibin) & allPrfAng{iroi}*pi/180<angBinBorders(ibin+1)));
     end
 end
 polarplot([angBinCenters angBinCenters(1)],[binData binData(:,1)],'color',0.7*[1 1 1]);
@@ -356,7 +388,7 @@ hold on
 
 [~, pvalRadCard, ciRadCard, statsRadCard] = ttest(binData);
 sigBins = pvalRadCard<pvalThresh;
-polarplot(angBinCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',radColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
+polarplot(angBinCenters(sigBins),mean(binData(:,sigBins)),'LineStyle','none','color',cardColor,'linewidth',linewidth,'markersize',sigMarkersize,'marker','.');
 
 rlim([min(binData(:))-0.1 max(binData(:))+0.1])
 thetaticks(0:45:315); thetaticklabels({'0','','\pi/2','', '\pi','','3\pi/2',''});
@@ -438,8 +470,16 @@ thetaticks(0:45:315); thetaticklabels({'0','','\pi/2','', '\pi','','3\pi/2',''})
 %%
 set(gcf,'position',[150 180 420 740]);
 
+if condition == 1
+    figName = 'quantMap_old';
+elseif condition == 2
+    figName = 'quantMap_ori';
+elseif condition == 3
+    figName = 'quantMap_control';
+end
+
 if toSavePdf
-    savepdf(h, [figFolder 'fig4.pdf']);
+    print('-painters','-dpdf',[figFolder, figName]);
 end
 
 

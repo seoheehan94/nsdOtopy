@@ -20,7 +20,7 @@ tic
 nsessionsSub = [40 40 32 30 40 32 40 30];
 nsessions=nsessionsSub(isub);
 nsplits=2;
-bandpass = 1; bandMin = 1; bandMax = 7;
+bandpass = 1; bandMin = 1; bandMax = 1;
 
 boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/';
 savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_Ori/';

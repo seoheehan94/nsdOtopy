@@ -34,7 +34,7 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/prfsample/'];
+prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/figures/'];
 
 allOri = cell(1,nrois);
@@ -109,10 +109,10 @@ end
 
 %%
 ifig=ifig+1; h=figure(ifig); clf;
-% rows=2;
-rows=1;
-% cols=3;
-cols=1;
+rows=2;
+% rows=1;
+cols=3;
+% cols=1;
 isplit = nsplits;
 isubplot=0;
 
@@ -126,71 +126,71 @@ plotOriLines(allOri{iroi}(isplit,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iro
 xlabel('\itx position (deg)');
 ylabel('\ity position (deg)');
 
-% %% preferred ORIENTATION - single splits
-% cols=2*cols;
-% isubplot=cols;
-% for isplit=1:2
-%     isubplot = isubplot+1;
-%     subplot(rows,cols, isubplot);
-%     plotOriLines(allOri{iroi}(isplit,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdR2{iroi}(3,:)));
-% 
-%     xlabel('\itx position (deg)');
-%     if isplit==1
-%         ylabel('\ity position (deg)');
-%     else
-%         set(gca,'yTick',[]);
-%         set(gca,'yTicklabels',{});
-%     end
-% end
-% isplit=3;
-% 
-% %% orientation color legend
-% cols = cols/2;
-% isubplot=2;
-% subplot(rows,cols, isubplot);
-% noris = 16;
-% oris = linspace(0,2*pi,noris+1);
-% oris = oris(1:end-1);
-% R = 0.3;
-% [oriX, oriY] = pol2cart(pi/2-oris,R);
-% linelength = 0.1;
-% linewidth = 4;
-% cMap = turbo(256);
-% 
-% angleColor = zeros(100,100);
-% [X,Y] = meshgrid(-100:100, -100:100);
-% [TH,R] = cart2pol(X,Y);
-% TH(R>100) = NaN;
-% imagesc(mod(pi/2+TH,pi));
-% colormap turbo
-% axis square
-% 
-% axis square
-% axis off
-% 
-% 
-% %% scale legend
-% isubplot=isubplot+1;
-% subplot(rows,cols, isubplot);
-% nlines = 6;
-% orientations = (pi/4)*ones(1,nlines);
-% x = 100*linspace(-1, 1, nlines);
-% y = ones(1,nlines);
-% snr = linspace(0.01, 0.2, nlines);
-% snr = 3*snr;
-% snr = snr*200;
-% lineWidth = 0.01*snr;
-% lineLength = 0.4*snr;
-% cMap = turbo(256);
-% for iline=1:nlines
-%     drawOriLine(x(iline), y(iline), pi/2-orientations(iline), lineLength(iline), lineWidth(iline), cMap(1+floor((orientations(iline))*255/(pi)),:));
-%     hold on
-% end
-% xlim([-interpSz interpSz]); ylim([-interpSz interpSz]);
-% 
-% axis square
-% axis off
-% 
+%% preferred ORIENTATION - single splits
+cols=2*cols;
+isubplot=cols;
+for isplit=1:2
+    isubplot = isubplot+1;
+    subplot(rows,cols, isubplot);
+    plotOriLines(allOri{iroi}(isplit,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdR2{iroi}(3,:)));
+
+    xlabel('\itx position (deg)');
+    if isplit==1
+        ylabel('\ity position (deg)');
+    else
+        set(gca,'yTick',[]);
+        set(gca,'yTicklabels',{});
+    end
+end
+isplit=3;
+
+%% orientation color legend
+cols = cols/2;
+isubplot=2;
+subplot(rows,cols, isubplot);
+noris = 16;
+oris = linspace(0,2*pi,noris+1);
+oris = oris(1:end-1);
+R = 0.3;
+[oriX, oriY] = pol2cart(pi/2-oris,R);
+linelength = 0.1;
+linewidth = 4;
+cMap = turbo(256);
+
+angleColor = zeros(100,100);
+[X,Y] = meshgrid(-100:100, -100:100);
+[TH,R] = cart2pol(X,Y);
+TH(R>100) = NaN;
+imagesc(mod(pi/2+TH,pi));
+colormap turbo
+axis square
+
+axis square
+axis off
+
+
+%% scale legend
+isubplot=isubplot+1;
+subplot(rows,cols, isubplot);
+nlines = 6;
+orientations = (pi/4)*ones(1,nlines);
+x = 100*linspace(-1, 1, nlines);
+y = ones(1,nlines);
+snr = linspace(0.01, 0.2, nlines);
+snr = 3*snr;
+snr = snr*200;
+lineWidth = 0.01*snr;
+lineLength = 0.4*snr;
+cMap = turbo(256);
+for iline=1:nlines
+    drawOriLine(x(iline), y(iline), pi/2-orientations(iline), lineLength(iline), lineWidth(iline), cMap(1+floor((orientations(iline))*255/(pi)),:));
+    hold on
+end
+xlim([-interpSz interpSz]); ylim([-interpSz interpSz]);
+
+axis square
+axis off
+
 % %%
 % set(gcf,'position',[150 180 3*250 rows*210]);
 % h.Units = 'centimeters';

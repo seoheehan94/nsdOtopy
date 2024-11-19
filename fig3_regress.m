@@ -34,7 +34,9 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
+prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
+% prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/'];
+% prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);
@@ -98,10 +100,11 @@ iroi=1;
 %% preferred ORIENTATION
 isubplot=isubplot+1;
 subplot(rows,cols, isubplot);
+set(gca, 'FontName', 'Helvetica', 'FontSize', 18, 'FontAngle', 'normal');
 plotOriLines(allOri{iroi}(1,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3*allNsdOriR2{iroi}(isplit,:)));
-
-xlabel('\itx position (deg)');
-ylabel('\ity position (deg)');
+% 
+% xlabel('\itx position (deg)', 'FontSize', 18, 'FontName', 'Helvetica', 'FontAngle', 'normal');
+% ylabel('\ity position (deg)', 'FontSize', 18, 'FontName', 'Helvetica', 'FontAngle', 'normal');
 
 % %% preferred ORIENTATION - single splits
 % cols=2*cols;
@@ -173,7 +176,7 @@ ylabel('\ity position (deg)');
 h.Units = 'centimeters';
 h.PaperSize=[5 5];
 if toSavePdf
-    print('-painters','-dpdf',[figFolder 'radialBias_regress_control']);
+    print('-painters','-dpdf',[figFolder 'radialBias_regress_old']);
 end
 % 
 % toc
@@ -209,11 +212,12 @@ line([interpSz/2 interpSz/2], [-interpSz/2 interpSz/2], 'color',linecolor);
 line([-interpSz/2 interpSz/2],[interpSz/2 interpSz/2], 'color',linecolor);
 line([-interpSz/2 interpSz/2],[-interpSz/2 -interpSz/2], 'color',linecolor);
 xlim([-interpSz interpSz]); ylim([-interpSz interpSz]);
-set(gca,'xTick',[-interpSz/2 0 interpSz/2]);
+set(gca,'xTick',[-interpSz/2 0 interpSz/2],  'FontSize', 18);
 set(gca,'xTicklabels',{-degPerPix*interpSz/2, 0, degPerPix*interpSz/2});
-set(gca,'yTick',[-interpSz/2 0 interpSz/2]);
+set(gca,'yTick',[-interpSz/2 0 interpSz/2],  'FontSize', 18);
 set(gca,'yTicklabels',{-degPerPix*interpSz/2, 0, degPerPix*interpSz/2});
 box on
 axis square
+set(gca, 'LineWidth', 1.5);
 
 end
