@@ -8,7 +8,6 @@ roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
 combinedRoiNames = {'V1','V2','V3','hV4'};
 conditions = {'old', 'ori', 'control'};
 prffolders = {'prfsample_maxmin', 'prfsample_maxmin_Ori', 'prfsample_maxmin_control'};
-subList = {'sub1', 'sub2','sub3', 'sub4','sub5', 'sub6', 'sub7', 'sub8'};
 imgTypes = {'Top', 'Bottom'};
 pairTypes = {'old_control', 'old_ori', 'control_ori'};
 
@@ -159,12 +158,15 @@ for curimgtype=1:2
         for row= 1:size(totalDiff.(imgTypes{curimgtype}), 1)
             allRows = [allRows (totalDiff.(imgTypes{curimgtype}){row, col})];
         end
-
+        totalDiffbyROI.(imgTypes{curimgtype}){col} = allRows;
         % Compute the mean across the 8 rows
-        columnMeans(curimgtype, col) = mean(allRows, "omitnan");
+        columnMeans(curimgtype, col) = mean(nonzeros(allRows), "omitnan");
     end
 end
 rad2deg(columnMeans(1,:)-columnMeans(2,:))
+
+[h,p,ci,stats] = ttest(nonzeros(totalDiffbyROI.Top{4}),nonzeros(totalDiffbyROI.Bottom{4}));
+fprintf('p:%d. tstat:%d.\n', p, stats.tstat);
 %% 2. make a brain volume %%
 
 %% make a brain volume
@@ -269,4 +271,16 @@ for isub = 1:8
             end
         end
     end
+end
+
+
+
+%% distribution of orientation in top/bottom
+
+savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin/';
+variablename = {'indicesTop_old_ori', 'indicesBottom_old_ori'};
+for cur
+for isub = 1:8
+    load(fullfile(savefolder,[variablename,'regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'nsd');
+    nsd.voxPrfOriSampleNormalized
 end

@@ -272,3 +272,16 @@ for isub = 1:8
         end
     end
 end
+
+
+
+%% distribution of orientation in top/bottom
+
+savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin/';
+variablename = {'indicesTop_old_ori', 'indicesBottom_old_ori'};
+for curimgtype = 1:2
+    for isub = 1:8
+        load(fullfile(savefolder,[variablename{curimgtype},'regressPrfSplit' '_bandpass1to7_v1_sub' num2str(isub) '.mat']),'nsd');
+        allsub.(variablename{curimgtype}){isub} = nsd.voxPrfOriSampleNormalized;
+    end
+end
