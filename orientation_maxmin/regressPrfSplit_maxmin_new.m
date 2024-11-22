@@ -197,7 +197,6 @@ for visualRegion=visualRegions
             for ivox=1:nvox(roinum)
                 
                 voxBetas = roiBetas{roinum}(ivox,imgTrials>0)';
-                keyboard;
                 voxPrfSample = squeeze(prfSampleLev{roinum}(imgNum(imgTrials>0),ivox,:));
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;
