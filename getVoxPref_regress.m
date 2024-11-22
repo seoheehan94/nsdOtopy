@@ -272,6 +272,7 @@ for iregion=1:numregions
             % elseif con ==2
             %     coefMat_meansf = fullCoef;
             % end
+            keyboard;
             coefMat_meansf = coefMat_meansf - min(coefMat_meansf,[],2);
             theta = linspace(0,2*pi,numOrientations+1);%for circular calculation
             theta = theta(1:end-1);

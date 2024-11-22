@@ -24,7 +24,7 @@ bandpass = 1; bandMin = 1; bandMax = 1;
 
 boxfolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/';
 savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_Ori/';
-indicefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/';
+indicefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMinPatch/';
 
 betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
 % stimfilename = fullfile(folder,'nsdsynthetic_colorstimuli_subj01.hdf5');
@@ -71,6 +71,11 @@ for visualRegion=visualRegions
     load(fullfile(boxfolder,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri','prfSampleLev',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf');
+
+    % for i = 1:numel(curIndices)
+    %     curIndices{i} = curIndices{i} | curIndices2{i};
+    % end
+    % find(curIndces{1}==0)
     %if prf sampling was done with the nonlinear CSS prf, then we want to
     %define the weights for the constrained model as a sum of the
     %orientation model across orientations:
@@ -152,7 +157,7 @@ for visualRegion=visualRegions
         voxOriPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
         voxResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
         voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
-        
+        voxPrfOriSampleNormalized{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials{roinum},numOrientations);
         %get model coefficients for each voxel, within each split
         for ivox=1:nvox(roinum)
             splitImgTrials = repmat(logicalArray{roinum}(:,ivox)',2,1);
@@ -168,14 +173,22 @@ for visualRegion=visualRegions
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;
                 voxCoef{roinum}(isplit,ivox,:) = voxPrfSample\voxBetas;
-                
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
                 voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
+                rowSums = sum(voxPrfOriSample, 2);
+                rowSums(rowSums == 0) = NaN; % Replace zero sums with NaN to avoid division by zero
+                voxPrfOriSampleNormalized{roinum}(nsplits,ivox,1:numTrials,:) = voxPrfOriSample ./ rowSums;
+                
                 %add constant predictor
+                % voxPrfOriSample= normalize(voxPrfOriSample);
+                % voxPrfOriSample2(:,end+1) = ones;
                 voxPrfOriSample(:,end+1) = ones;
+
                 voxOriCoef{roinum}(isplit,ivox,:) = voxPrfOriSample\voxBetas;%check vox 144 in first ROI
                 
+
+               
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 %regress vignetting predicted timecourse with orientation model
@@ -236,6 +249,7 @@ for visualRegion=visualRegions
                 voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
                 %add constant predictor
+                % voxPrfOriSample= normalize(voxPrfOriSample);
                 voxPrfOriSample(:,end+1) = ones;
                 
                 voxOriResidualSplit{roinum}(isplit,ivox,1:numTrials) = voxBetas' - squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample';
@@ -244,8 +258,8 @@ for visualRegion=visualRegions
                 %r2 between splits
                 r2split{roinum}(isplit,ivox) = rsquared(voxResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
                 r2oriSplit{roinum}(isplit,ivox) = rsquared(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
-                aicOriSplit{roinum}(isplit,ivox) = AIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
-                bicOriSplit{roinum}(isplit,ivox) = BIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
+                aicOriSplit{roinum}(isplit,ivox) = computeAIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
+                bicOriSplit{roinum}(isplit,ivox) = computeBIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
                 
                 %corr between splits
                 % pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
@@ -283,6 +297,7 @@ for visualRegion=visualRegions
     nsd.voxResidOriR2 = voxResidOriR2;
     nsd.voxOriResidOriR2 = voxOriResidOriR2;
     nsd.roiInd = roiInd;
+    nsd.voxPrfOriSampleNormalized = voxPrfOriSampleNormalized;
     
     
     %% SYNTHETIC STIMULI

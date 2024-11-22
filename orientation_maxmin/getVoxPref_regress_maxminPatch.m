@@ -123,10 +123,10 @@ for iregion=1:numregions
         %         synth.voxOriCoef{1} = [];
 
         for iroi=1:length(rois)
-            nsd.voxResidual{1} = cat(2,nsd.voxResidual{1},oldNsd.voxResidual{iroi});
-            nsd.voxOriResidual{1} = cat(2,nsd.voxOriResidual{1},oldNsd.voxOriResidual{iroi});
-            nsd.voxResidualSplit{1} = cat(2,nsd.voxResidualSplit{1},oldNsd.voxOriResidual{iroi});
-            nsd.voxOriResidualSplit{1} = cat(2,nsd.voxOriResidualSplit{1},oldNsd.voxOriResidual{iroi});
+            % nsd.voxResidual{1} = cat(2,nsd.voxResidual{1},oldNsd.voxResidual{iroi});
+            % nsd.voxOriResidual{1} = cat(2,nsd.voxOriResidual{1},oldNsd.voxOriResidual{iroi});
+            % nsd.voxResidualSplit{1} = cat(2,nsd.voxResidualSplit{1},oldNsd.voxOriResidual{iroi});
+            % nsd.voxOriResidualSplit{1} = cat(2,nsd.voxOriResidualSplit{1},oldNsd.voxOriResidual{iroi});
 
             % nsd.pearsonRori{1} = cat(2,nsd.pearsonRori{1},oldNsd.pearsonRori{iroi});
             % nsd.pearsonR{1} = cat(2,nsd.pearsonR{1},oldNsd.pearsonR{iroi});
@@ -286,6 +286,27 @@ for iregion=1:numregions
     %     %         synthFullPrefOri{iroi} = gratingPrefOri(synthFullCoef,gratings.modelOriEnergy);
     % end
 
+%% Apply threshold
+
+
+threshold = -1;
+
+columnsToModify = nsd.r2oriSplit{1}(3, :) < threshold;
+modifiedIndices = find(columnsToModify);
+
+nsd.voxCoef{1}(:, modifiedIndices,:) = NaN;
+nsd.voxOriCoef{1}(:, modifiedIndices,:) = NaN;
+nsd.voxPredOriCoef{1}(:, modifiedIndices,:) = NaN;
+nsd.voxOriPredOriCoef{1}(:, modifiedIndices,:) = NaN;
+nsd.voxResidOriCoef{1}(:, modifiedIndices,:) = NaN;
+nsd.voxOriResidOriCoef{1}(:, modifiedIndices,:) = NaN;
+
+nsd.r2{1}(:, modifiedIndices) = NaN;
+nsd.r2ori{1}(:, modifiedIndices) = NaN;
+nsd.r2split{1}(:, modifiedIndices) = NaN;
+nsd.r2oriSplit{1}(:, modifiedIndices) = NaN;
+nsd.aicOriSplit{1}(:, modifiedIndices) = NaN;
+nsd.bicOriSplit{1}(:, modifiedIndices) = NaN;
 
     %% get regress angle
     clear fullPrefOri oriDeviation vertDeviation cardDeviation fullCoef

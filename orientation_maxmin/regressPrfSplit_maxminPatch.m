@@ -169,6 +169,7 @@ for visualRegion=visualRegions
                 voxPrfSample(:,end+1) = ones;
                 voxCoef{roinum}(isplit,ivox,:) = voxPrfSample\voxBetas;
                 
+                
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
                 voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
