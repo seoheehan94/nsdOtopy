@@ -178,7 +178,8 @@ for visualRegion=visualRegions
                 
                 rowSums = sum(voxPrfOriSample, 2);
                 rowSums(rowSums == 0) = NaN; % Replace zero sums with NaN to avoid division by zero
-                voxPrfOriSampleNormalized{roinum}(nsplits,ivox,1:numTrials,:) = voxPrfOriSample ./ rowSums;
+                keyboard;
+                voxPrfOriSampleNormalized{roinum}(isplits,ivox,1:numTrials,:) = voxPrfOriSample ./ rowSums;
                 
                 %add constant predictor
                 % voxPrfOriSample= normalize(voxPrfOriSample);
@@ -281,12 +282,8 @@ for visualRegion=visualRegions
     nsd.r2oriSplit = r2oriSplit;
     nsd.aicOriSplit = aicOriSplit;
     nsd.bicOriSplit = bicOriSplit;
-<<<<<<< HEAD:orientation_maxmin/regressPrfSplit_maxminPatch.asv
-    %   
-=======
     % nsd.pearsonRori = pearsonRori;
     % nsd.pearsonR = pearsonR;
->>>>>>> 831780abc0e94365d21a3da4712498a3055520c5:orientation_maxmin/regressPrfSplit_maxminPatch_new.asv
     nsd.imgNum = imgNum;
     nsd.totalNumTrials = totalNumTrials;
     nsd.splitImgTrials = splitImgTrials;

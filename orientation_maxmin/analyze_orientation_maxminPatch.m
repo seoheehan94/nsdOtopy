@@ -282,6 +282,38 @@ variablename = {'indicesTop_old_ori', 'indicesBottom_old_ori'};
 for curimgtype = 1:2
     for isub = 1:8
         load(fullfile(savefolder,[variablename{curimgtype},'regressPrfSplit' '_bandpass1to7_v1_sub' num2str(isub) '.mat']),'nsd');
-        allsub.(variablename{curimgtype}){isub} = nsd.voxPrfOriSampleNormalized;
+        allsubOld.(variablename{curimgtype}){isub} = nsd.voxPrfOriSampleNormalized;
     end
+end
+
+
+
+savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_Ori/';
+variablename = {'indicesTop_old_ori', 'indicesBottom_old_ori'};
+for curimgtype = 1:2
+    for isub = 1:8
+        load(fullfile(savefolder,[variablename{curimgtype},'regressPrfSplit' '_bandpass1to1_v1_sub' num2str(isub) '.mat']),'nsd');
+        allsubOri.(variablename{curimgtype}){isub} = nsd.voxPrfOriSampleNormalized;
+    end
+end
+
+
+combinedOri = struct;
+for isub = 1:8
+    % Extract the inner cell
+    roiCell = allsubOri.indicesTop_old_ori{isub}; % 1x2 cell
+    curRoi = [];
+    for icell = 1:size(roiCell,2)
+        curSecCell = roiCell{icell};
+        curSecCell = permute(curSecCell,[3 2 4 1]);
+        newarray = [curSecCell(:,:,:,1);curSecCell(:,:,:,1)];
+        newarray = permute(newarray, [2 1 3]);
+        isAllZero = all(newarray == 0, [1, 3]);
+        newarray(:, isAllZero, :) = [];
+
+        newarray_mean = squeeze(mean(newarray, 2));
+        curRoi = [curRoi; newarray];
+    end
+    combinedOri.indicesTop_old_ori{isub} = curRoi;
+
 end

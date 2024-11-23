@@ -178,7 +178,7 @@ for visualRegion=visualRegions
                 
                 rowSums = sum(voxPrfOriSample, 2);
                 rowSums(rowSums == 0) = NaN; % Replace zero sums with NaN to avoid division by zero
-                voxPrfOriSampleNormalized{roinum}(nsplits,ivox,1:numTrials,:) = voxPrfOriSample ./ rowSums;
+                voxPrfOriSampleNormalized{roinum}(isplit,ivox,1:numTrials,:) = voxPrfOriSample ./ rowSums;
                 
                 %add constant predictor
                 % voxPrfOriSample= normalize(voxPrfOriSample);

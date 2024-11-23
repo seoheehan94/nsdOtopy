@@ -176,7 +176,7 @@ for visualRegion=visualRegions
                 voxPrfOriSample2 = squeeze(mean(voxPrfOriSample,2));
                 rowSums = sum(voxPrfOriSample2, 2);
                 rowSums(rowSums == 0) = NaN; % Replace zero sums with NaN to avoid division by zero
-                voxPrfOriSampleNormalized{roinum}(nsplits,ivox,1:numTrials,:) = voxPrfOriSample2 ./ rowSums;
+                voxPrfOriSampleNormalized{roinum}(isplit,ivox,1:numTrials,:) = voxPrfOriSample2 ./ rowSums;
                 
                 voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
 

@@ -142,14 +142,22 @@ end
 %         end 
 % end
 
-for isub=1:7
-   fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch',isub,1, 'old_ori', 'Bottom');
-
+for isub=1:8
+    fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch',isub,1, 'old_ori', 'Bottom');
     regressPrfSplit_maxminPatch(isub, 1, 'old_ori', 'Bottom')
+    fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch',isub,1, 'old_ori', 'Top');
+    regressPrfSplit_maxminPatch(isub, 1, 'old_ori', 'Top')
+
+    fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_new',isub,1, 'old_ori', 'Bottom');
+    regressPrfSplit_maxminPatch_new(isub, 1, 'old_ori', 'Bottom')
+    fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch_new',isub,1, 'old_ori', 'Top');
+    regressPrfSplit_maxminPatch_new(isub, 1, 'old_ori', 'Top')
 
 end
-for isub=1:7
-       fprintf('%s. %d. %d. %s. %s. ...\n','regressPrfSplit_maxminPatch',isub,1, 'old_ori', 'Top');
 
-    regressPrfSplit_maxminPatch(isub, 1, 'old_ori', 'Top')
+
+for isub=8
+
+    regressPrfSplit_maxminPatch_new(isub, 1, 'old_ori', 'Top')
+    regressPrfSplit_maxminPatch_new(isub, 1, 'old_ori', 'Bottom')
 end
