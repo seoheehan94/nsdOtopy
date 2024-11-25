@@ -286,7 +286,27 @@ for curimgtype = 1:2
     end
 end
 
+combinedOld = struct;
+for curimgtype = 1:2
+    for isub = 1:8
+        % Extract the inner cell
+        roiCell = allsubOld.(variablename{curimgtype}){isub}; % 1x2 cell
+        curRoi = [];
+        for icell = 1:size(roiCell,2)
+            curSecCell = roiCell{icell};
+            curSecCell = permute(curSecCell,[3 2 4 1]);
+            newarray = [curSecCell(:,:,:,1);curSecCell(:,:,:,1)];
+            newarray = permute(newarray, [2 1 3]);
+            isAllZero = all(newarray == 0, [1, 3]);
+            newarray(:, isAllZero, :) = [];
 
+            newarray_mean = squeeze(mean(newarray, 2));
+            curRoi = [curRoi; newarray_mean];
+        end
+        combinedOld.(variablename{curimgtype}){isub} = curRoi;
+    end
+end
+clearvars allsubOld
 
 savefolder = '/bwdata/NSDData/Seohee/Orientation/prfsample_maxmin_Ori/';
 variablename = {'indicesTop_old_ori', 'indicesBottom_old_ori'};
@@ -297,23 +317,92 @@ for curimgtype = 1:2
     end
 end
 
-
 combinedOri = struct;
-for isub = 1:8
-    % Extract the inner cell
-    roiCell = allsubOri.indicesTop_old_ori{isub}; % 1x2 cell
-    curRoi = [];
-    for icell = 1:size(roiCell,2)
-        curSecCell = roiCell{icell};
-        curSecCell = permute(curSecCell,[3 2 4 1]);
-        newarray = [curSecCell(:,:,:,1);curSecCell(:,:,:,1)];
-        newarray = permute(newarray, [2 1 3]);
-        isAllZero = all(newarray == 0, [1, 3]);
-        newarray(:, isAllZero, :) = [];
+for curimgtype = 1:2
+    for isub = 1:8
+        % Extract the inner cell
+        roiCell = allsubOri.(variablename{curimgtype}){isub}; % 1x2 cell
+        curRoi = [];
+        for icell = 1:size(roiCell,2)
+            curSecCell = roiCell{icell};
+            curSecCell = permute(curSecCell,[3 2 4 1]);
+            newarray = [curSecCell(:,:,:,1);curSecCell(:,:,:,1)];
+            newarray = permute(newarray, [2 1 3]);
+            isAllZero = all(newarray == 0, [1, 3]);
+            newarray(:, isAllZero, :) = [];
 
-        newarray_mean = squeeze(mean(newarray, 2));
-        curRoi = [curRoi; newarray];
+            newarray_mean = squeeze(mean(newarray, 2));
+            curRoi = [curRoi; newarray_mean];
+        end
+        combinedOri.(variablename{curimgtype}){isub} = curRoi;
     end
-    combinedOri.indicesTop_old_ori{isub} = curRoi;
-
 end
+clearvars allsubOri
+
+totalMean = struct;
+rowNames = {'Top', 'Bottom'};
+thisMean = array2table(nan(size(rowNames,2), 8), "RowNames",rowNames);
+for curimgtype = 1:2
+    allsub = [];
+    for isub = 1:8
+        allsub = [allsub; combinedOld.(variablename{curimgtype}){isub}];
+    end
+    thisMean{rowNames{curimgtype},:} = mean(allsub, 'omitnan');
+end
+totalMean.old = thisMean;
+
+thisMean = array2table(nan(size(rowNames,2), 8), "RowNames",rowNames);
+for curimgtype = 1:2
+    allsub = [];
+    for isub = 1:8
+        allsub = [allsub; combinedOri.(variablename{curimgtype}){isub}];
+    end
+    thisMean{rowNames{curimgtype},:} = mean(allsub, 'omitnan');
+end
+totalMean.ori = thisMean;
+
+
+
+% Plot the bar graph
+data_old = table2array(totalMean.old);
+figure;
+bar(data_old', 'grouped'); % Transpose the data to align columns with x-axis
+xlabel('Bins (Columns)');
+ylabel('Value');
+ylim([0,0.35]);
+title('totalMean.old');
+legend(totalMean.old.Properties.RowNames, 'Location', 'best');
+xticks(1:size(data_old, 2)); % Set x-ticks to match bin numbers
+xticklabels(totalMean.old.Properties.VariableNames); % Optional: use column names if available
+
+data_ori = table2array(totalMean.ori);
+figure;
+bar(data_ori', 'grouped'); % Transpose the data to align columns with x-axis
+xlabel('Bins (Columns)');
+ylabel('Value');
+ylim([0,0.35]);
+title('totalMean.ori');
+legend(totalMean.ori.Properties.RowNames, 'Location', 'best');
+xticks(1:size(data_ori, 2)); % Set x-ticks to match bin numbers
+xticklabels(totalMean.ori.Properties.VariableNames); % Optional: use column names if available
+
+circ_mean()
+
+theta = linspace(0,2*pi,8+1);%for circular calculation
+theta = theta(1:end-1);
+prefAngle_oldTop = circ_mean(theta',totalMean.old{'Top',:}');
+prefAngle_oldTop = mod(prefAngle_oldTop,2*pi);%from [-pi, pi] to [0 2pi]
+prefAngle_oldTop = prefAngle_oldTop./2;%range 0 to pi.
+prefAngle_oldBottom = circ_mean(theta',totalMean.old{'Bottom',:}');
+prefAngle_oldBottom = mod(prefAngle_oldBottom,2*pi);%from [-pi, pi] to [0 2pi]
+prefAngle_oldBottom = prefAngle_oldBottom./2;%range 0 to pi.
+prefAngle_oriTop = circ_mean(theta',totalMean.ori{'Top',:}');
+prefAngle_oriTop = mod(prefAngle_oriTop,2*pi);%from [-pi, pi] to [0 2pi]
+prefAngle_oriTop = prefAngle_oriTop./2;%range 0 to pi.
+prefAngle_oriBottom = circ_mean(theta',totalMean.ori{'Bottom',:}');
+prefAngle_oriBottom = mod(prefAngle_oriBottom,2*pi);%from [-pi, pi] to [0 2pi]
+prefAngle_oriBottom = prefAngle_oriBottom./2;%range 0 to pi.
+rad2deg(prefAngle_oldTop)
+rad2deg(prefAngle_oldBottom)
+rad2deg(prefAngle_oriTop)
+rad2deg(prefAngle_oriBottom)
