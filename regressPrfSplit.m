@@ -201,8 +201,8 @@ for visualRegion=visualRegions
                 keyboard;
                 r2split{roinum}(isplit,ivox) = rsquared(voxResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
                 r2oriSplit{roinum}(isplit,ivox) = rsquared(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
-                aicOriSplit{roinum}(isplit,ivox) = AIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
-                bicOriSplit{roinum}(isplit,ivox) = BIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
+                aicOriSplit{roinum}(isplit,ivox) = computeAIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
+                bicOriSplit{roinum}(isplit,ivox) = computeBIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
                 
                 %corr between splits
                 pearsonRori{roinum}(isplit,ivox) = corr(voxBetas,(squeeze(voxOriCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfOriSample')');
