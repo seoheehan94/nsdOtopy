@@ -110,7 +110,7 @@ for visualRegion=visualRegions
         voxPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         voxPredCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
         voxOriPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
-        voxResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         
         %get model coefficients for each voxel, within each split
