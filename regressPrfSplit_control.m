@@ -125,7 +125,8 @@ for visualRegion=visualRegions
                 voxCoef{roinum}(isplit,ivox,:) = voxPrfSample\voxBetas;
                 
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
-                voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
+                voxPrfOriSample = squeeze(voxPrfOriSample(:,1,:));
+                % voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
                 %add constant predictor
                 voxPrfOriSample(:,end+1) = ones;
@@ -185,7 +186,8 @@ for visualRegion=visualRegions
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
-                voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
+                voxPrfOriSample = squeeze(voxPrfOriSample(:,1,:));
+                % voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
                 %add constant predictor
                 voxPrfOriSample(:,end+1) = ones;
@@ -321,7 +323,7 @@ for visualRegion=visualRegions
     
     %% SAVE RESULTS
     bandpassStr = ['_bandpass' num2str(bandMin) 'to' num2str(bandMax)];
-    save(fullfile(boxfolder,['regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
+    save(fullfile(boxfolder,['regressPrfSplit_sf1' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
     toc
