@@ -52,7 +52,6 @@ for visualRegion=visualRegions
         end
         numLevels = bandMax-bandMin+1;
     end
-    numLevels =  1;
     
     for roinum=1:length(rois); iroi = rois(roinum); roiBetas{roinum}=[]; end
     for isession=1:nsessions
@@ -106,13 +105,13 @@ for visualRegion=visualRegions
         voxResidual{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
         voxOriResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
         voxResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
-        voxOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         voxCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
-        voxPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         voxPredCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
-        voxOriPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxOriPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         voxResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
-        voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
         
         %get model coefficients for each voxel, within each split
         for isplit=1:nsplits
@@ -199,7 +198,6 @@ for visualRegion=visualRegions
                 voxResidualSplit{roinum}(isplit,ivox,1:numTrials) = voxBetas' - squeeze(voxCoef{roinum}(nsplits-isplit+1,ivox,:))'*voxPrfSample';
                 
                 %r2 between splits
-                keyboard;
                 r2split{roinum}(isplit,ivox) = rsquared(voxResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
                 r2oriSplit{roinum}(isplit,ivox) = rsquared(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), roiBetas{roinum}(ivox,imgTrials>0));
                 aicOriSplit{roinum}(isplit,ivox) = computeAIC(voxOriResidualSplit{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))), numTrials, size(voxOriCoef{roinum},3));
