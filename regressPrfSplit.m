@@ -52,6 +52,7 @@ for visualRegion=visualRegions
         end
         numLevels = bandMax-bandMin+1;
     end
+    numLevels =  1;
     
     for roinum=1:length(rois); iroi = rois(roinum); roiBetas{roinum}=[]; end
     for isession=1:nsessions
