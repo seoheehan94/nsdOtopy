@@ -55,7 +55,7 @@ for iregion=1:numregions
     load(fullfile(curPrf,['regressPrfSplit_sf1' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
-
+    numLevels = 1;
     if length(rois)>1 %combine across ventral and dorsal ROIs
         oldNsd = nsd;
         nsd.voxResidual{1} = [];
@@ -272,7 +272,6 @@ for iregion=1:numregions
             % elseif con ==2
             %     coefMat_meansf = fullCoef;
             % end
-            keyboard;
             coefMat_meansf = coefMat_meansf - min(coefMat_meansf,[],2);
             theta = linspace(0,2*pi,numOrientations+1);%for circular calculation
             theta = theta(1:end-1);

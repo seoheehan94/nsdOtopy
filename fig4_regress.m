@@ -15,12 +15,12 @@ close all
 clear all
 tic
 
-condition =3; %1=old, 2=ori, 3=control
+condition =1; %1=old, 2=ori, 3=control
 
 figRoi=1;
 pvalThresh = 0.025;
 
-toSavePdf = 1;
+toSavePdf = 0;
 nbins = 20;
 sigMarkersize = 15;
 
@@ -145,7 +145,7 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref_regress_sub' num2str(isub) '.mat'],'allRoiPrf',...
+    load([prffolder 'voxModelPref_sf1_regress_sub' num2str(isub) '.mat'],'allRoiPrf',...
         'roiOri','roiNsdOriR2',...
         'roiOriDeviation','roiVertDeviation','roiCardDeviation',...
         'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');

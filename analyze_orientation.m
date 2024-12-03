@@ -1,118 +1,85 @@
 %analyze_orientation.m
-% get voxel preference from model weights and create brainVolume 
+% get voxel preference from model weights and create brainVolume
 %   uses files created by: regressPrfSplit.m
 %   creates files used by:
 clear all;
 savefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/brainVolume_regress';
 roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
 combinedRoiNames = {'V1','V2','V3','hV4'};
-condition = {'old', 'ori', 'control'};
-prffolder = {'prfsample', 'prfsample_Ori', 'prfsample_Ori_control'};
-subList = {'sub1', 'sub2','sub3', 'sub4','sub5', 'sub6', 'sub7', 'sub8'};
+conditions = {'old', 'ori', 'control'};
+prffolders = {'prfsample', 'prfsample_Ori', 'prfsample_Ori_control'};
 
+
+%% 1.  mean R2, AIC, BIC %%
 totalR2OriSplit = struct;
 totalaicOriSplit = struct;
 totalbicOriSplit = struct;
+for con = [1,3]
+    totalR2OriSplit.(conditions{con}) = {};
+    totalaicOriSplit.(conditions{con}) = {};
+    totalbicOriSplit.(conditions{con}) = {};
+    for isub = 1:8
+        curPrf = ['/bwdata/NSDData/Seohee/Orientation/', prffolders{con}, '/'];
+        fprintf('isub:%d. con:%d. ...\n',isub,con);
+        load([curPrf 'voxModelPref_sf1_regress_sub' num2str(isub) '.mat']);
 
+        %% total values of R2, aic, bic
+        totalR2OriSplit.(conditions{con}){end+1} = roiNsdOriR2;
+        totalaicOriSplit.(conditions{con}){end+1} = allaicOriSplit;
+        totalbicOriSplit.(conditions{con}){end+1} = allbicOriSplit;
 
-%% 1.  Coef voxel preference %%
-for con = 1:3
-    
-curPrf = ['/bwdata/NSDData/Seohee/Orientation/', prffolder{con}, '/'];
-if con == 1 || con == 3
-    bandpassStr = '_bandpass1to7';
-elseif con == 2
-    bandpassStr = '_bandpass1to1';
+    end
 end
-for isub = 1:8
-    cd('/home/hanseohe/Documents/GitHub/nsdOtopy');
-    fprintf('%d ...\n',isub);
-    clearvars -except isub con subList totalaicOriSplit totalbicOriSplit totalR2OriSplit roiNames combinedRoiNames curPrf prffolder savefolder bandpassStr condition
-    % allMeanCoef = struct;
-    allR2OriSplit = struct;
-    for visualRegion = 1:4
-        thisfield = combinedRoiNames{visualRegion};
-        load(fullfile(curPrf,['regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
-            'nsd','rois','roiPrf','nsplits');
 
-        if length(rois)>1 %combine across ventral and dorsal ROIs
-            oldNsd = nsd;
-            nsd.voxOriCoef{1} = [];
-            nsd.roiInd{1} = [];
-            nsd.r2oriSplit{1} = [];
-            nsd.aicOriSplit{1} = [];
-            nsd.bicOriSplit{1} = [];
-
-            for iroi=1:length(rois)
-                nsd.voxOriCoef{1} = cat(2,nsd.voxOriCoef{1},oldNsd.voxOriCoef{iroi});
-                nsd.roiInd{1} = cat(1,nsd.roiInd{1}, oldNsd.roiInd{iroi});
-                nsd.r2oriSplit{1} = cat(2,nsd.r2oriSplit{1},oldNsd.r2oriSplit{iroi});
-                nsd.aicOriSplit{1} = cat(2,nsd.aicOriSplit{1},oldNsd.aicOriSplit{iroi});
-                nsd.bicOriSplit{1} = cat(2,nsd.bicOriSplit{1},oldNsd.bicOriSplit{iroi});
-            end
-
-            oldPrf = roiPrf; clear roiPrf;
-            roiPrf{1}.ecc=[];
-            roiPrf{1}.ang=[];
-            roiPrf{1}.sz=[];
-            %         roiPrf{1}.exponent=[];
-            %         roiPrf{1}.gain=[];
-            roiPrf{1}.r2=[];
-            roiPrf{1}.x=[];
-            roiPrf{1}.y=[];
-            for iroi=1:length(rois)
-                roiPrf{1}.ecc = cat(1,roiPrf{1}.ecc,oldPrf{iroi}.ecc);
-                roiPrf{1}.ang = cat(1,roiPrf{1}.ang,oldPrf{iroi}.ang);
-                roiPrf{1}.sz = cat(1,roiPrf{1}.sz,oldPrf{iroi}.sz);
-                %             roiPrf{1}.exponent = cat(1,roiPrf{1}.exponent,oldPrf{iroi}.exponent);
-                %             roiPrf{1}.gain = cat(1,roiPrf{1}.gain,oldPrf{iroi}.gain);
-                roiPrf{1}.r2 = cat(1,roiPrf{1}.r2,oldPrf{iroi}.r2);
-                roiPrf{1}.x = cat(1,roiPrf{1}.x,oldPrf{iroi}.x);
-                roiPrf{1}.y = cat(1,roiPrf{1}.y,oldPrf{iroi}.y);
-            end
-            rois = 1;
+%% R2
+fieldsCon = fieldnames(totalR2OriSplit);
+allroiR2OriSplit=[];
+V1R2OriSplit=[];
+for i = 1:numel(fieldsCon)
+    curRoiR2OriSplit = [];
+    curV1R2OriSplit = [];
+    
+    for j = 1:numel(totalR2OriSplit.(fieldsCon{i}))
+        for k = 1:size(roiNsdOriR2,2)
+            curRoiR2OriSplit = [curRoiR2OriSplit, totalR2OriSplit.(fieldsCon{i}){j}{k}(3,:)];
         end
 
-        % AVERAGE SPLITS
-        nsd.voxOriCoef{1}(nsplits+1,:,:) = mean(nsd.voxOriCoef{1},1);
-        nsd.r2oriSplit{1}(nsplits+1,:) = mean(nsd.r2oriSplit{1},1);
-        nsd.aicOriSplit{1}(nsplits+1,:) = mean(nsd.aicOriSplit{1},1);
-        nsd.bicOriSplit{1}(nsplits+1,:) = mean(nsd.bicOriSplit{1},1);
-
-        allR2OriSplit.(thisfield) = nsd.r2oriSplit{1}(3,:);
-        allaicOriSplit.(thisfield) = nsd.aicOriSplit{1}(3,:);
-        allbicOriSplit.(thisfield) = nsd.bicOriSplit{1}(3,:);
-        allRoiPrf{visualRegion} = roiPrf{1};
-        roiNsdOriR2{visualRegion} = nsd.r2oriSplit{1};
-
-        % %% get regress angle
-        % prefAngle =[];
-        % fullCoef = squeeze(nsd.voxOriCoef{1}(3,:,1:end-1));
-        % numvox = size(fullCoef,1);
-        % numLevels = 7;
-        % numOrientations = 8;
-        % if con == 1 || con ==3
-        %     coefMat = reshape(fullCoef,numvox,numLevels,numOrientations);%vox x levels x orientations
-        %     coefMat_meansf = squeeze(mean(coefMat, 2));
-        % elseif con ==2
-        %     coefMat_meansf = fullCoef;
-        % end
-        % coefMat_meansf = coefMat_meansf - min(coefMat_meansf,[],2);
-        % theta = linspace(0,2*pi,numOrientations+1);%for circular calculation
-        % theta = theta(1:end-1);
-        % for ivox=1:numvox
-        %     prefAngle(ivox) = circ_mean(theta',coefMat_meansf(ivox,:)');
-        % end
-        % prefAngle = mod(prefAngle,2*pi);%from [-pi, pi] to [0 2pi]
-        % prefAngle = prefAngle./2;%range 0 to pi.
-        % prefAngle = prefAngle / pi *180;
-        % 
-        % % allMeanCoef.(thisfield) = prefAngle;
-        % allMeanCoef{visualRegion} = prefAngle;
+        curV1R2OriSplit = [curV1R2OriSplit, totalR2OriSplit.(fieldsCon{i}){j}{1}(3,:)];
     end
+    % writematrix(curRoiR2OriSplit', ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/allroiR2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
+    % writematrix(curV1R2OriSplit', ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/V1R2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
 
-    %  saveName = [curPrf, 'voxOriCoef_regress_sub', num2str(isub), '.mat'];
-    % save(saveName, 'allMeanCoef', 'allRoiPrf','roiNsdOriR2');
+    allroiR2OriSplit(i) = mean(curRoiR2OriSplit, 'omitnan');
+    V1R2OriSplit(i) = mean(curV1R2OriSplit,'omitnan');
+end
+
+% save(fullfile(['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMinPatch/', 'meanR2.mat']), "allroiR2OriSplit", "V1R2OriSplit");
+
+
+%% AIC/BIC
+fieldsCon = fieldnames(totalaicOriSplit);
+for i = 1:numel(fieldsCon)
+    curRoiaicOriSplit = [];
+    curV1aicOriSplit = [];
+    curRoibicOriSplit = [];
+    curV1bicOriSplit = [];
+    for j = 1:numel(totalR2OriSplit.(fieldsCon{i}))
+        for k = 1:size(roiNsdOriR2,2)
+            curRoiaicOriSplit = [curRoiaicOriSplit, totalaicOriSplit.(fieldsCon{i}){j}{k}(3,:)];
+            curRoibicOriSplit = [curRoibicOriSplit, totalbicOriSplit.(fieldsCon{i}){j}{k}(3,:)];
+        end
+
+        curV1aicOriSplit = [curV1aicOriSplit, totalaicOriSplit.(fieldsCon{i}){j}{1}(3,:)];
+        curV1bicOriSplit = [curV1bicOriSplit, totalbicOriSplit.(fieldsCon{i}){j}{1}(3,:)];
+    end
+    % writematrix(curRoiaicOriSplit, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/allroiR2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
+    % writematrix(curRoiaicOriSplit, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/V1R2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
+
+    allroiaicOriSplit(i) = mean(curRoiaicOriSplit,"omitnan");
+    V1aicOriSplit(i) = mean(curV1aicOriSplit,"omitnan");
+    allroibicOriSplit}(i) = mean(curRoibicOriSplit,"omitnan");
+    V1bicOriSplit(i) = mean(curV1bicOriSplit,"omitnan");
+end
 
 
     %% make a brain volume
@@ -248,72 +215,6 @@ for isub = 1:8
 end
 
 
-end
-%% mean R2
-
-% allroiR2OriSplit=[]; 
-% V1R2OriSplit=[];
-% fieldsCon = fieldnames(totalR2OriSplit);
-% fieldsSub = fieldnames(totalR2OriSplit.old);
-% fieldsRoi = fieldnames(totalR2OriSplit.old.sub1);
-% for i = 1:numel(fieldsCon)
-%     curRoiR2OriSplit = [];
-%     curV1R2OriSplit = [];
-%     for j = 1:numel(fieldsSub) 
-%         for k = 1:numel(fieldsRoi)
-%             curRoiR2OriSplit = [curRoiR2OriSplit, totalR2OriSplit.(fieldsCon{i}).(fieldsSub{j}).(fieldsRoi{k})];
-%         end
-% 
-%        curV1R2OriSplit = [curV1R2OriSplit, totalR2OriSplit.(fieldsCon{i}).(fieldsSub{j}).V1]; 
-%     end
-%     writematrix(curRoiR2OriSplit, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/allroiR2', (fieldsCon{i}), '.csv']);
-%     writematrix(curV1R2OriSplit, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/V1R2', (fieldsCon{i}), '.csv']);
-% 
-%     allroiR2OriSplit(i) = mean(curRoiR2OriSplit);
-%     V1R2OriSplit(i) = mean(curV1R2OriSplit);
-% end
-% allroiR2OriSplit
-% V1R2OriSplit
-% % save(fullfile('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/meanR2.mat'), "allroiR2OriSplit", "V1R2OriSplit");
-% 
-% 
-% %% AIC/BIC
-% allroiaicOriSplit=[]; 
-% V1aicOriSplit=[];
-% allroibicOriSplit=[]; 
-% V1bicOriSplit=[];
-% fieldsCon = fieldnames(totalaicOriSplit);
-% fieldsSub = fieldnames(totalaicOriSplit.old);
-% fieldsRoi = fieldnames(totalaicOriSplit.old.sub1);
-% for i = 1:numel(fieldsCon)
-%     curRoiaicOriSplit = [];
-%     curV1aicOriSplit = [];
-%     curRoibicOriSplit = [];
-%     curV1bicOriSplit = [];
-%     for j = 1:numel(fieldsSub) 
-%         for k = 1:numel(fieldsRoi)
-%             curRoiaicOriSplit = [curRoiaicOriSplit, totalaicOriSplit.(fieldsCon{i}).(fieldsSub{j}).(fieldsRoi{k})];
-%             curRoibicOriSplit = [curRoibicOriSplit, totalbicOriSplit.(fieldsCon{i}).(fieldsSub{j}).(fieldsRoi{k})];
-%         end
-% 
-%        curV1aicOriSplit = [curV1aicOriSplit, totalaicOriSplit.(fieldsCon{i}).(fieldsSub{j}).V1]; 
-%        curV1bicOriSplit = [curV1bicOriSplit, totalbicOriSplit.(fieldsCon{i}).(fieldsSub{j}).V1]; 
-%     end
-%     % writematrix(curRoiaicOriSplit, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/allroiR2', (fieldsCon{i}), '.csv']);
-%     % writematrix(curRoiaicOriSplit, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/V1R2', (fieldsCon{i}), '.csv']);
-% 
-%     allroiaicOriSplit(i) = mean(curRoiaicOriSplit,"omitnan");
-%     V1aicOriSplit(i) = mean(curV1aicOriSplit,"omitnan");
-%     allroibicOriSplit(i) = mean(curRoibicOriSplit,"omitnan");
-%     V1bicOriSplit(i) = mean(curV1bicOriSplit,"omitnan");
-% end
-% 
-% allroiaicOriSplit
-% V1aicOriSplit
-% allroibicOriSplit
-% V1bicOriSplit
-% 
-% save(fullfile('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/meanAICBIC.mat'), "allroiaicOriSplit", "V1aicOriSplit", "allroibicOriSplit", "V1bicOriSplit");
 
 % Load CSV files
 % old_R2 = readtable('allroiR2old.csv');

@@ -35,5 +35,6 @@
 
 %% getVoxPref_control
 for sub = 1:8
-    getVoxPref_regress(sub,4);
+    getVoxPref_regress(sub,4, 1);
+    getVoxPref_regress(sub,4, 3);
 end
