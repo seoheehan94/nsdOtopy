@@ -12,7 +12,7 @@
 %   uses files created by: prfSampleModel.m, prfSampleModel_synth.m
 %   creates files used by: getVoxPref.m
 
-function regressPrfSplit_control(isub,visualRegions)
+function regressPrfSplit_sfmean_control(isub,visualRegions)
 
 tic
 
@@ -48,9 +48,11 @@ for visualRegion=visualRegions
     if bandpass
         for roinum=1:length(rois)
             prfSampleLevOri{roinum} = prfSampleLevOri{roinum}(:,:,bandMin:bandMax,:);
+            prfSampleLevOri{roinum} = sum(prfSampleLevOri{roinum},3);
             prfSampleLev{roinum} = prfSampleLev{roinum}(:,:,bandMin:bandMax);
         end
-        numLevels = bandMax-bandMin+1;
+        % numLevels = bandMax-bandMin+1;
+        numLevels = 1;
     end
     
     for roinum=1:length(rois); iroi = rois(roinum); roiBetas{roinum}=[]; end
@@ -105,13 +107,15 @@ for visualRegion=visualRegions
         voxResidual{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
         voxOriResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
         voxResidualSplit{roinum} = NaN(nsplits, nvox(roinum),maxNumTrials);
-        voxOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
-        voxCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
-        voxPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
-        voxPredCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
-        voxOriPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
-        voxResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
-        voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),1*numOrientations+1);
+        voxOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        % voxCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
+        voxCoef{roinum} = zeros(nsplits, nvox(roinum),7+1);
+        voxPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        % voxPredCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels+1);
+        voxPredCoef{roinum} = zeros(nsplits, nvox(roinum),7+1);
+        voxOriPredOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
+        voxOriResidOriCoef{roinum} = zeros(nsplits, nvox(roinum),numLevels*numOrientations+1);
         
         %get model coefficients for each voxel, within each split
         for isplit=1:nsplits
@@ -125,8 +129,8 @@ for visualRegion=visualRegions
                 voxCoef{roinum}(isplit,ivox,:) = voxPrfSample\voxBetas;
                 
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
-                voxPrfOriSample = squeeze(voxPrfOriSample(:,7,:));
-                % voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
+                % voxPrfOriSample = squeeze(voxPrfOriSample(:,1,:));
+                voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
                 %add constant predictor
                 voxPrfOriSample(:,end+1) = ones;
@@ -186,8 +190,8 @@ for visualRegion=visualRegions
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
-                voxPrfOriSample = squeeze(voxPrfOriSample(:,7,:));
-                % voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
+                % voxPrfOriSample = squeeze(voxPrfOriSample(:,1,:));
+                voxPrfOriSample = reshape(voxPrfOriSample,[],numLevels*numOrientations);
                 
                 %add constant predictor
                 voxPrfOriSample(:,end+1) = ones;
@@ -323,7 +327,7 @@ for visualRegion=visualRegions
     
     %% SAVE RESULTS
     bandpassStr = ['_bandpass' num2str(bandMin) 'to' num2str(bandMax)];
-    save(fullfile(boxfolder,['regressPrfSplit_sf7' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
+    save(fullfile(boxfolder,['regressPrfSplit_sfmean' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
     toc
