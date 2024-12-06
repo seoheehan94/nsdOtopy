@@ -21,7 +21,7 @@ for con = [1,3]
     for isub = 1:8
         curPrf = ['/bwdata/NSDData/Seohee/Orientation/', prffolders{con}, '/'];
         fprintf('isub:%d. con:%d. ...\n',isub,con);
-        load([curPrf 'voxModelPref_sf1_regress_sub' num2str(isub) '.mat']);
+        load([curPrf 'voxModelPref_sfmean_regress_sub' num2str(isub) '.mat']);
 
         %% total values of R2, aic, bic
         totalR2OriSplit.(conditions{con}){end+1} = roiNsdOriR2;
@@ -77,7 +77,7 @@ for i = 1:numel(fieldsCon)
 
     allroiaicOriSplit(i) = mean(curRoiaicOriSplit,"omitnan");
     V1aicOriSplit(i) = mean(curV1aicOriSplit,"omitnan");
-    allroibicOriSplit}(i) = mean(curRoibicOriSplit,"omitnan");
+    allroibicOriSplit(i) = mean(curRoibicOriSplit,"omitnan");
     V1bicOriSplit(i) = mean(curV1bicOriSplit,"omitnan");
 end
 

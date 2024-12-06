@@ -33,9 +33,9 @@ edgeAlpha = 0.3;%0.07
 markerColor = [0 0 0];
 prfThresh = 0;
 
-% prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
+prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample/'];
 % prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/'];
-prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
+% prffolder = ['/bwdata/NSDData/Seohee/Orientation/prfsample_Ori_control/'];
 figFolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/figures/'];
 
 allOri = cell(1,nrois);
@@ -50,7 +50,7 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref_sfmean_regress_sub' num2str(subnum) '.mat']);
+    load([prffolder 'voxModelPref_sf7_regress_sub' num2str(subnum) '.mat']);
     
     % subAnalysis(isub) = prefAnalysis;
 %     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
@@ -176,7 +176,7 @@ plotOriLines(allOri{iroi}(1,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3
 h.Units = 'centimeters';
 h.PaperSize=[5 5];
 if toSavePdf
-    print('-painters','-dpdf',[figFolder 'radialBias sfmean_regress_control']);
+    print('-painters','-dpdf',[figFolder 'radialBias sf7_regress_old']);
 end
 % 
 % toc
