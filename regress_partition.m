@@ -1,5 +1,6 @@
+clear all;
 
-isub
+isub=1;
 visualRegions = [1, 2, 3, 4];
 conditions = {'old', 'ori', 'control'};
 nsessionsSub = [40 40 32 30 40 32 40 30];
@@ -9,6 +10,7 @@ bandpass = 1; bandMin = 1; bandMax = 7;
 
 boxfolder1 = '/bwdata/NSDData/Seohee/Orientation/prfsample/';
 boxfolder2 = '/bwdata/NSDData/Seohee/Orientation/prfsample_Ori/';
+savefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/partition/';
 betasfolder = ['/bwdata/NSDData/nsddata_betas/ppdata/subj0' num2str(isub) '/func1pt8mm/betas_fithrf_GLMdenoise_RR/'];
 % stimfilename = fullfile(folder,'nsdsynthetic_colorstimuli_subj01.hdf5');
 nsdfolder = '/bwdata/NSDData/nsddata/experiments/nsd/';
@@ -28,7 +30,7 @@ for visualRegion=visualRegions
     numLevels1 = numLevels;
     prfSampleLevOri1 = prfSampleLevOri;
 
-    load(fullfile(boxfolder2,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
+    load(fullfile(boxfolder2,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf');
     numLevels2 = numLevels;
@@ -87,7 +89,7 @@ for visualRegion=visualRegions
             for ivox=1:nvox(roinum)
                 voxBetas = roiBetas{roinum}(ivox,imgTrials>0)';
 
-                voxPrfOriSample1 = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
+                voxPrfOriSample1 = squeeze(prfSampleLevOri1{roinum}(imgNum(imgTrials>0),ivox,:,:));
                 voxPrfOriSample1 = reshape(voxPrfOriSample1,[],numLevels1*numOrientations);
                 voxPrfOriSample2 = squeeze(prfSampleLevOri2{roinum}(imgNum(imgTrials>0),ivox,:,:));
                 voxPrfOriSample2 = reshape(voxPrfOriSample2,[],numLevels2*numOrientations);
@@ -111,7 +113,7 @@ for visualRegion=visualRegions
 
                 voxBetas = roiBetas{roinum}(ivox,imgTrials>0)';
 
-                voxPrfOriSample1 = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
+                voxPrfOriSample1 = squeeze(prfSampleLevOri1{roinum}(imgNum(imgTrials>0),ivox,:,:));
                 voxPrfOriSample1 = reshape(voxPrfOriSample1,[],numLevels1*numOrientations);
                 voxPrfOriSample2 = squeeze(prfSampleLevOri2{roinum}(imgNum(imgTrials>0),ivox,:,:));
                 voxPrfOriSample2 = reshape(voxPrfOriSample2,[],numLevels2*numOrientations);
@@ -134,7 +136,7 @@ for visualRegion=visualRegions
                 % Partition variance
                 sharedVariance{roinum}(isplit,ivox) = r2oriSplitCombined{roinum}(isplit,ivox) - (r2oriSplit1{roinum}(isplit,ivox) + r2oriSplit2{roinum}(isplit,ivox));
                 uniqueModel1{roinum}(isplit,ivox) = r2oriSplit1{roinum}(isplit,ivox) - sharedVariance{roinum}(isplit,ivox);
-                uniqueModel2{roinum}(isplitivox) = r2oriSplit2{roinum}(isplit,ivox) - sharedVariance{roinum}(isplit,ivox);
+                uniqueModel2{roinum}(isplit,ivox) = r2oriSplit2{roinum}(isplit,ivox) - sharedVariance{roinum}(isplit,ivox);
             end
         end
     end
@@ -145,7 +147,7 @@ for visualRegion=visualRegions
     nsd.uniqueModel2 = uniqueModel2;
 
 
-     save(fullfile(boxfolder,['regressPartition_oldori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
+     save(fullfile(savefolder,['regressPartition_oldori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
         'nsd','rois','nvox','nsplits');
 
 

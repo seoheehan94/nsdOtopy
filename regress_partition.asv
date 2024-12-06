@@ -1,5 +1,6 @@
+clear all;
 
-isub
+isub=1;
 visualRegions = [1, 2, 3, 4];
 conditions = {'old', 'ori', 'control'};
 nsessionsSub = [40 40 32 30 40 32 40 30];
@@ -28,7 +29,7 @@ for visualRegion=visualRegions
     numLevels1 = numLevels;
     prfSampleLevOri1 = prfSampleLevOri;
 
-    load(fullfile(boxfolder2,['prfSampleStim_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
+    load(fullfile(boxfolder2,['prfSampleStim_ori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']),'prfSampleLevOri',...
         'rois','allImgs','numLevels','numOrientations','interpImgSize','backgroundSize','pixPerDeg',...
         'roiPrf');
     numLevels2 = numLevels;
@@ -145,9 +146,8 @@ for visualRegion=visualRegions
     nsd.uniqueModel2 = uniqueModel2;
 
 
-
-
-
+     save(fullfile(boxfolder,['regressPartition_oldori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
+        'nsd','rois','nvox','nsplits');
 
 
 end
