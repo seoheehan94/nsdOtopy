@@ -125,7 +125,7 @@ for visualRegion=visualRegions
                 voxCoef{roinum}(isplit,ivox,:) = voxPrfSample\voxBetas;
                 
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
-                voxPrfOriSample = squeeze(voxPrfOriSample(:,4:7,:));
+                voxPrfOriSample = squeeze(voxPrfOriSample(:,5:7,:));
 
                 voxPrfOriSample = reshape(voxPrfOriSample,[],3*numOrientations);
                 
@@ -187,7 +187,7 @@ for visualRegion=visualRegions
                 %add constant predictor
                 voxPrfSample(:,end+1) = ones;
                 voxPrfOriSample = squeeze(prfSampleLevOri{roinum}(imgNum(imgTrials>0),ivox,:,:));
-                voxPrfOriSample = squeeze(voxPrfOriSample(:,4:7,:));
+                voxPrfOriSample = squeeze(voxPrfOriSample(:,5:7,:));
 
                 voxPrfOriSample = reshape(voxPrfOriSample,[],3*numOrientations);
                 
