@@ -135,7 +135,7 @@ for isub=1:8
         nsd.R2_model1 = R2_model1;
         nsd.R2_model2_orth = R2_model2_orth;
         nsd.R2_combined = R2_combined;
-        nsd.sharedVariance = sharedVariance;
+        nsd.sharedVariance = shared_variance;
         
         save(fullfile(savefolder,['regressPartition_oldori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']), ...
             'nsd','rois','nvox','nsplits');
