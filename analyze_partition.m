@@ -2,10 +2,6 @@ clear all;
 
 
 savefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/partition/';
-roiNames = {'V1v','V1d','V2v','V2d','V3v','V3d','hV4'};
-combinedRoiNames = {'V1','V2','V3','hV4'};
-% conditions = {'old', 'ori', 'control'};
-% prffolders = {'prfsample', 'prfsample_Ori', 'prfsample_Ori_control'};
 
 
 %% 1.  mean R2, AIC, BIC %%
