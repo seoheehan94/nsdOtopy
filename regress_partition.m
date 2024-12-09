@@ -111,7 +111,7 @@ for isub=3:8
                     residuals_model1{roinum}(isplit,ivox,1:numTrials) = voxBetas' - squeeze(voxOriCoef1{roinum}(isplit,ivox,:))'*voxPrfOriSample1';
                 
                     % Step 2: Fit Model 2 to residuals of Model 1
-                    coef_model2_orth{roinum}(isplit,ivox,1:numTrials) = voxPrfOriSample2 \ squeeze(residuals_model1{roinum}(isplit,ivox,1:numTrials));
+                    coef_model2_orth{roinum}(isplit,ivox,:) = voxPrfOriSample2 \ squeeze(residuals_model1{roinum}(isplit,ivox,1:numTrials));
                     pred_model2_orth{roinum}(isplit,ivox,1:numTrials) = squeeze(coef_model2_orth{roinum}(isplit,ivox,:))'*voxPrfOriSample2';
                     residuals_model2_orth{roinum}(isplit,ivox,1:numTrials) =  residuals_model1{roinum}(isplit,ivox,1:numTrials) - pred_model2_orth{roinum}(isplit,ivox,1:numTrials);
                     
