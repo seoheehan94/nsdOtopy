@@ -1,6 +1,7 @@
 clear all;
 
-for isub=2:8
+for isub=1:8
+    isub
     visualRegions = [1, 2, 3, 4];
     conditions = {'old', 'ori', 'control'};
     nsessionsSub = [40 40 32 30 40 32 40 30];
