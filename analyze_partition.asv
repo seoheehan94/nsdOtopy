@@ -23,24 +23,27 @@ for visualRegion =1:4
             nsd.uniqueModel1 = [];
             nsd.uniqueModel2 = [];
             for iroi=1:length(rois)
-                nsd.sharedVariance = cat(2,nsd.sharedVariance{1},oldNsd.sharedVariance{iroi});
-                nsd.uniqueModel1 = cat(2,nsd.uniqueModel1{1},oldNsd.uniqueModel1{iroi});
-                nsd.uniqueModel1 = cat(2,nsd.uniqueModel1{1},oldNsd.uniqueModel1{iroi});
+                nsd.sharedVariance = cat(2,nsd.sharedVariance,oldNsd.sharedVariance{iroi});
+                nsd.uniqueModel1 = cat(2,nsd.uniqueModel1,oldNsd.uniqueModel1{iroi});
+                nsd.uniqueModel2 = cat(2,nsd.uniqueModel2,oldNsd.uniqueModel2{iroi});
             end
         end
-        nsd.sharedVariance(nsplits+1,:,:) = mean(nsd.sharedVariance,1);
+        nsd.sharedVariance(3,:,:) = mean(nsd.sharedVariance,1);
+        nsd.uniqueModel1(3,:,:) = mean(nsd.uniqueModel1,1);
+        nsd.uniqueModel2(3,:,:) = mean(nsd.uniqueModel2,1);
+        
 
 
         %% total values
-        totalsharedVariance{visualRegion}{end+1} = nsd.sharedVariance;
-        totaluniqueModel_old{visualRegion}{end+1} = nsd.uniqueModel1;
-        totaluniqueModel_ori{visualRegion}{end+1} = nsd.uniqueModel2;
+        totalsharedVariance{visualRegion}{end+1} = nsd.sharedVariance(3,:,:);
+        totaluniqueModel_old{visualRegion}{end+1} = nsd.uniqueModel1(3,:,:);
+        totaluniqueModel_ori{visualRegion}{end+1} = nsd.uniqueModel2(3,:,:);
     end
 
 end
 
 
-%% R2
+%% average participants
 fieldsCon = fieldnames(totalsharedVariance);
 allroiR2OriSplit=[];
 V1R2OriSplit=[];

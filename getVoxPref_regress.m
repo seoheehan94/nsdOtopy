@@ -52,10 +52,10 @@ degPerPix = 8.4/(714*imgScaling);
 % 'sumOriEnergy','modelOriEnergy','normResp','backgroundSize','imgScaling');
 for iregion=1:numregions
     visualRegion = iregion;%V1,V2,V3,V4
-    load(fullfile(curPrf,['regressPrfSplit_sf7' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
+    load(fullfile(curPrf,['regressPrfSplit_topsf' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
-    numLevels = 1;
+    numLevels = 3;
     if length(rois)>1 %combine across ventral and dorsal ROIs
         oldNsd = nsd;
         nsd.voxResidual{1} = [];

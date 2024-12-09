@@ -43,7 +43,7 @@ for visualRegion =1:4
 end
 
 
-%% R2
+%% average participants
 fieldsCon = fieldnames(totalsharedVariance);
 allroiR2OriSplit=[];
 V1R2OriSplit=[];

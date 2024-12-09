@@ -94,6 +94,7 @@ for isub=1:8
                     voxPrfOriSample1 = reshape(voxPrfOriSample1,[],numLevels1*numOrientations);
                     voxPrfOriSample2 = squeeze(prfSampleLevOri2{roinum}(imgNum(imgTrials>0),ivox,:,:));
                     voxPrfOriSample2 = reshape(voxPrfOriSample2,[],numLevels2*numOrientations);
+                    keyboard;
                     voxPrfOriSampleCombined = [voxPrfOriSample1, voxPrfOriSample2];
 
                     %add constant predictor
