@@ -1,6 +1,6 @@
 clear all;
 
-for isub=1:8
+for isub=3:8
     isub
     visualRegions = [1, 2, 3, 4];
     conditions = {'old', 'ori', 'control'};
@@ -108,12 +108,12 @@ for isub=1:8
                     voxOriCoef1{roinum}(isplit,ivox,:) = voxPrfOriSample1\voxBetas;%check vox 144 in first ROI
                     % voxOriCoef2{roinum}(isplit,ivox,:) = voxPrfOriSample2\voxBetas;
                 
-                    pred_model1{roinum}(isplit,ivox,:) = squeeze(voxOriCoef1{roinum}(isplit,ivox,:))'*voxPrfOriSample1';
+                    pred_model1{roinum}(isplit,ivox,1:numTrials) = squeeze(voxOriCoef1{roinum}(isplit,ivox,1:numTrials))'*voxPrfOriSample1';
                     residuals_model1{roinum}(isplit,ivox,1:numTrials) = voxBetas' - squeeze(voxOriCoef1{roinum}(isplit,ivox,:))'*voxPrfOriSample1';
                 
                     % Step 2: Fit Model 2 to residuals of Model 1
-                    coef_model2_orth{roinum}(isplit,ivox,:) = voxPrfOriSample2 \ squeeze(residuals_model1{roinum}(isplit,ivox,1:numTrials));
-                    pred_model2_orth{roinum}(isplit,ivox,:) = squeeze(coef_model2_orth{roinum}(isplit,ivox,:))'*voxPrfOriSample2';
+                    coef_model2_orth{roinum}(isplit,ivox,1:numTrials) = voxPrfOriSample2 \ squeeze(residuals_model1{roinum}(isplit,ivox,1:numTrials));
+                    pred_model2_orth{roinum}(isplit,ivox,1:numTrials) = squeeze(coef_model2_orth{roinum}(isplit,ivox,1:numTrials))'*voxPrfOriSample2';
                     residuals_model2_orth{roinum}(isplit,ivox,1:numTrials) =  residuals_model1{roinum}(isplit,ivox,1:numTrials) - pred_model2_orth{roinum}(isplit,ivox,1:numTrials);
                     
                     % Step 3: Calculate R² values
@@ -121,7 +121,7 @@ for isub=1:8
                     R2_model2_orth{roinum}(isplit,ivox) = rsquared(residuals_model2_orth{roinum}(isplit,ivox,1:sum(splitImgTrials(isplit,:))),residuals_model1{roinum}(isplit,ivox,1:numTrials));
 
                     % Step 4: Shared Variance (if needed)
-                    pred_combined{roinum}(isplit,ivox,:) = pred_model1{roinum}(isplit,ivox,:) + pred_model2_orth{roinum}(isplit,ivox,:);
+                    pred_combined{roinum}(isplit,ivox,1:numTrials) = pred_model1{roinum}(isplit,ivox,1:numTrials) + pred_model2_orth{roinum}(isplit,ivox,1:numTrials);
                     residuals_combined{roinum}(isplit,ivox,1:numTrials) = voxBetas' - squeeze(pred_combined{roinum}(isplit,ivox,1:numTrials))';
                     R2_combined{roinum}(isplit,ivox) = rsquared(residuals_combined{roinum}(isplit,ivox,1:numTrials),roiBetas{roinum}(ivox,imgTrials>0));
 
