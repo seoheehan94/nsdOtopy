@@ -45,22 +45,27 @@ end
 
 
 %% average participants
-allroiR2=[];
-V1R2OriSplit=[];
-for i = 1:numel(fieldsCon)
-    curRoiR2OriSplit = [];
-    curV1R2OriSplit = [];
+allroiR2_old=[];
+V1R2_old=[];
+allroiR2_unique_ori=[];
+V1R2_unique_ori=[];
+allroiR2_combined=[];
+V1R2_combined=[];
+allroisharedVariance=[];
+V1sharedVariance=[];
+for visualRegion =1:4
     
-    for j = 1:numel(totalR2_old.(fieldsCon{i}))
-        for k = 1:size(roiNsdOriR2,2)
-            curRoiR2OriSplit = [curRoiR2OriSplit, totalR2_old.(fieldsCon{i}){j}{k}(3,:)];
-        end
+    for isub = 1:8
+        curRoiR2_old = [curRoiR2_old, totalR2_old{visualRegion}{isub}];
+        curRoiR2_unique_orid = [curRoiR2_unique_ori, totalR2_unique_ori{visualRegion}{isub}];
+        curRoiR2_combined = [curRoiR2_old, totalR2_combined{visualRegion}{isub}];
+        curRoiR2_old = [curRoiR2_old, totalsharedVariance{visualRegion}{isub}];
 
-        curV1R2OriSplit = [curV1R2OriSplit, totalR2_old.(fieldsCon{i}){j}{1}(3,:)];
     end
     % writematrix(curRoiR2OriSplit', ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/allroiR2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
     % writematrix(curV1R2OriSplit', ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/V1R2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
+    if visualRegion == 1
 
-    allroiR2OriSplit(i) = mean(curRoiR2OriSplit, 'omitnan');
-    V1R2OriSplit(i) = mean(curV1R2OriSplit,'omitnan');
+    allroiR2_old(i) = mean(curRoiR2_old, 'omitnan');
+    V1R2_old(i) = mean(curV1R2_old,'omitnan');
 end
