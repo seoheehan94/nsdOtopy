@@ -86,7 +86,7 @@ for isub=1:8
             voxOriCoef2{roinum} = zeros(nsplits, nvox(roinum),numLevels2*numOrientations+1);
             coef_model2_orth{roinum} = zeros(nsplits, nvox(roinum),numLevels2*numOrientations+numLevels2*numOrientations+1);
             pred_model2_orth{roinum} = zeros(nsplits, nvox(roinum),numLevels2*numOrientations+numLevels2*numOrientations+1);
-            residuals_model2_orth = NaN(nsplits, nvox(roinum),maxNumTrials);
+            residuals_model2_orth{roinum}= NaN(nsplits, nvox(roinum),maxNumTrials);
 
             for isplit=1:nsplits
                 imgTrials = splitImgTrials(isplit,:);
