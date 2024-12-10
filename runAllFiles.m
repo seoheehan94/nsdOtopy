@@ -13,16 +13,16 @@
 % end
 
 %% regressPrfSplit
-for sub = 1:8
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
-regressPrfSplit(sub, 1);
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
-regressPrfSplit(sub, 2);
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 3);
-regressPrfSplit(sub, 3);
-fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 4);
-regressPrfSplit(sub, 4);
-end
+% for sub = 1:8
+% fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
+% regressPrfSplit(sub, 1);
+% fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 2);
+% regressPrfSplit(sub, 2);
+% fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 3);
+% regressPrfSplit(sub, 3);
+% fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 4);
+% regressPrfSplit(sub, 4);
+% end
 % % 
 % for sub = 1:8
 % fprintf('%s. %d. %d ...\n','regressPrfSplit',sub, 1);
@@ -36,7 +36,7 @@ end
 % end
 
 %% getVoxPref
-% for sub = 1:8
-%     fprintf('%s. %d. %d ...\n','getVoxPref_regress',sub, 1);
-%     getVoxPref_regress(sub,4, 1);
-% end
+for sub = 1:8
+    fprintf('%s. %d. %d ...\n','getVoxPref_regress',sub, 1);
+    getVoxPref_regress(sub,4, 1);
+end
