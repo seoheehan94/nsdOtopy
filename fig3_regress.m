@@ -50,7 +50,7 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref_topsf_regress_sub' num2str(subnum) '.mat']);
+    load([prffolder 'voxModelPref_bottomsf_regress_sub' num2str(subnum) '.mat']);
     
     % subAnalysis(isub) = prefAnalysis;
 %     subNsdSynthImprov_corr(isub,:,:) = nsdSynthImprov_corr;
@@ -176,7 +176,7 @@ plotOriLines(allOri{iroi}(1,:), allPrfX{iroi}, allPrfY{iroi}, allPrfEcc{iroi},(3
 h.Units = 'centimeters';
 h.PaperSize=[5 5];
 if toSavePdf
-    print('-painters','-dpdf',[figFolder 'radialBias topsf_regress_old']);
+    print('-painters','-dpdf',[figFolder 'radialBias bottomsf_regress_old']);
 end
 % 
 % toc
