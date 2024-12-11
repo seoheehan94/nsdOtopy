@@ -10,7 +10,7 @@ totalsharedVariance = cell(4,1);
 for visualRegion =1:4
     for isub = 1:8
         fprintf('isub:%d. V:%d. ...\n',isub,visualRegion);
-        load([savefolder 'regressPartition_oldori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']);
+        load([savefolder 'regressPartitionCrossV_oldori_v' num2str(visualRegion) '_sub' num2str(isub) '.mat']);
         oldNsd = nsd;
             nsd.R2_model1 = [];
             nsd.R2_model2_orth = [];
