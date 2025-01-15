@@ -64,8 +64,8 @@ for visualRegion =1:4
     % writematrix(curRoiR2OriSplit', ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/allroiR2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
     % writematrix(curV1R2OriSplit', ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/MaxMin/V1R2', imgType{curimgtype}, '_', (fieldsCon{i}), '.csv']);
     if visualRegion == 1
-        V1R2_old = mean(curR2_old, 'omitnan');
-        V1R2_unique_ori = mean(curR2_unique_ori,'omitnan');
+        V1R2_model1 = mean(curR2_old, 'omitnan');
+        V1R2_unique_model2 = mean(curR2_unique_ori,'omitnan');
         V1R2_combined = mean(curR2_combined, 'omitnan');
         V1sharedVariance = mean(cur_sharedVariance, 'omitnan');
     end
@@ -73,7 +73,7 @@ for visualRegion =1:4
 
 end
 
-allroiR2_old = mean(curR2_old, 'omitnan');
-allroiR2_unique_ori = mean(curR2_unique_ori,'omitnan');
+allroiR2_model1 = mean(curR2_old, 'omitnan');
+allroiR2_unique_2 = mean(curR2_unique_ori,'omitnan');
 allroiR2_combined = mean(curR2_combined, 'omitnan');
 allroisharedVariance = mean(cur_sharedVariance, 'omitnan');

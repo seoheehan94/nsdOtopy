@@ -4,18 +4,20 @@
 clear all;
 
 filedir = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/';
-condition = {'old', 'ori', 'control'};
+condition = {'old', 'control','ori'};
 
 addpath(genpath('/usr/local/freesurfer/7.4.1/matlab'));
 [~,M,mr] = load_mgh('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/sub1/oldBrain_sub1_lh_fsaverage.mgh');
-%save_mgh(vol, 'orig.stripped.mgz', M,mr);
-%result = MRIread('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/sub1/angleBrain_sub1_lh_fsaverage.mgh');
 
 % 50 percet cutoff for old R2 (participant averaged)
-cutoff_lh = 0.02;
-cutoff_rh = 0.02;
+cutoff_lh = 0.014;
+cutoff_rh = 0.014;
 
-for curcond = 1:3
+% number of voxels survived
+% numVoxel_lh = [];
+% numVoxel_rh = [];
+
+for curcond = 3
     %% get all subjects volume in radians
     % what to do with -1 and 0?
     for isub=1:8
@@ -65,14 +67,23 @@ for curcond = 1:3
     top50_prefAngle_lh(meanR2_lh < cutoff_lh) = 0;
     top50_prefAngle_rh = prefAngle_rh;
     top50_prefAngle_rh(meanR2_rh < cutoff_rh) = 0;
-    %% save
-    fileName_lh = [filedir, condition{curcond}, 'Brain_groupmean_lh_fsaverage.mgh'];
-    fileName_rh = [filedir, condition{curcond}, 'Brain_groupmean_rh_fsaverage.mgh'];
-    save_mgh(prefAngle_lh, fileName_lh, M,mr);
-    save_mgh(prefAngle_rh, fileName_rh, M,mr);
+    
+    % meanR2_lh_save=(meanR2_lh(~isnan(meanR2_lh)));
+    % meanR2_rh_save=(meanR2_rh(~isnan(meanR2_rh)));
 
-    fileName_lh = [filedir, condition{curcond}, 'Brain_groupmean_top50_lh_fsaverage.mgh'];
-    fileName_rh = [filedir, condition{curcond}, 'Brain_groupmean_top50_rh_fsaverage.mgh'];
+    % writematrix(meanR2_lh_save, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/subMeanR2_lh', condition{curcond}, '.csv']);
+    % writematrix(meanR2_rh_save, ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/analyses/subMeanR_rh', condition{curcond}, '.csv']);
+
+    % numVoxel_lh(curcond) = size(nonzeros(top50_prefAngle_lh),1);
+    % numVoxel_rh(curcond) = size(nonzeros(top50_prefAngle_rh),1);
+    %% save
+    % fileName_lh = [filedir, condition{curcond}, 'Brain_sfmean_groupmean_lh_fsaverage.mgh'];
+    % fileName_rh = [filedir, condition{curcond}, 'Brain_sfmean_groupmean_rh_fsaverage.mgh'];
+    % save_mgh(prefAngle_lh, fileName_lh, M,mr);
+    % save_mgh(prefAngle_rh, fileName_rh, M,mr);
+
+    fileName_lh = [filedir, condition{curcond}, 'Brain_sfmean_groupmean_top50_lh_fsaverage.mgh'];
+    fileName_rh = [filedir, condition{curcond}, 'Brain_sfmean_groupmean_top50_rh_fsaverage.mgh'];
     save_mgh(top50_prefAngle_lh, fileName_lh, M,mr);
     save_mgh(top50_prefAngle_rh, fileName_rh, M,mr);
 end
@@ -80,3 +91,85 @@ end
 
 
 
+% plot number of voxels
+
+% figure;
+% plot(numVoxel_lh,'-o', 'Color','#0072BD','LineWidth',2);
+% hold on;
+% plot(numVoxel_rh,'-o', 'Color','#F35872','LineWidth',2);
+% xticks(1:3);
+% xticklabels({'photograph-filter','line drawing-filter','contour'});
+% xlabel('Methods');
+% legend('left','right','FontSize',15,'FontName','Helvetica');
+% ax = gca;
+% ax.YAxis.FontSize = 15;
+% ax.YAxis.FontName = 'Helvetica';
+% title('Number of voxels above R2 0.02', 'FontSize',20,'FontName','Helvetica');
+% box off;
+% legend boxoff
+
+
+
+%% get R2 difference
+clear all;
+
+filedir = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/';
+condition = {'old', 'control','ori'};
+
+addpath(genpath('/usr/local/freesurfer/7.4.1/matlab'));
+[~,M,mr] = load_mgh('/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/surfaceData/sub1/oldBrain_sub1_lh_fsaverage.mgh');
+
+for isub=1:8
+    for curcond = 1:3
+        R2_lh(:,curcond) = load_mgh([filedir, 'sub', num2str(isub), '/', condition{curcond}, 'BrainR2_sub', num2str(isub), '_lh_fsaverage.mgh']);
+        R2_rh(:,curcond) = load_mgh([filedir, 'sub', num2str(isub), '/', condition{curcond}, 'BrainR2_sub', num2str(isub), '_rh_fsaverage.mgh']); 
+    end
+
+    %old_ori
+    R2diff_lh(:,isub) = R2_lh(:,3)- R2_lh(:,1);
+    R2diff_rh(:,isub) = R2_rh(:,3)- R2_rh(:,1);
+
+end
+
+meanR2diff_lh = mean(R2diff_lh,2, "omitnan");
+meanR2diff_rh = mean(R2diff_rh,2, "omitnan");
+
+fileName_lh = [filedir, 'R2diff_oriold_lh_fsaverage.mgh'];
+fileName_rh = [filedir, 'R2diff_oriold_rh_fsaverage.mgh'];
+  
+% save_mgh(meanR2diff_lh, fileName_lh, M,mr);
+% save_mgh(meanR2diff_rh, fileName_rh, M,mr);
+
+
+%% save by ROI
+% Path to your .label file
+visualregions = {'V1', 'V2', 'V3', 'V4'};
+hemis = {'lh', 'rh'};
+numVertices = 163842;
+for visualregion = 1:4
+    for hemi = 1:2
+        labelFilePath = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/Orientation/visualRegion/labels/';
+        curfile = [labelFilePath, hemis{hemi}, '.', visualregions{visualregion}, '.label'];
+        
+        % Read the .label file
+        labelData = read_label(curfile);
+
+        % Initialize the overlay with NaN (no value) for all vertices
+        overlay = nan(numVertices, 1);
+
+        % Assign a value (e.g., 1.0) to vertices in the label file
+        overlay(labelData.vertexIndex) = labelData.values;
+
+        if hemi == 1
+            curmeanR2diff = meanR2diff_lh;
+        else 
+            curmeanR2diff = meanR2diff_rh;
+        end
+
+        curmeanR2diff(isnan(overlay))=NaN;
+
+        fileName = [filedir, 'R2diff_oriold_', visualregions{visualregion}, '_', hemis{hemi}, '_fsaverage.mgh'];
+        save_mgh(curmeanR2diff, fileName, M,mr);
+
+    end
+end

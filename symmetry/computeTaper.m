@@ -4,13 +4,13 @@ rng(4228);
 
 % Add path
 addpath(genpath('/home/hanseohe/Documents/GitHub/MLV_toolbox'));
-original_folder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli'; % Original image file folder
+original_folder = '/bwdata/NSDData/stimuli/vecLD'; % Original image file folder
 addpath(original_folder);
 original_subfolder = dir(original_folder);
 %original_subfolder = original_subfolder(~ismember({original_subfolder(:).name},{'.','..'}));
 original_subfolder = original_subfolder(ismember({original_subfolder(:).name},{'images01','images02','images03','images04','images05'}));
 
-save_folder = '/bwlab/Users/SeoheeHan/NSDData/nsddata_stimuli';
+save_folder = '/bwdata/NSDData/stimuli/vecLD';
 
 %% Read files
 for k = 1 : length(original_subfolder)

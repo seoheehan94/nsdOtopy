@@ -52,10 +52,10 @@ degPerPix = 8.4/(714*imgScaling);
 % 'sumOriEnergy','modelOriEnergy','normResp','backgroundSize','imgScaling');
 for iregion=1:numregions
     visualRegion = iregion;%V1,V2,V3,V4
-    load(fullfile(curPrf,['regressPrfSplit_bottomsf' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
+    load(fullfile(curPrf,['regressPrfSplit' bandpassStr '_v' num2str(visualRegion) '_sub' num2str(isub)  '.mat']), ...
         'nsd',...
         'numLevels', 'numOrientations','rois','nvox','roiPrf','nsplits');
-    numLevels = 3;
+    
     if length(rois)>1 %combine across ventral and dorsal ROIs
         oldNsd = nsd;
         nsd.voxResidual{1} = [];
@@ -267,12 +267,13 @@ for iregion=1:numregions
             fullCoef = squeeze(nsd.voxOriCoef{iroi}(isplit,:,1:end-1));
             numvox = size(fullCoef,1);
             % if con == 1 || con ==3
-                coefMat = reshape(fullCoef,numvox,numLevels,numOrientations);%vox x levels x orientations
-                coefMat_meansf = squeeze(mean(coefMat, 2));
+            coefMat = reshape(fullCoef,numvox,numLevels,numOrientations);%vox x levels x orientations
+            coefMat_meansf = squeeze(mean(coefMat, 2));
             % elseif con ==2
             %     coefMat_meansf = fullCoef;
             % end
             coefMat_meansf = coefMat_meansf - min(coefMat_meansf,[],2);
+            keyboard;
             theta = linspace(0,2*pi,numOrientations+1);%for circular calculation
             theta = theta(1:end-1);
             for ivox=1:numvox

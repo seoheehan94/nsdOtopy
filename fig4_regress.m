@@ -20,7 +20,7 @@ condition =1; %1=old, 2=ori, 3=control
 figRoi=1;
 pvalThresh = 0.025;
 
-toSavePdf = 0;
+toSavePdf = 1;
 nbins = 20;
 sigMarkersize = 15;
 
@@ -145,7 +145,7 @@ allSubInd = cell(1,nrois);
 
 for isub=1:length(subjects)
     subnum = subjects(isub);
-    load([prffolder 'voxModelPref_sf1_regress_sub' num2str(isub) '.mat'],'allRoiPrf',...
+    load([prffolder 'voxModelPref_sfmean_regress_sub' num2str(isub) '.mat'],'allRoiPrf',...
         'roiOri','roiNsdOriR2',...
         'roiOriDeviation','roiVertDeviation','roiCardDeviation',...
         'visRoiData','roiNames','combinedRoiNames','roiInd','prefAnalysis','nsplits');
@@ -259,7 +259,7 @@ plot(binCenters,binRad,'linewidth',linewidth,'color',radColor, 'LineStyle', line
 dsErrorsurface(binCenters,binRad,binSemRad,radColor,surfaceAlpha);
 
 xlim([0 10]);
-ylim([0.35 1.05]);
+ylim([0.2 1.05]);
 axis square
 xlabel('\iteccentricity (deg)');
 ylabel('\itdeviation (rad)');

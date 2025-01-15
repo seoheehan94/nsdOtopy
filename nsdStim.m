@@ -107,6 +107,7 @@ for isub=[1:8]
                 modelOri{ilev} = zeros(numOrientations, dims(1), dims(2));
                 for orientation = 1:numOrientations
                     thisBand = abs(accessSteerBand(pyr, pind, numOrientations,ilev, orientation)).^2;
+                    keyboard;
                     sumOri{ilev}(:,:) = sumOri{ilev}(:,:) + thisBand;
                     modelOri{ilev}(orientation,:,:) = thisBand;
                 end
