@@ -16,13 +16,26 @@
 close all;
 clear all;
 
+prompt = "Type of symmetry?";
+symmetryType = input(prompt,"s");
+
 backgroundSize = [512 512];
 renderSize = [357,357];
 
 methods = {'contour', 'medialAxis', 'area'};
 % cd '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli';
 %pyramidfolder = '/misc/data18/rothzn/nsd/stimuli/pyramid/';%to save model outputs
-savefolder = '/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/parfilter/';%to save model outputs
+switch (lower(symmetryType))
+    case 'parallelism'
+        whichtype = 'par';
+    case 'separation'
+        whichtype = 'sep';
+    case 'mirror'
+        whichtype = 'mir';
+    case 'taper'
+        whichtype = 'tap';
+end
+savefolder = ['/bwlab/Users/SeoheeHan/NSDData/rothzn/nsd/stimuli/',whichtype,'filter/'];%to save model outputs
 
 %%
 
@@ -62,7 +75,7 @@ for isub=1:8
     for imgNum=allImgs
         iimg = iimg+1
         
-        filename = ['parImg' num2str(imgNum) '.mat'];
+        filename = [whichtype, 'Img' num2str(imgNum) '.mat'];
         if ~isfile(fullfile(savefolder, filename))%if file exists already no need to remake it
             imgName = ['img' num2str(imgNum) '.mat'];
             if imgNum <= 14600*1
@@ -81,7 +94,7 @@ for isub=1:8
            
             %% pass image through filter
             for m = 1: length(methods)
-                featureMap = generateSymmetryMap(vecLD,'parallelism', methods{m}, NaN, backgroundSize, renderSize);
+                featureMap = generateSymmetryMap(vecLD,symmetryType, methods{m}, NaN, backgroundSize, renderSize);
                 model.(methods{m}) = featureMap;
             % figure;drawMATproperty(vecLD,'parallelism')
             % figure;
