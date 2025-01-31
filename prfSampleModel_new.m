@@ -118,6 +118,7 @@ for roinum=1:length(rois)
                 for iori=1:numOrientations
                     temp = data.modelOri(iori,:,:);
                     voxPrfSampleOri(iori) = temp(:)'*G(:);
+                    keyboard;
                 end
                 voxPrfSampleLevOri(ilev,:) = voxPrfSampleOri;
             end
